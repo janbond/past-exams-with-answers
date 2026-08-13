@@ -3955,5 +3955,2984 @@
 "text": "綜合以上，面對兼具巨量、高速、多樣三項特性的大數據情境，以分散式、可水平擴展、綱要彈性之NoSQL／Hadoop生態系技術取代傳統集中式關聯式資料庫，方能有效因應3V挑戰。"
 }
 ]
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "109",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 1,
+"qlabel": null,
+"stem": "請為流行傳染病採檢通報系統設計符合BCNF且考量OO的EER data model，model中請註明合適的primary/foreign/candidate keys，資料表間的關聯亦請適當地說明彼此間的maximum/minimum cardinality。［需求：查詢醫事機構地址及開放時段、特定縣市特定時段開放採檢機構、特定日期特定機構受檢男性數量、特定縣市確診人員受檢日期與採檢機構、確診案例感染類型/感染源/症狀/收治機構/年齡/性別/縣市、受檢後未確診需追蹤人員之手機/居住地址/追蹤事由、各縣市居家檢疫數量等7項］（30分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為109年高考三級（第一份試卷 第1題），經與goldensun線上題庫核對後，確認並非109年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "依題目需求分析，設計「人員」（Person）為父類別，並依「是否已確診」與「是否受檢後未確診需追蹤」兩種身分，特化（Specialization）出ConfirmedCase與UnderFollowUp兩個子類別（不相交、部分特化，以滿足OO物件導向之父子型態關係塑模需求，並符合並非每位受檢者皆會成為確診案例或需追蹤對象之實際業務語意）。"
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK/候選鍵）"
+],
+"rows": [
+[
+"MedicalInstitution",
+"InstID (PK), Name, Address, Phone, City"
+],
+[
+"OpeningHours",
+"InstID (FK→MedicalInstitution) + DayOfWeek + TimeSlot，複合PK：(InstID, DayOfWeek, TimeSlot)"
+],
+[
+"Person（父類別）",
+"PersonID (PK), Name, Gender, Age, MobilePhone, ResidentialAddress, City"
+],
+[
+"TestRecord",
+"PersonID (FK→Person) + InstID (FK→MedicalInstitution) + TestDateTime，複合PK：(PersonID, InstID, TestDateTime)"
+],
+[
+"ConfirmedCase（子類別，繼承Person）",
+"PersonID (PK/FK→Person), InfectionType, InfectionSource, Symptoms, AdmittingInstID (FK→MedicalInstitution)"
+],
+[
+"UnderFollowUp（子類別，繼承Person）",
+"PersonID (PK/FK→Person), FollowUpReason（如檢疫、隔離、自主健康管理等）"
+]
+]
+},
+{
+"type": "para",
+"text": "關聯之最大／最小基數"
+},
+{
+"type": "para",
+"text": "MedicalInstitution — OpeningHours：1機構對應0..N筆開放時段；每筆開放時段恰屬1..1機構。"
+},
+{
+"type": "para",
+"text": "MedicalInstitution — TestRecord：1機構可執行0..N筆採檢紀錄；每筆採檢紀錄恰於1..1機構執行。"
+},
+{
+"type": "para",
+"text": "Person — TestRecord：1人員可有0..N筆採檢紀錄（可能多次受檢）；每筆採檢紀錄恰屬1..1人員。"
+},
+{
+"type": "para",
+"text": "Person — ConfirmedCase：特化關係，不相交、部分特化，1人員至多對應0..1筆確診子類別資料。"
+},
+{
+"type": "para",
+"text": "Person — UnderFollowUp：特化關係，不相交、部分特化，1人員至多對應0..1筆追蹤子類別資料。"
+},
+{
+"type": "para",
+"text": "ConfirmedCase — MedicalInstitution（收治）：每一確診案例恰由1..1機構收治；1機構可收治0..N確診案例。"
+},
+{
+"type": "para",
+"text": "依此設計，可逐一滿足7項查詢需求：機構開放時段查詢需join MedicalInstitution-OpeningHours；特定縣市特定時段開放機構查詢需以City與OpeningHours篩選；特定日期特定機構受檢男性數量需join TestRecord-Person並以Gender='M'篩選計數；特定縣市確診人員受檢紀錄需join Person(City)-ConfirmedCase-TestRecord；確診案例詳細資訊需查ConfirmedCase並join Person與MedicalInstitution（收治機構）；未確診追蹤人員資訊需查UnderFollowUp並join Person取得手機、居住地址；各縣市居家檢疫數量需以UnderFollowUp.FollowUpReason='居家檢疫'篩選並依Person.City分組計數。"
+}
+],
+"origin_year": "109",
+"orig_section": "第一份試卷",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "109",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 2,
+"qlabel": null,
+"stem": "假設現有個人旅行資料紀錄之關聯式資料庫：Person(personID,name,nationality,gender) PK:personID／Flight(flightID,date,flightNation,takeoff,arrival) PK:(flightID,date)／TravelRecord(personID,flightID,date,seat) PK:(personID,flightID,date), FK:personID ref.Person, (flightID,date) ref.Flight（假設每航班每天最多飛行一次）。(a)使用DDL定義所有資料表。（10分）(b)依國籍及性別分類顯示，2020年5月由USA New York出發所有班機的搭機人數。（5分）(c)列出2020年5月搭機人數>=100的所有航班資訊（航班代號、國籍、出發地、目的地、日期），依日期由近至遠排序。（5分）(d)新增TW籍BR777航班（Taipei飛Los Angeles，2020/07/01開放訂位），首位訂位客人（TW籍P000000007男性Mark Lee，尚不在Person表中）訂位16A，加入資料順序不可違反參照完整性。（5分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為109年高考三級（第一份試卷 第2題），經與goldensun線上題庫核對後，確認並非109年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "(a) DDL資料表定義"
+},
+{
+"type": "para",
+"text": "CREATE TABLE Person ("
+},
+{
+"type": "para",
+"text": "personID    CHAR(10) PRIMARY KEY,"
+},
+{
+"type": "para",
+"text": "name        VARCHAR(50),"
+},
+{
+"type": "para",
+"text": "nationality VARCHAR(20),"
+},
+{
+"type": "para",
+"text": "gender      CHAR(1)"
+},
+{
+"type": "para",
+"text": ");"
+},
+{
+"type": "para",
+"text": "CREATE TABLE Flight ("
+},
+{
+"type": "para",
+"text": "flightID     CHAR(10),"
+},
+{
+"type": "para",
+"text": "date         DATE,"
+},
+{
+"type": "para",
+"text": "flightNation VARCHAR(20),"
+},
+{
+"type": "para",
+"text": "takeoff      VARCHAR(50),"
+},
+{
+"type": "para",
+"text": "arrival      VARCHAR(50),"
+},
+{
+"type": "para",
+"text": "PRIMARY KEY (flightID, date)"
+},
+{
+"type": "para",
+"text": ");"
+},
+{
+"type": "para",
+"text": "CREATE TABLE TravelRecord ("
+},
+{
+"type": "para",
+"text": "personID CHAR(10),"
+},
+{
+"type": "para",
+"text": "flightID CHAR(10),"
+},
+{
+"type": "para",
+"text": "date     DATE,"
+},
+{
+"type": "para",
+"text": "seat     VARCHAR(5),"
+},
+{
+"type": "para",
+"text": "PRIMARY KEY (personID, flightID, date),"
+},
+{
+"type": "para",
+"text": "FOREIGN KEY (personID) REFERENCES Person(personID),"
+},
+{
+"type": "para",
+"text": "FOREIGN KEY (flightID, date) REFERENCES Flight(flightID, date)"
+},
+{
+"type": "para",
+"text": ");"
+},
+{
+"type": "para",
+"text": "(b) 2020年5月由New York出發，依國籍性別分類之搭機人數"
+},
+{
+"type": "para",
+"text": "SELECT p.nationality, p.gender, COUNT(*) AS passenger_count"
+},
+{
+"type": "para",
+"text": "FROM   TravelRecord tr"
+},
+{
+"type": "para",
+"text": "JOIN Flight f ON tr.flightID = f.flightID AND tr.date = f.date"
+},
+{
+"type": "para",
+"text": "JOIN Person p ON tr.personID = p.personID"
+},
+{
+"type": "para",
+"text": "WHERE  f.takeoff = 'New York, USA'"
+},
+{
+"type": "para",
+"text": "AND  f.date BETWEEN '2020-05-01' AND '2020-05-31'"
+},
+{
+"type": "para",
+"text": "GROUP BY p.nationality, p.gender;"
+},
+{
+"type": "para",
+"text": "(c) 2020年5月搭機人數>=100之航班（依日期由近至遠排序）"
+},
+{
+"type": "para",
+"text": "SELECT f.flightID, f.flightNation, f.takeoff, f.arrival, f.date"
+},
+{
+"type": "para",
+"text": "FROM   Flight f"
+},
+{
+"type": "para",
+"text": "JOIN TravelRecord tr ON f.flightID = tr.flightID AND f.date = tr.date"
+},
+{
+"type": "para",
+"text": "WHERE  f.date BETWEEN '2020-05-01' AND '2020-05-31'"
+},
+{
+"type": "para",
+"text": "GROUP BY f.flightID, f.flightNation, f.takeoff, f.arrival, f.date"
+},
+{
+"type": "para",
+"text": "HAVING COUNT(*) >= 100"
+},
+{
+"type": "para",
+"text": "ORDER BY f.date DESC;"
+},
+{
+"type": "para",
+"text": "(d) 新增航班、旅客、訂位資料（依參照完整性順序）"
+},
+{
+"type": "para",
+"text": "須依序先新增Flight，再新增Person，最後新增TravelRecord（因TravelRecord同時參照Person與Flight，兩者皆須先行存在）："
+},
+{
+"type": "para",
+"text": "INSERT INTO Flight (flightID, date, flightNation, takeoff, arrival)"
+},
+{
+"type": "para",
+"text": "VALUES ('BR777', '2020-07-01', 'TW', 'Taipei', 'Los Angeles');"
+},
+{
+"type": "para",
+"text": "INSERT INTO Person (personID, name, nationality, gender)"
+},
+{
+"type": "para",
+"text": "VALUES ('P000000007', 'Mark Lee', 'TW', 'M');"
+},
+{
+"type": "para",
+"text": "INSERT INTO TravelRecord (personID, flightID, date, seat)"
+},
+{
+"type": "para",
+"text": "VALUES ('P000000007', 'BR777', '2020-07-01', '16A');"
+}
+],
+"origin_year": "109",
+"orig_section": "第一份試卷",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "109",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 3,
+"qlabel": null,
+"stem": "請將下列專案工作指派表格資料，以符合BCNF的RDB資料表來表示，並將經BCNF正規化後的資料表，分別以json檔案格式來描述。原始資料欄位：ProjectID,ProjectName,Budget,EmployeeID,EmployeeName,Gender,Mobile,Email,StartDate,EndDate；資料列：(P001,Health Care,1000000,E001,Jacky Hsu,M,0911111111,...,12/1/2019,1/15/2020)、(P001,Health Care,1000000,E002,Lily Wu,F,0922222222,...,1/1/2020,6/30/2020)、(P002,Mask Management,200000,E001,Jacky Hsu,M,0911111111,...,1/1/2020,2/15/2020)、(P002,Mask Management,200000,E003,Cathy Su,F,0933333333,...,2/1/2020,6/30/2020)。（25分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為109年高考三級（第一份試卷 第3題），經與goldensun線上題庫核對後，確認並非109年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "原始題目附表之Email欄位內容於公開來源之文字重製版本中，因網頁郵件保護機制而未能取得實際文字內容，以下以示範性電子郵件格式呈現，不影響正規化分析與資料表結構設計之正確性。"
+},
+{
+"type": "para",
+"text": "BCNF正規化分析與分解"
+},
+{
+"type": "para",
+"text": "原始表格中存在之函數相依：ProjectID→{ProjectName, Budget}（每一專案有固定之名稱與預算）；EmployeeID→{EmployeeName, Gender, Mobile, Email}（每一員工有固定之個人資料）；(ProjectID, EmployeeID)→{StartDate, EndDate}（員工參與特定專案之起訖日期，為專案與員工多對多關係本身之屬性）。依此分解為三個符合BCNF之資料表："
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK）"
+],
+"rows": [
+[
+"PROJECT",
+"ProjectID (PK), ProjectName, Budget"
+],
+[
+"EMPLOYEE",
+"EmployeeID (PK), EmployeeName, Gender, Mobile, Email"
+],
+[
+"ASSIGNMENT",
+"ProjectID (FK→PROJECT) + EmployeeID (FK→EMPLOYEE)，複合PK：(ProjectID, EmployeeID), StartDate, EndDate"
+]
+]
+},
+{
+"type": "para",
+"text": "正規化後資料表內容"
+},
+{
+"type": "table",
+"header": [
+"ProjectID",
+"ProjectName",
+"Budget"
+],
+"rows": [
+[
+"P001",
+"Health Care",
+"1000000"
+],
+[
+"P002",
+"Mask Management",
+"200000"
+]
+]
+},
+{
+"type": "table",
+"header": [
+"EmployeeID",
+"EmployeeName",
+"Gender",
+"Mobile",
+"Email"
+],
+"rows": [
+[
+"E001",
+"Jacky Hsu",
+"M",
+"0911111111",
+"jacky.hsu@example.com"
+],
+[
+"E002",
+"Lily Wu",
+"F",
+"0922222222",
+"lily.wu@example.com"
+],
+[
+"E003",
+"Cathy Su",
+"F",
+"0933333333",
+"cathy.su@example.com"
+]
+]
+},
+{
+"type": "table",
+"header": [
+"ProjectID",
+"EmployeeID",
+"StartDate",
+"EndDate"
+],
+"rows": [
+[
+"P001",
+"E001",
+"12/1/2019",
+"1/15/2020"
+],
+[
+"P001",
+"E002",
+"1/1/2020",
+"6/30/2020"
+],
+[
+"P002",
+"E001",
+"1/1/2020",
+"2/15/2020"
+],
+[
+"P002",
+"E003",
+"2/1/2020",
+"6/30/2020"
+]
+]
+},
+{
+"type": "para",
+"text": "JSON格式描述"
+},
+{
+"type": "para",
+"text": "{"
+},
+{
+"type": "para",
+"text": "\"PROJECT\": ["
+},
+{
+"type": "para",
+"text": "{\"ProjectID\":\"P001\",\"ProjectName\":\"Health Care\",\"Budget\":1000000},"
+},
+{
+"type": "para",
+"text": "{\"ProjectID\":\"P002\",\"ProjectName\":\"Mask Management\",\"Budget\":200000}"
+},
+{
+"type": "para",
+"text": "],"
+},
+{
+"type": "para",
+"text": "\"EMPLOYEE\": ["
+},
+{
+"type": "para",
+"text": "{\"EmployeeID\":\"E001\",\"EmployeeName\":\"Jacky Hsu\",\"Gender\":\"M\","
+},
+{
+"type": "para",
+"text": "\"Mobile\":\"0911111111\",\"Email\":\"jacky.hsu@example.com\"},"
+},
+{
+"type": "para",
+"text": "{\"EmployeeID\":\"E002\",\"EmployeeName\":\"Lily Wu\",\"Gender\":\"F\","
+},
+{
+"type": "para",
+"text": "\"Mobile\":\"0922222222\",\"Email\":\"lily.wu@example.com\"},"
+},
+{
+"type": "para",
+"text": "{\"EmployeeID\":\"E003\",\"EmployeeName\":\"Cathy Su\",\"Gender\":\"F\","
+},
+{
+"type": "para",
+"text": "\"Mobile\":\"0933333333\",\"Email\":\"cathy.su@example.com\"}"
+},
+{
+"type": "para",
+"text": "],"
+},
+{
+"type": "para",
+"text": "\"ASSIGNMENT\": ["
+},
+{
+"type": "para",
+"text": "{\"ProjectID\":\"P001\",\"EmployeeID\":\"E001\",\"StartDate\":\"2019-12-01\",\"EndDate\":\"2020-01-15\"},"
+},
+{
+"type": "para",
+"text": "{\"ProjectID\":\"P001\",\"EmployeeID\":\"E002\",\"StartDate\":\"2020-01-01\",\"EndDate\":\"2020-06-30\"},"
+},
+{
+"type": "para",
+"text": "{\"ProjectID\":\"P002\",\"EmployeeID\":\"E001\",\"StartDate\":\"2020-01-01\",\"EndDate\":\"2020-02-15\"},"
+},
+{
+"type": "para",
+"text": "{\"ProjectID\":\"P002\",\"EmployeeID\":\"E003\",\"StartDate\":\"2020-02-01\",\"EndDate\":\"2020-06-30\"}"
+},
+{
+"type": "para",
+"text": "]"
+},
+{
+"type": "para",
+"text": "}"
+}
+],
+"origin_year": "109",
+"orig_section": "第一份試卷",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "109",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 4,
+"qlabel": null,
+"stem": "假設現有兩個transactions同步存取資料X,Y：T1（Begin, Read(Y), Read(X), Write(X), Write(Y), Commit）、T2（Begin, Read(X), Write(X), Commit）。請繪製表格說明不同時間標記點，如果讀寫動作被允許進行，系統對資料X,Y所記錄的R_TS及W_TS為何？如果讀寫動作不被允許進行，請說明原因及系統會作出的回應為何？（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為109年高考三級（第一份試卷 第4題），經與goldensun線上題庫核對後，確認並非109年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "時戳指派"
+},
+{
+"type": "para",
+"text": "依T1、T2開始執行（Begin）之先後順序指派時戳，T1先開始，故TS(T1)=1，TS(T2)=2。"
+},
+{
+"type": "para",
+"text": "時戳排序協定（Basic Timestamp Ordering Protocol）判定規則"
+},
+{
+"type": "para",
+"text": "Ti讀取資料項Q：若TS(Ti) < W_TS(Q)，表示已有時戳較晚（較新）之交易寫入過Q，Ti讀取將違反時序，故拒絕並回滾（Rollback）Ti；否則允許讀取，並更新R_TS(Q) = max(R_TS(Q), TS(Ti))。"
+},
+{
+"type": "para",
+"text": "Ti寫入資料項Q：若TS(Ti) < R_TS(Q) 或 TS(Ti) < W_TS(Q)，表示已有時戳較晚之交易讀取或寫入過Q，Ti寫入將違反時序，故拒絕並回滾Ti；否則允許寫入，並更新W_TS(Q) = TS(Ti)。"
+},
+{
+"type": "para",
+"text": "系統對違反規則之操作，其回應方式為：拒絕該操作、回滾（撤銷）該筆交易之所有已執行效果，並賦予該交易一個新的（較大的）時戳後重新啟動執行。"
+},
+{
+"type": "para",
+"text": "示範性交錯執行順序與R_TS/W_TS追蹤"
+},
+{
+"type": "para",
+"text": "假設初始R_TS(X)=W_TS(X)=R_TS(Y)=W_TS(Y)=0，並依下列示範性交錯順序執行（T1與T2各自內部操作順序保持題目所給定之順序）："
+},
+{
+"type": "table",
+"header": [
+"時間",
+"操作",
+"判定",
+"更新後R_TS/W_TS"
+],
+"rows": [
+[
+"1",
+"T2: Read(X)",
+"TS(T2)=2 ≥ W_TS(X)=0，允許",
+"R_TS(X)=max(0,2)=2"
+],
+[
+"2",
+"T1: Read(Y)",
+"TS(T1)=1 ≥ W_TS(Y)=0，允許",
+"R_TS(Y)=max(0,1)=1"
+],
+[
+"3",
+"T1: Read(X)",
+"TS(T1)=1 ≥ W_TS(X)=0，允許",
+"R_TS(X)=max(2,1)=2（不變）"
+],
+[
+"4",
+"T2: Write(X)",
+"TS(T2)=2 ≥ R_TS(X)=2 且 ≥ W_TS(X)=0，允許",
+"W_TS(X)=2"
+],
+[
+"5",
+"T1: Write(X)",
+"TS(T1)=1 < R_TS(X)=2，拒絕！",
+"T1遭回滾（Rollback），須賦予新時戳後重新啟動"
+]
+]
+},
+{
+"type": "para",
+"text": "於此示範中，T1嘗試於時間點5對X執行寫入時遭拒絕，原因為時戳較新之T2已於時間點1讀取過X（R_TS(X)已更新為2），若仍允許時戳較舊之T1寫入X，將違反「已被較新交易讀取之資料，不得再被較舊交易寫入」之時序規則（否則會使T2讀到之X值，在邏輯序列上晚於T1之寫入，破壞可序列性），故系統拒絕T1此次寫入操作，並將T1整筆回滾，賦予其一個新的、較大之時戳後重新執行。"
+}
+],
+"origin_year": "109",
+"orig_section": "第一份試卷",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "109",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 5,
+"qlabel": null,
+"stem": "在關聯式資料庫模型，何謂關聯代數（Relational Algebra）？為何需要關聯代數？何謂關聯完全（Relationally Complete）？又商業化的資料庫管理系統會用到的資料庫查詢語言是什麼？與關聯代數有何關係？資料庫處理器（Run-time Database Processor）如何處理此查詢語言？（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為109年高考三級（第一份試卷 第5題），經與goldensun線上題庫核對後，確認並非109年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "關聯代數之定義"
+},
+{
+"type": "para",
+"text": "關聯代數係一種程序式（Procedural）之形式化查詢語言，由一組運算子（如選擇σ、投影π、聯集∪、差集−、卡氏積×、連接⋈、更名ρ等）所構成，各運算子皆以關聯（表格）作為輸入，並產生另一關聯作為輸出，每一運算子皆具備嚴謹且基於集合論之形式化語意。"
+},
+{
+"type": "para",
+"text": "為何需要關聯代數"
+},
+{
+"type": "para",
+"text": "關聯代數為關聯式資料庫之查詢提供一套嚴謹、無歧義之數學理論基礎，得以精確描述查詢之意圖，作為SQL等實際查詢語言之理論根基；同時，關聯代數亦作為查詢最佳化之理論工具，透過比較語意等價但運算順序不同之代數運算式，資料庫系統得以評估並選出執行效率較佳之查詢計畫。"
+},
+{
+"type": "para",
+"text": "關聯完全（Relationally Complete）之定義"
+},
+{
+"type": "para",
+"text": "若某一查詢語言至少具備與基本關聯代數運算（選擇、投影、聯集、差集、卡氏積、更名）相同之表達能力，亦即該語言得以表達出所有得以透過關聯代數表達之查詢，則稱該查詢語言為「關聯完全」，此概念常作為評估一查詢語言是否具備足夠表達能力，得以被視為正式關聯式查詢語言之基準。"
+},
+{
+"type": "para",
+"text": "商業化資料庫管理系統所使用之查詢語言及其與關聯代數之關係"
+},
+{
+"type": "para",
+"text": "商業化關聯式資料庫管理系統普遍採用SQL（Structured Query Language）作為其資料庫查詢語言。SQL屬於宣告式（Declarative／Non-procedural）查詢語言，使用者僅需描述所欲取得資料之條件（What），無需描述取得資料之運算步驟（How），此與關聯代數之程序式特性有所不同；然而，SQL在表達能力上已達關聯完全（甚至因具備聚合函數、群組等功能而更為強大），且任何一句SQL查詢，理論上皆可轉換為一個語意等價之關聯代數運算式。"
+},
+{
+"type": "para",
+"text": "資料庫處理器如何處理此查詢語言"
+},
+{
+"type": "para",
+"text": "資料庫管理系統之查詢處理器，首先將使用者輸入之SQL查詢語句進行語法解析（Parsing），並將其轉換為內部之關聯代數運算式（或查詢樹／查詢圖）表示；接著查詢最佳化器（Query Optimizer）依據可用之索引、統計資訊及代數轉換規則，比較多種語意等價但運算順序不同之執行計畫，選出成本（如預估執行時間或資源消耗）最低之執行計畫；最終由執行期資料庫處理器（Run-time Database Processor）依據此選定之實體執行計畫，實際呼叫對應之存取方法（如索引掃描、循序掃描、各式連接演算法）執行運算，取得結果並回傳予使用者。"
+}
+],
+"origin_year": "109",
+"orig_section": "第一份試卷",
+"orig_qnum": 5
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "109",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 6,
+"qlabel": null,
+"stem": "線上分析處理（OLAP）為資料倉儲系統中主要的資料分析方式，其中包括向下鑽取（Drill Down）與向上鑽取（Drill Up）兩種運算。請分別針對這兩種OLAP運算，首先說明其運算方式，然後舉例說明其可能的應用方式。（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為109年高考三級（第二份試卷 第4題），經與goldensun線上題庫核對後，確認並非109年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "向下鑽取（Drill Down）"
+},
+{
+"type": "para",
+"text": "運算方式：將資料自維度階層中較高（較為彙總、概略）之層次，展開呈現至較低（較為細節）之層次，使分析者得以檢視更詳細之資料內容。"
+},
+{
+"type": "para",
+"text": "應用舉例：分析人員檢視某企業「年度」銷售總額後，欲進一步了解銷售狀況變化，可向下鑽取展開為各「季」之銷售金額，甚至進一步鑽取至各「月」乃至各「日」之銷售金額，藉以掌握更細緻之銷售趨勢變化。"
+},
+{
+"type": "para",
+"text": "向上鑽取（Drill Up，又稱Roll Up）"
+},
+{
+"type": "para",
+"text": "運算方式：與向下鑽取相反，將資料自維度階層中較低（較為細節）之層次，彙總聚合為較高（較為概略）之層次，呈現彙整後之摘要數據。"
+},
+{
+"type": "para",
+"text": "應用舉例：分析人員原本檢視各「城市」之銷售明細資料，欲了解整體區域表現，可向上鑽取彙總為各「縣市」之銷售總額，甚至進一步彙總為全國「地區」層級之總體銷售表現，藉以掌握宏觀層次之經營概況。"
+}
+],
+"origin_year": "109",
+"orig_section": "第二份試卷",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "110",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 1,
+"qlabel": null,
+"stem": "某一個連鎖商店要建置一個關聯式資料庫，請設計一個資料庫綱要以滿足下列資料需求：商店（SID,Name,City，SID唯一）；顧客（CID,Name,Gender,Address,若干個電話號碼Phone，CID唯一）；交易（記錄CID,SID,交易日期時間Time,金額Amount，由CID+SID+Time唯一識別）。（30分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為110年高考三級（第一份試卷 第1題），經與goldensun線上題庫核對後，確認並非110年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK）",
+"說明"
+],
+"rows": [
+[
+"STORE",
+"SID (PK), Name, City",
+"商店資料"
+],
+[
+"CUSTOMER",
+"CID (PK), Name, Gender, Address",
+"顧客資料（電話為多重值屬性，另立資料表）"
+],
+[
+"CUSTOMER_PHONE",
+"CID (FK→CUSTOMER) + Phone，複合PK：(CID, Phone)",
+"顧客電話號碼，一位顧客可有多筆電話"
+],
+[
+"TRANSACTION",
+"CID (FK→CUSTOMER) + SID (FK→STORE) + Time，複合PK：(CID, SID, Time), Amount",
+"交易紀錄，依題目要求以CID+SID+Time唯一識別"
+]
+]
+}
+],
+"origin_year": "110",
+"orig_section": "第一份試卷",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "110",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 2,
+"qlabel": null,
+"stem": "請定義資料庫管理系統的四個基本名詞：資料庫（Database）、資料（Data）、資訊（Information）、詮釋資料（Metadata）。（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為110年高考三級（第一份試卷 第2題），經與goldensun線上題庫核對後，確認並非110年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "資料庫（Database）：一個經過組織、整合之相關資料集合，通常反映現實世界中某一範疇之情況，並依適當結構儲存於電腦系統中，供多個使用者或應用程式共享存取，由資料庫管理系統統一管理其儲存、查詢與更新。"
+},
+{
+"type": "para",
+"text": "資料（Data）：未經處理之原始事實、數值或符號，本身不具備脈絡意義。"
+},
+{
+"type": "para",
+"text": "資訊（Information）：資料經處理、組織、彙整後所產生，具備脈絡與意義、可供決策參考之內容。"
+},
+{
+"type": "para",
+"text": "詮釋資料（Metadata）：「描述資料的資料」，用以描述資料庫中資料之結構、格式、型態、來源等屬性資訊（如綱要定義），本身並非業務資料。"
+}
+],
+"origin_year": "110",
+"orig_section": "第一份試卷",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "110",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 3,
+"qlabel": null,
+"stem": "T(A, B, C, D, E, F, G)是一個關聯式資料庫表格的綱要，（A, E）為組合主鍵，同時也是唯一候選鍵。功能相依：A→{B,C,D}、C→D、E→F、(A,E)→G。(a)請問表格T符合第幾正規型式？請說明理由。（10分）(b)表格T應正規化到第幾正規型式才適當？請正規化，寫出每一個表格的綱要，包括名稱、屬性、主鍵及外來鍵。（15分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為110年高考三級（第一份試卷 第3題），經與goldensun線上題庫核對後，確認並非110年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "(a) 正規化程度判定"
+},
+{
+"type": "para",
+"text": "候選鍵為(A,E)，質數屬性為A、E，非質數屬性為B、C、D、F、G。檢驗2NF：A→{B,C,D}中，A僅為候選鍵(A,E)之真子集合，卻決定了非質數屬性B、C、D，構成部分相依，違反2NF；同理，E→F中，E亦僅為候選鍵之真子集合，卻決定了非質數屬性F，同樣構成部分相依，違反2NF。故表格T僅符合第一正規型式（1NF），不符合2NF（因存在多組部分相依）。"
+},
+{
+"type": "para",
+"text": "(b) 正規化至BCNF"
+},
+{
+"type": "para",
+"text": "依3NF／BCNF合成演算法，先求出最小相依集（Minimal Cover）：由A→{B,C,D}與C→D可知A→D可由A→C及C→D遞移推得，故A→D為冗餘，最小相依集為：A→B、A→C、C→D、E→F、(A,E)→G。依此建立各關聯並合併具相同決定者之關聯（A→B與A→C因決定者同為A而合併）："
+},
+{
+"type": "table",
+"header": [
+"分解後資料表",
+"屬性",
+"主鍵／外來鍵"
+],
+"rows": [
+[
+"R1",
+"A, B, C",
+"PK：A"
+],
+[
+"R2",
+"C, D",
+"PK：C；FK：C 參照 R1(C)"
+],
+[
+"R3",
+"E, F",
+"PK：E"
+],
+[
+"R4",
+"A, E, G",
+"PK：(A, E)；FK：A 參照 R1(A)；FK：E 參照 R3(E)"
+]
+]
+},
+{
+"type": "para",
+"text": "驗證各表均達BCNF：R1(A,B,C)中僅A→{B,C}成立，A為候選鍵（超鍵），符合BCNF；R2(C,D)中C→D成立，C為候選鍵，符合BCNF；R3(E,F)中E→F成立，E為候選鍵，符合BCNF；R4(A,E,G)中(A,E)→G成立，(A,E)為候選鍵，符合BCNF。且R4完整保留原表之候選鍵(A,E)，依分解演算法之理論保證此分解具備侵損連接性，並保留原表之全部函數相依，故表格T應正規化至BCNF，且此分解已達成該要求。"
+}
+],
+"origin_year": "110",
+"orig_section": "第一份試卷",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "110",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 4,
+"qlabel": null,
+"stem": "資料倉儲設計最常使用多維度資料模型，是以星狀綱要、雪花狀綱要或事實星座綱要的形式存在，請先分別說明此三種綱要，然後比較星狀綱要與雪花狀綱要之優缺點。（25分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為110年高考三級（第一份試卷 第4題），經與goldensun線上題庫核對後，確認並非110年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "table",
+"header": [
+"綱要類型",
+"說明"
+],
+"rows": [
+[
+"星狀綱要\n（Star Schema）",
+"以單一事實表為中心，直接連結至多個未正規化之維度表，整體結構因事實表居中、維度表向外輻射而形似星形。"
+],
+[
+"雪花狀綱要\n（Snowflake Schema）",
+"星狀綱要之延伸，維度表進一步正規化拆解為多層子維度表，整體結構因多層次維度表延伸而形似雪花。"
+],
+[
+"事實星座綱要\n（Fact Constellation Schema）",
+"由多個事實表共享部分相同維度表所構成之複合結構，適用於企業存在多項業務流程且各流程分析需共用部分維度之情境。"
+]
+]
+},
+{
+"type": "para",
+"text": "星狀綱要與雪花狀綱要之優缺點比較"
+},
+{
+"type": "table",
+"header": [
+"",
+"星狀綱要（Star）",
+"雪花狀綱要（Snowflake）"
+],
+"rows": [
+[
+"優點",
+"結構單純、join層次少，查詢效能較佳，使用者易於理解與撰寫查詢",
+"維度表經正規化，資料重複度低，節省儲存空間，維度資料一致性與維護性較佳"
+],
+[
+"缺點",
+"維度表未正規化，可能存在資料重複，維護維度資料時較易發生更新異常",
+"維度表拆分為多層子表，查詢時須經過更多join層次，查詢效能通常較星狀綱要低"
+]
+]
+}
+],
+"origin_year": "110",
+"orig_section": "第一份試卷",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "110",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 5,
+"qlabel": null,
+"stem": "資料庫領域有許多專門術語，請敘述下列術語之意涵：(a)參與限制（Participation Constraint）（4分）(b)基數限制（Cardinality Constraint）（4分）(c)View（4分）(d)外來鍵（Foreign Key）（4分）(e)叢集索引（Clustered Index）（4分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為110年高考三級（第一份試卷 第5題），經與goldensun線上題庫核對後，確認並非110年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "(a) 參與限制（Participation Constraint）：規範某一實體集合中之每一個實例，是否必須參與某一特定關係，分為「全體參與」（Total Participation，每一實例皆必須參與該關係）與「部分參與」（Partial Participation，允許部分實例不參與該關係），決定關係之最小基數（0或1）。"
+},
+{
+"type": "para",
+"text": "(b) 基數限制（Cardinality Constraint）：規範某一實體於特定關係中，最多可與另一實體之多少個實例產生關聯，常見類型有一對一（1:1）、一對多（1:N）及多對多（M:N），用以決定關係之最大基數。"
+},
+{
+"type": "para",
+"text": "(c) View：一種虛擬表格，其內容並非實際獨立儲存於資料庫中，而係由預先定義之查詢語句，於使用者存取時動態運算自一個或多個基底表格所產生，用以提供使用者特定、經篩選或彙整過之資料呈現方式，亦可作為存取控制之手段。"
+},
+{
+"type": "para",
+"text": "(d) 外來鍵（Foreign Key）：某一關聯表格中之屬性或屬性組合，其值須參照（等於）另一（或同一）關聯表格之主鍵值，用以在關聯表格間建立參照完整性（Referential Integrity）約束，確保跨表格資料之一致性。"
+},
+{
+"type": "para",
+"text": "(e) 叢集索引（Clustered Index）：一種依索引鍵值排序，決定資料表中資料列實際實體儲存順序之索引，亦即資料列本身即依此索引鍵值之順序排列儲存；由於資料實際儲存順序僅能有一種，故一個資料表至多僅能建立一個叢集索引。"
+}
+],
+"origin_year": "110",
+"orig_section": "第一份試卷",
+"orig_qnum": 5
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "110",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 6,
+"qlabel": null,
+"stem": "請試述下列名詞之意涵：(a)Replication independence in a distributed database system（5分）(b)B+-tree（5分）(c)Entity integrity rule（5分）(d)Boyce-Codd Normal Form（BCNF）（5分）(e)NoSQL（5分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為110年高考三級（第二份試卷 第1題），經與goldensun線上題庫核對後，確認並非110年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "(a) 分散式資料庫之複製獨立性（Replication Independence）：屬透明度之一種，係指使用者或應用程式存取資料時，無需知悉該筆資料是否於分散式系統之多個站台存在複本，亦無需自行處理各複本間之一致性維護，此類作業由資料庫管理系統自動透明地完成，使用者僅需以邏輯方式存取資料，猶如僅存在單一複本。"
+},
+{
+"type": "para",
+"text": "(b) B+樹（B+-tree）：一種平衡多路搜尋樹結構，其內部節點僅儲存導引搜尋用之鍵值與子節點指標，實際資料紀錄之指標則集中儲存於葉節點層，且所有葉節點依序以指標相互鏈結成串列，所有葉節點深度相同（高度平衡），常用作資料庫索引結構，兼顧等值查詢與範圍查詢之效能。"
+},
+{
+"type": "para",
+"text": "(c) 實體完整性規則（Entity Integrity Rule）：關聯式資料模型中之基本完整性規則，規定基底關聯表格之主鍵（含組成主鍵之任一屬性）不得為空值（NULL），以確保每一筆資料列均可被主鍵唯一識別，避免資料庫中存在無法識別之資料紀錄。"
+},
+{
+"type": "para",
+"text": "(d) Boyce-Codd正規型式（BCNF）：正規化理論中較3NF更嚴格之正規化程度，要求關聯表格中每一個非顯然（Non-trivial）函數相依X→Y，其決定者X必須為該表格之超鍵（Superkey），不允許3NF中「被決定屬性為質數屬性」之例外情形，藉以徹底消除因決定者非超鍵所導致之資料異常。"
+},
+{
+"type": "para",
+"text": "(e) NoSQL：泛指一類不採用傳統關聯式資料庫固定綱要與表格結構之資料庫管理系統，設計目標在於因應巨量、半結構化或非結構化資料，並提供高度水平擴展性與綱要彈性，常見類型包括文件資料庫、鍵值資料庫、欄族資料庫及圖形資料庫等。"
+}
+],
+"origin_year": "110",
+"orig_section": "第二份試卷",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "110",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 7,
+"qlabel": null,
+"stem": "假設某投資公司資料庫R=(B, O, I, S, Q, D)，其中B-Broker, O-Office of a broker, I-Investor, S-Stock, Q-Quantity of stock owned by an investor, D-dividend paid by a stock，functional dependency為I→B, IS→Q, B→O, S→D。(a)列舉所有R的candidate keys。（5分）(b)寫出一個lossless-join分解使R分解後滿足BCNF。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為110年高考三級（第二份試卷 第2題），經與goldensun線上題庫核對後，確認並非110年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "(a) 候選鍵之求解"
+},
+{
+"type": "para",
+"text": "觀察屬性I與S：兩者皆未出現於任何函數相依之右側（即不存在其他屬性可決定I或S），故I與S必然為每一候選鍵之組成部分。計算{I,S}之閉包：{I,S} → 依I→B得{I,S,B} → 依IS→Q得{I,S,B,Q} → 依B→O得{I,S,B,Q,O} → 依S→D得{I,S,B,Q,O,D}＝R之全部屬性，故{I,S}為超鍵；又I之閉包僅為{I,B,O}、S之閉包僅為{S,D}，均未涵蓋全部屬性，故{I,S}已達最小，{I,S}為唯一之候選鍵。"
+},
+{
+"type": "para",
+"text": "(b) BCNF之侵損連接分解"
+},
+{
+"type": "para",
+"text": "逐一檢驗各函數相依之決定者是否為超鍵{I,S}：I→B（I非超鍵，違反BCNF）、B→O（B非超鍵，違反BCNF）、S→D（S非超鍵，違反BCNF）、IS→Q（IS為超鍵，不違反）。依序分解："
+},
+{
+"type": "para",
+"text": "先依I→B分解：R1＝I之閉包（限於R之屬性）＝{I,B,O}；R2＝R−{B,O}＝{I,S,Q,D}。續檢R1(I,B,O)：其中B→O，B非R1之超鍵（B之閉包限於{B,O}），故R1仍違反BCNF，須再分解為R1a(I,B)（鍵I）與R1b(B,O)（鍵B）。續檢R2(I,S,Q,D)：其中S→D，S非R2之超鍵（S之閉包限於{S,D}），故R2仍違反BCNF，須再分解為R2a(I,S,Q)（鍵I,S）與R2b(S,D)（鍵S）。"
+},
+{
+"type": "table",
+"header": [
+"分解後資料表",
+"屬性",
+"主鍵／外來鍵"
+],
+"rows": [
+[
+"INVESTOR_BROKER",
+"I, B",
+"PK：I；FK：B 參照 BROKER_OFFICE(B)"
+],
+[
+"BROKER_OFFICE",
+"B, O",
+"PK：B"
+],
+[
+"HOLDING",
+"I, S, Q",
+"PK：(I, S)；FK：I 參照 INVESTOR_BROKER(I)；FK：S 參照 STOCK_DIVIDEND(S)"
+],
+[
+"STOCK_DIVIDEND",
+"S, D",
+"PK：S"
+]
+]
+},
+{
+"type": "para",
+"text": "驗證：INVESTOR_BROKER(I,B)中I→B成立，I為候選鍵，符合BCNF；BROKER_OFFICE(B,O)中B→O成立，B為候選鍵，符合BCNF；HOLDING(I,S,Q)中僅(I,S)→Q成立，(I,S)為候選鍵，符合BCNF；STOCK_DIVIDEND(S,D)中S→D成立，S為候選鍵，符合BCNF。四表聯集屬性為{I,B,O,S,Q,D}＝R，且每次分解之公共屬性均為分解後一方之鍵，依BCNF分解演算法之理論保證，此分解具備侵損連接性（Lossless-join）。"
+}
+],
+"origin_year": "110",
+"orig_section": "第二份試卷",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "110",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 8,
+"qlabel": null,
+"stem": "請解釋何謂SQL injection以及要如何預防？（10分）常見的SQL injection攻擊手法為「略過權限檢查」與「注入SQL子語法」等，請寫出一段有SQL injection漏洞的網頁程式碼以及可能的SQL injection攻擊寫法。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為110年高考三級（第二份試卷 第3題），經與goldensun線上題庫核對後，確認並非110年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "SQL injection之定義"
+},
+{
+"type": "para",
+"text": "SQL injection（SQL注入）係指攻擊者於網頁應用程式之輸入欄位（如登入表單），刻意輸入夾帶惡意SQL語法片段之內容；若該應用程式係以字串拼接方式，直接將使用者輸入內容組合進SQL查詢語句中，而未進行適當之過濾或參數化處理，將導致資料庫實際執行攻擊者所注入之SQL指令，可能造成略過身分驗證、未經授權之資料存取、資料竄改或刪除等嚴重資安後果。"
+},
+{
+"type": "para",
+"text": "預防方式"
+},
+{
+"type": "para",
+"text": "採用參數化查詢（Parameterized Query）／預備陳述式（Prepared Statement）：將使用者輸入內容以綁定變數方式傳遞給資料庫，而非直接拼接於SQL字串中，使輸入內容僅被視為資料值，不會被解讀為可執行之SQL語法。"
+},
+{
+"type": "para",
+"text": "對所有使用者輸入進行嚴格之驗證與過濾（如白名單驗證），拒絕不符合預期格式之輸入內容。"
+},
+{
+"type": "para",
+"text": "資料庫連線帳號依最小權限原則設定，避免應用程式所使用之資料庫帳號具備過高權限。"
+},
+{
+"type": "para",
+"text": "部署Web應用防火牆（WAF），過濾具備已知SQL注入特徵之惡意請求。"
+},
+{
+"type": "para",
+"text": "含SQL injection漏洞之範例程式碼（以字串拼接方式撰寫）"
+},
+{
+"type": "para",
+"text": "$username = $_POST[\"username\"];"
+},
+{
+"type": "para",
+"text": "$password = $_POST[\"password\"];"
+},
+{
+"type": "para",
+"text": "$query = \"SELECT * FROM users WHERE username = '\" . $username ."
+},
+{
+"type": "para",
+"text": "\"' AND password = '\" . $password . \"'\";"
+},
+{
+"type": "para",
+"text": "$result = mysqli_query($conn, $query);"
+},
+{
+"type": "para",
+"text": "可能之攻擊寫法"
+},
+{
+"type": "para",
+"text": "略過權限檢查（利用SQL註解字元 -- 截斷後續密碼檢查條件）：於username欄位輸入 admin'-- ，密碼欄位任意輸入，此時實際組成之SQL語句為："
+},
+{
+"type": "para",
+"text": "SELECT * FROM users WHERE username = 'admin'-- ' AND password = '任意值';"
+},
+{
+"type": "para",
+"text": "由於「--」在SQL中代表註解，其後內容（含密碼比對條件）將被忽略，實際執行之查詢等同於SELECT * FROM users WHERE username = 'admin'，攻擊者無需知曉正確密碼，即可以admin身分登入。"
+},
+{
+"type": "para",
+"text": "注入SQL子語法（利用永真條件 OR '1'='1'）：於username欄位輸入 ' OR '1'='1 ，使組成之SQL語句條件恆為真："
+},
+{
+"type": "para",
+"text": "SELECT * FROM users WHERE username = '' OR '1'='1' AND password = '...';"
+},
+{
+"type": "para",
+"text": "由於'1'='1'恆為真，可能使此查詢繞過原先預期之帳號密碼驗證邏輯，回傳不應被授權存取之資料列。"
+}
+],
+"origin_year": "110",
+"orig_section": "第二份試卷",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "110",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 9,
+"qlabel": null,
+"stem": "根據關聯資料表架構：student(SID,Sname,Sage,Ssex)、course(CID,Cname,TID)、teacher(TID,Tname)、score(SID,CID,sc)，寫出以下SQL查詢：(a)查詢學生名字中含有「Alan」的男學生人數。（5分）(b)查詢Alan修過的課中，那門課只由一位老師開課的課程名稱。（5分）(c)查詢修過課程所有成績之平均成績大於等於60分的同學的學生編號、姓名和平均成績。（10分）(d)查詢學過編號'01'但沒有學過編號'02'課程的同學編號與其修'01'課的分數。（10分）(e)查詢沒有學過全部課程的同學的編號。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為110年高考三級（第二份試卷 第4題），經與goldensun線上題庫核對後，確認並非110年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "(a) 名字含「Alan」之男學生人數"
+},
+{
+"type": "para",
+"text": "SELECT COUNT(*) AS cnt"
+},
+{
+"type": "para",
+"text": "FROM   student"
+},
+{
+"type": "para",
+"text": "WHERE  Sname LIKE '%Alan%' AND Ssex = 'M';"
+},
+{
+"type": "para",
+"text": "(b) Alan修過之課中，僅由一位老師開課者之課程名稱"
+},
+{
+"type": "para",
+"text": "SELECT c.Cname"
+},
+{
+"type": "para",
+"text": "FROM   course c"
+},
+{
+"type": "para",
+"text": "JOIN score sc ON c.CID = sc.CID"
+},
+{
+"type": "para",
+"text": "JOIN student s ON sc.SID = s.SID"
+},
+{
+"type": "para",
+"text": "WHERE  s.Sname = 'Alan'"
+},
+{
+"type": "para",
+"text": "AND  c.CID IN ("
+},
+{
+"type": "para",
+"text": "SELECT CID FROM course"
+},
+{
+"type": "para",
+"text": "GROUP BY CID"
+},
+{
+"type": "para",
+"text": "HAVING COUNT(DISTINCT TID) = 1);"
+},
+{
+"type": "para",
+"text": "(c) 平均成績>=60之學生編號、姓名、平均成績"
+},
+{
+"type": "para",
+"text": "SELECT s.SID, s.Sname, AVG(sc.sc) AS avg_score"
+},
+{
+"type": "para",
+"text": "FROM   student s"
+},
+{
+"type": "para",
+"text": "JOIN score sc ON s.SID = sc.SID"
+},
+{
+"type": "para",
+"text": "GROUP BY s.SID, s.Sname"
+},
+{
+"type": "para",
+"text": "HAVING AVG(sc.sc) >= 60;"
+},
+{
+"type": "para",
+"text": "(d) 學過'01'但未學過'02'之學生編號與'01'課分數"
+},
+{
+"type": "para",
+"text": "SELECT sc1.SID, sc1.sc"
+},
+{
+"type": "para",
+"text": "FROM   score sc1"
+},
+{
+"type": "para",
+"text": "WHERE  sc1.CID = '01'"
+},
+{
+"type": "para",
+"text": "AND  sc1.SID NOT IN ("
+},
+{
+"type": "para",
+"text": "SELECT SID FROM score WHERE CID = '02');"
+},
+{
+"type": "para",
+"text": "(e) 未學過全部課程之學生編號"
+},
+{
+"type": "para",
+"text": "以下提供兩種等價寫法：計數比較法（較直觀）與雙重NOT EXISTS關聯除法（Relational Division，教科書標準寫法）。"
+},
+{
+"type": "para",
+"text": "-- 寫法一：計數比較法"
+},
+{
+"type": "para",
+"text": "SELECT s.SID"
+},
+{
+"type": "para",
+"text": "FROM   student s"
+},
+{
+"type": "para",
+"text": "WHERE  (SELECT COUNT(DISTINCT sc.CID) FROM score sc"
+},
+{
+"type": "para",
+"text": "WHERE sc.SID = s.SID)"
+},
+{
+"type": "para",
+"text": "< (SELECT COUNT(*) FROM course);"
+},
+{
+"type": "para",
+"text": "-- 寫法二：雙重NOT EXISTS（關聯除法）"
+},
+{
+"type": "para",
+"text": "SELECT s.SID"
+},
+{
+"type": "para",
+"text": "FROM   student s"
+},
+{
+"type": "para",
+"text": "WHERE  EXISTS ("
+},
+{
+"type": "para",
+"text": "SELECT 1 FROM course c"
+},
+{
+"type": "para",
+"text": "WHERE NOT EXISTS ("
+},
+{
+"type": "para",
+"text": "SELECT 1 FROM score sc"
+},
+{
+"type": "para",
+"text": "WHERE sc.SID = s.SID AND sc.CID = c.CID));"
+}
+],
+"origin_year": "110",
+"orig_section": "第二份試卷",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "111",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 1,
+"qlabel": null,
+"stem": "某圖書館關聯式資料庫系統包含MEMBER(Mid, Name, Telephone)、BOOK(ISBN, Title, Publisher)、BORROWER(Mid, ISBN, Date)三表格。請利用SQL查詢指令回答：(a)找出曾經借閱過「全華」出版社出版書籍的會員，列出會員編號、姓名和聯絡電話。（10分）(b)針對每個出版社，找出曾經借閱過3本以上（含）該出版社書籍的會員，輸出出版社和會員編號。（10分）(c)定義一個名為TimeBookCount的檢視表，輸出每個會員借閱「時報」出版社書籍的總數，屬性命名為Mid與BookCount。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為111年高考三級（第一份試卷 第1題），經與goldensun線上題庫核對後，確認並非111年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "(a) 曾借閱「全華」出版社書籍之會員"
+},
+{
+"type": "para",
+"text": "SELECT DISTINCT m.Mid, m.Name, m.Telephone"
+},
+{
+"type": "para",
+"text": "FROM   MEMBER m"
+},
+{
+"type": "para",
+"text": "JOIN BORROWER br ON m.Mid = br.Mid"
+},
+{
+"type": "para",
+"text": "JOIN BOOK b ON br.ISBN = b.ISBN"
+},
+{
+"type": "para",
+"text": "WHERE  b.Publisher = '全華';"
+},
+{
+"type": "para",
+"text": "(b) 各出版社中借閱該社書籍達3本以上（含）之會員"
+},
+{
+"type": "para",
+"text": "說明：「3本以上的書籍」解讀為相異書籍（ISBN）數量達3本以上，故以COUNT(DISTINCT ISBN)計算，避免同一本書借閱多次被重複計入。"
+},
+{
+"type": "para",
+"text": "SELECT b.Publisher, br.Mid"
+},
+{
+"type": "para",
+"text": "FROM   BORROWER br"
+},
+{
+"type": "para",
+"text": "JOIN BOOK b ON br.ISBN = b.ISBN"
+},
+{
+"type": "para",
+"text": "GROUP BY b.Publisher, br.Mid"
+},
+{
+"type": "para",
+"text": "HAVING COUNT(DISTINCT br.ISBN) >= 3;"
+},
+{
+"type": "para",
+"text": "(c) TimeBookCount檢視表"
+},
+{
+"type": "para",
+"text": "說明：此處「借閱總數」解讀為借閱紀錄之總次數（含重複借閱同一本書之情形），故以COUNT(*)計算，與(b)小題「相異書籍數」之計算方式有意區別。"
+},
+{
+"type": "para",
+"text": "CREATE VIEW TimeBookCount (Mid, BookCount) AS"
+},
+{
+"type": "para",
+"text": "SELECT br.Mid, COUNT(*) AS BookCount"
+},
+{
+"type": "para",
+"text": "FROM   BORROWER br"
+},
+{
+"type": "para",
+"text": "JOIN BOOK b ON br.ISBN = b.ISBN"
+},
+{
+"type": "para",
+"text": "WHERE  b.Publisher = '時報'"
+},
+{
+"type": "para",
+"text": "GROUP BY br.Mid;"
+}
+],
+"origin_year": "111",
+"orig_section": "第一份試卷",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "111",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 2,
+"qlabel": null,
+"stem": "假設在關聯式資料庫系統中，DBA定義了一個MEMBER表格（Mid, Name, Telephone皆為字串型態），並根據Mid欄位定義一個名為「MyIndex」的B+-tree索引。請說明「MyIndex」索引的樹狀結構，包含其內部節點、葉節點、結構的特性等（答案請以文字敘述或圖形呈現）。其次請說明資料庫系統如何利用該索引結構，提升下列SQL查詢句的處理效能：select Name from MEMBER where Mid = 'M001'（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為111年高考三級（第一份試卷 第2題），經與goldensun線上題庫核對後，確認並非111年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "B+樹索引結構說明"
+},
+{
+"type": "para",
+"text": "[ 內部節點：鍵值(分隔用) + 子節點指標 ]"
+},
+{
+"type": "para",
+"text": "/        |        \\"
+},
+{
+"type": "para",
+"text": "[內部節點]   [內部節點]   [內部節點]"
+},
+{
+"type": "para",
+"text": "/    \\        ...          ..."
+},
+{
+"type": "para",
+"text": "[葉節點]<-->[葉節點]<-->[葉節點]<-->[葉節點]  （葉節點間以指標相互鏈結）"
+},
+{
+"type": "para",
+"text": "(Mid值,資料指標)  (Mid值,資料指標) ..."
+},
+{
+"type": "para",
+"text": "內部節點（Internal Node）：僅儲存作為搜尋導引用之鍵值（分隔鍵）與指向子節點之指標，並不儲存實際資料紀錄本身；若一內部節點具有n個子節點指標，則恰含n-1個鍵值，用以判斷搜尋鍵應導向哪一個子節點。"
+},
+{
+"type": "para",
+"text": "葉節點（Leaf Node）：儲存實際之Mid鍵值，並附帶指向對應資料紀錄（該筆會員完整資料所在位置）之指標；此外，所有葉節點依鍵值大小順序，透過額外之鏈結指標相互串接成一個有序之鏈結串列，以支援範圍查詢時得以循序掃描葉節點而無需重新由樹根搜尋。"
+},
+{
+"type": "para",
+"text": "結構特性：B+樹為一種平衡多路搜尋樹，所有葉節點皆位於相同深度（高度平衡），每個節點（除樹根外）之子節點數目均落於[⌈m/2⌉, m]範圍內（m為樹的階數），此設計確保搜尋、插入、刪除等操作之時間複雜度均為O(log N)，且因應磁碟區塊大小設計節點容量，可大幅降低查詢所需之磁碟I/O存取次數。"
+},
+{
+"type": "para",
+"text": "如何提升查詢效能"
+},
+{
+"type": "para",
+"text": "執行 select Name from MEMBER where Mid = 'M001' 時，資料庫系統得以透過MyIndex索引，自樹根節點開始，於每一內部節點比對搜尋鍵值'M001'與節點中之分隔鍵，依比對結果選擇對應之子節點指標繼續向下搜尋，如此逐層下降，僅需經過與樹高度成正比（約為log_m(N)，N為資料筆數、m為樹的階數）之少數幾次節點存取，即可抵達葉節點層並精確定位到Mid='M001'該筆資料之實際儲存位置指標，再依該指標直接讀取對應資料紀錄取出Name值；相較於未建立索引時，資料庫系統須對MEMBER表格進行全表掃描（Full Table Scan，時間複雜度為O(N)，逐筆比對Mid是否等於'M001'），透過B+樹索引搜尋所需之存取次數大幅減少，故能顯著提升此類等值查詢（Equality Query）之處理效能。"
+}
+],
+"origin_year": "111",
+"orig_section": "第一份試卷",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "111",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 3,
+"qlabel": null,
+"stem": "關聯式資料庫系統在實作異動處理（Transaction Processing）時，大多希望能符合ACID四個特性以確保資料庫內容的正確性。假設一個異動欲從P帳戶轉1000元到Q帳戶，包含六個指令：1.read(P) 2.P:=P-1000 3.write(P) 4.read(Q) 5.Q:=Q+1000 6.write(Q)。請以該異動具體說明ACID所代表的四個要求分別為何？若沒有達到該要求會造成什麼不良的影響？（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為111年高考三級（第一份試卷 第3題），經與goldensun線上題庫核對後，確認並非111年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "table",
+"header": [
+"特性",
+"以本異動具體說明之要求",
+"未達成時之不良影響"
+],
+"rows": [
+[
+"原子性\n（Atomicity）",
+"上述六個指令須視為一個不可分割之整體，要嘛全部執行完成（P扣款且Q入帳皆完成），要嘛完全不執行（P、Q皆維持原狀），不允許僅完成部分指令。",
+"若系統於執行完步驟3（P已扣款1000並寫回）後、尚未執行步驟6（Q尚未入帳）前發生當機，將導致P帳戶已減少1000元，但Q帳戶卻未收到該筆款項，造成資金憑空消失之嚴重錯誤。"
+],
+[
+"一致性\n（Consistency）",
+"異動執行前後，資料庫必須由一個合法一致之狀態，轉換至另一個合法一致之狀態，例如P與Q兩帳戶之總金額於轉帳前後應維持不變，且不應違反任何完整性限制（如餘額不得為負）。",
+"若異動執行後導致P與Q之總金額與轉帳前不符，或允許P帳戶餘額變為負值而違反銀行不得透支之業務規則，將造成帳務數字兜不攏、違反既定商業規則等資料不一致問題。"
+],
+[
+"隔離性\n（Isolation）",
+"本異動在尚未提交（Commit）完成前，其執行過程中之中間狀態不應被其他並行執行之異動看見，即多個異動並行執行之結果，應等同於依某種循序方式依序執行之結果。",
+"若另一並行異動於本異動執行完步驟3（P已扣款）但尚未執行步驟6（Q尚未入帳）之時間點，讀取到P、Q之當前餘額（即讀取到「未提交」之中間狀態，發生髒讀Dirty Read），該並行異動可能因誤信此不一致之中間數據而做出錯誤之後續處理。"
+],
+[
+"持久性\n（Durability）",
+"一旦本異動完成六個步驟並成功提交，P與Q帳戶之變更結果即必須永久保存於資料庫中，即使其後系統發生當機或斷電等故障，該項變更結果亦不應遺失。",
+"若異動提交後，系統向使用者確認轉帳成功，但實際變更尚未確實寫入永久性儲存媒介前即發生系統當機，導致復原後P、Q帳戶變更遺失，將形成系統已對外承諾成功、但實際資料卻未持久保存之嚴重不一致情形，使用者權益因而受損。"
+]
+]
+}
+],
+"origin_year": "111",
+"orig_section": "第一份試卷",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "111",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 4,
+"qlabel": null,
+"stem": "假設我們要建立書籍的資料，其中書籍的編號（No）和書名（Title）為字串型態，而作者（Authors）則為數個字串組合而成的陣列，且每本書籍的編號皆不與其他書籍相同。請針對此資料特性，首先設計出符合第一正規化（1NF）的關聯式表格，標註欄位名稱與主鍵，並對應範例資料。其次，將上述表格內容以一個集合（collection）內含兩個JSON文件表示，一本書籍對應一個JSON文件。最後，詳述結構化關聯式資料和半結構化JSON資料表示法的差異性。（30分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為111年高考三級（第一份試卷 第4題），經與goldensun線上題庫核對後，確認並非111年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "符合1NF之關聯式表格設計"
+},
+{
+"type": "para",
+"text": "由於Authors為多重值屬性（一本書可對應多位作者），若直接置於單一欄位將違反1NF，故須將作者資訊拆分至獨立表格："
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（主鍵）"
+],
+"rows": [
+[
+"BOOK",
+"No (PK), Title"
+],
+[
+"BOOK_AUTHOR",
+"No (FK→BOOK) + AuthorSeq，複合主鍵：(No, AuthorSeq), AuthorName"
+]
+]
+},
+{
+"type": "para",
+"text": "對應範例資料"
+},
+{
+"type": "table",
+"header": [
+"No",
+"Title"
+],
+"rows": [
+[
+"1",
+"計概"
+],
+[
+"2",
+"資料庫"
+]
+]
+},
+{
+"type": "table",
+"header": [
+"No",
+"AuthorSeq",
+"AuthorName"
+],
+"rows": [
+[
+"1",
+"1",
+"趙先生"
+],
+[
+"1",
+"2",
+"張小姐"
+],
+[
+"2",
+"1",
+"Silbers"
+],
+[
+"2",
+"2",
+"Korth"
+],
+[
+"2",
+"3",
+"Sudarshan"
+]
+]
+},
+{
+"type": "para",
+"text": "以JSON集合表示（一本書一份文件）"
+},
+{
+"type": "para",
+"text": "["
+},
+{
+"type": "para",
+"text": "{"
+},
+{
+"type": "para",
+"text": "\"No\": \"1\","
+},
+{
+"type": "para",
+"text": "\"Title\": \"計概\","
+},
+{
+"type": "para",
+"text": "\"Authors\": [\"趙先生\", \"張小姐\"]"
+},
+{
+"type": "para",
+"text": "},"
+},
+{
+"type": "para",
+"text": "{"
+},
+{
+"type": "para",
+"text": "\"No\": \"2\","
+},
+{
+"type": "para",
+"text": "\"Title\": \"資料庫\","
+},
+{
+"type": "para",
+"text": "\"Authors\": [\"Silbers\", \"Korth\", \"Sudarshan\"]"
+},
+{
+"type": "para",
+"text": "}"
+},
+{
+"type": "para",
+"text": "]"
+},
+{
+"type": "para",
+"text": "結構化關聯式資料與半結構化JSON表示法之差異"
+},
+{
+"type": "para",
+"text": "關聯式表示法須事先訂定固定且一致之綱要（Schema-on-write），所有資料列必須嚴格遵循相同之欄位結構；面對Authors此類多重值屬性，須依正規化理論將其拆分為獨立之BOOK_AUTHOR表格，查詢完整書籍資料（含全部作者）時須透過主鍵/外來鍵進行join運算重新組合，優點是能透過主鍵、外來鍵及正規化理論嚴謹地維護資料完整性、避免資料重複，且便於進行複雜之跨表格條件查詢與聚合運算。"
+},
+{
+"type": "para",
+"text": "JSON表示法則屬半結構化資料，得以直接於單一文件中以陣列（Authors）巢狀嵌入多重值資料，無需另建關聯表格與join運算即可完整表達一本書與其全部作者之對應關係；其綱要具彈性（Schema-on-read），同一集合中不同文件之欄位結構可不完全一致（例如個別書籍文件可額外增加「Edition」欄位而不影響其他文件），較適合資料結構隨時間演變、或需整份文件一次性讀寫（如網頁API資料交換、文件導向NoSQL資料庫）之應用情境；惟其相對缺乏關聯式資料庫中嚴謹之跨文件參照完整性檢查機制，且巢狀陣列內部資料之查詢與跨文件之複雜關聯查詢，通常不若關聯式SQL來得直接便利。"
+}
+],
+"origin_year": "111",
+"orig_section": "第一份試卷",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "112",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 1,
+"qlabel": null,
+"stem": "請定義資訊（Information）與詮釋資料（Metadata），並說明它們和資料（Data）的差別。（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為112年高考三級（第一份試卷 第1題），經與goldensun線上題庫核對後，確認並非112年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "三者之定義"
+},
+{
+"type": "para",
+"text": "資料（Data）：未經處理之原始事實、數值或符號，本身不具備脈絡意義，例如單獨的數字「25」或字串「王小明」。"
+},
+{
+"type": "para",
+"text": "資訊（Information）：資料經過處理、組織、彙整或賦予脈絡後，成為對使用者具有意義且有助於理解或決策之內容，例如「王小明，年齡25歲」。"
+},
+{
+"type": "para",
+"text": "詮釋資料（Metadata）：「描述資料的資料」，係用以描述其他資料之結構、格式、來源、意義、建立時間等屬性資訊，例如資料庫綱要中定義某欄位之資料型態為整數、長度上限、建立日期等，本身並非業務資料，而是協助理解與管理業務資料之輔助資訊。"
+},
+{
+"type": "para",
+"text": "三者之差別"
+},
+{
+"type": "para",
+"text": "資料為未加工之原始素材，本身缺乏脈絡與意義；資訊則是資料經處理、組織後所產生，具備脈絡與意義、可供決策使用之結果，故資訊可視為「加值後之資料」；詮釋資料則與前兩者性質不同，其並非業務內容本身，而是描述資料（或資訊）之結構、屬性、來源等後設層面資訊，用以協助資料庫系統或使用者正確理解、存取、管理實際之資料內容，三者之關係可簡化為：詮釋資料描述資料，資料經處理後產生資訊。"
+}
+],
+"origin_year": "112",
+"orig_section": "第一份試卷",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "112",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 2,
+"qlabel": null,
+"stem": "在擴充實體關係模型（Extended Entity-Relationship Model, EER Model）中，必須在父子型態關係（Supertype/Subtype Relationship）上描述兩種限制（Constraints），請說明這兩種限制。（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為112年高考三級（第一份試卷 第2題），經與goldensun線上題庫核對後，確認並非112年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "不相交限制（Disjointness Constraint）"
+},
+{
+"type": "para",
+"text": "用以規範父類別之各子類別之間，其實例集合是否可以重疊。若為「不相交」（Disjoint，常以字母d標示），表示父類別之任一實例至多只能屬於其中一個子類別；若為「重疊」（Overlapping，常以字母o標示），表示父類別之單一實例可同時屬於多個子類別。例如「員工」父類別下之「工程師」與「業務員」子類別若設定為不相交，則同一員工不可同時身兼工程師與業務員兩種子類別身分。"
+},
+{
+"type": "para",
+"text": "完整性限制（Completeness Constraint）"
+},
+{
+"type": "para",
+"text": "用以規範父類別之每一個實例，是否必須至少屬於某一個子類別。若為「全體式」（Total／Mandatory，以雙線表示），表示父類別之每一實例都必須至少歸屬於一個子類別，不允許存在僅屬於父類別而不屬於任何子類別之實例；若為「部分式」（Partial／Optional，以單線表示），則允許父類別存在部分實例不屬於任何子類別。"
+},
+{
+"type": "para",
+"text": "此兩種限制可相互組合，形成四種常見之特化／一般化情形：不相交全體式（disjoint total）、不相交部分式（disjoint partial）、重疊全體式（overlapping total）及重疊部分式（overlapping partial），設計者須依實際業務語意，選擇適當之組合方式描述父子型態關係。"
+}
+],
+"origin_year": "112",
+"orig_section": "第一份試卷",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "112",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 3,
+"qlabel": null,
+"stem": "在關聯式資料庫（Relational Database）的正規化理論（Normalization Theory）中，決定者（Determinant）與候選鍵（Candidate Key）的定義分別為何？決定者與候選鍵之間的關係為何？（30分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為112年高考三級（第一份試卷 第3題），經與goldensun線上題庫核對後，確認並非112年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "決定者（Determinant）之定義"
+},
+{
+"type": "para",
+"text": "在一個函數相依（Functional Dependency）X → Y中，左側之屬性或屬性集合X，即稱為此函數相依之決定者，意即X之值可唯一決定（函數性地推導出）Y之值；一個關聯表格中可能同時存在多個決定者，只要其能決定表格中任一其他屬性或屬性集合，即符合決定者之定義，並不要求該決定者必須決定表格中之「全部」其他屬性。"
+},
+{
+"type": "para",
+"text": "候選鍵（Candidate Key）之定義"
+},
+{
+"type": "para",
+"text": "候選鍵係關聯表格中一組屬性之最小集合（Minimal Set），此集合須同時滿足兩項條件：其一為「唯一性」，即該屬性集合之值可唯一識別表格中每一筆資料列（亦即可決定該表格之「所有」其他屬性）；其二為「最小性」，即該集合中不存在任何真子集合，仍能滿足前述唯一識別之要求（若移除集合中任一屬性後即無法唯一識別，方稱之為最小）。"
+},
+{
+"type": "para",
+"text": "決定者與候選鍵之關係"
+},
+{
+"type": "para",
+"text": "每一個候選鍵必然是一個決定者，因為候選鍵依定義即可決定該表格之所有其他屬性，自然符合決定者之定義；然而，並非每一個決定者都是候選鍵——決定者僅需能決定表格中「部分」其他屬性即可成立，而不要求其能決定表格之全部屬性，亦不要求其滿足候選鍵之最小性條件（例如：非最小之超鍵、或僅決定表格中一小部分非鍵屬性之屬性集合，皆屬於決定者，但未必是候選鍵）。故可歸結：候選鍵為決定者中一種特殊且較嚴格之子集合，其範圍限定於「能決定全部其他屬性，且滿足最小性」之決定者；換言之，候選鍵必為決定者，但決定者未必為候選鍵，此一關係亦正是BCNF理論之核心──BCNF即要求關聯表格中之每一個決定者都必須同時是候選鍵（即超鍵），方能避免資料異常。"
+}
+],
+"origin_year": "112",
+"orig_section": "第一份試卷",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "112",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 4,
+"qlabel": null,
+"stem": "資料倉儲（Data Warehouse）的設計是採用維度模式（Dimension Model），請列出維度模式的三種綱要（Schema），並說明這三種綱要的架構。（30分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為112年高考三級（第一份試卷 第4題），經與goldensun線上題庫核對後，確認並非112年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "table",
+"header": [
+"綱要類型",
+"架構說明"
+],
+"rows": [
+[
+"星型綱要\n（Star Schema）",
+"以單一事實表（Fact Table）為中心，事實表儲存可量化之度量值（如銷售金額、銷售數量），並透過外來鍵直接連結至周圍多個未正規化（去正規化）之維度表（Dimension Table，如時間、產品、地區維度），整體結構因事實表居中、維度表向外輻射，形似星形而得名，結構單純、查詢效能佳，惟維度表可能存在資料重複。"
+],
+[
+"雪花型綱要\n（Snowflake Schema）",
+"為星型綱要之延伸，其維度表進一步正規化，拆解為多層相關聯之子維度表（例如「產品」維度表再拆分為「產品類別」子維度表），使整體結構因多層次維度表向外延伸而形似雪花，優點為降低維度表資料重複、節省儲存空間，缺點為查詢時需經過更多層次的join，查詢效能較星型綱要略低。"
+],
+[
+"星系綱要\n（Fact Constellation Schema，又稱Galaxy Schema）",
+"由多個事實表共同存在，並共享部分相同之維度表所構成之複合結構，適用於企業內部存在多項業務流程（如同時有「銷售」與「庫存」兩項事實表），且各業務流程之分析需共用部分相同維度（如時間、產品維度）之情境，整體結構因多組事實表與共享維度表交錯連結，形似多個星座交織之銀河星系而得名。"
+]
+]
+}
+],
+"origin_year": "112",
+"orig_section": "第一份試卷",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "112",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 5,
+"qlabel": null,
+"stem": "試說明下列名詞之意涵：(a)第二正規化（Second Normal Form）的定義（5分）(b)何謂NoSQL（5分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為112年高考三級（第一份試卷 第5題），經與goldensun線上題庫核對後，確認並非112年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "(a) 第二正規化（2NF）之定義"
+},
+{
+"type": "para",
+"text": "一個關聯表格若符合第一正規化（1NF），且表格中每一個非質數屬性（Non-prime Attribute，即未出現於任一候選鍵中之屬性）均完全函數相依（Full Functional Dependency）於該表格之每一個候選鍵，而非僅相依於候選鍵之某一真子集合（即不存在部分相依，Partial Dependency），則稱該關聯表格符合第二正規化。此定義主要用以規範具備複合候選鍵（由多個屬性組成之候選鍵）之表格，避免非鍵屬性僅相依於複合鍵之部分屬性所導致之資料重複與更新異常。"
+},
+{
+"type": "para",
+"text": "(b) 何謂NoSQL"
+},
+{
+"type": "para",
+"text": "NoSQL（Not only SQL）泛指一類不採用傳統關聯式資料庫之表格結構與固定綱要（Schema）之資料庫管理系統，其設計目標在於因應巨量資料、半結構化或非結構化資料，以及需要高度水平擴展性（Horizontal Scalability）與彈性綱要之應用情境，常見類型包括文件導向資料庫（Document Store，如MongoDB）、鍵值儲存資料庫（Key-Value Store，如Redis）、欄族資料庫（Column-family Store，如Cassandra）及圖形資料庫（Graph Database，如Neo4j）等，相較傳統關聯式資料庫，NoSQL通常犧牲部分嚴格之交易一致性（ACID）保證，以換取更佳之擴展性與彈性。"
+}
+],
+"origin_year": "112",
+"orig_section": "第一份試卷",
+"orig_qnum": 5
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "112",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 6,
+"qlabel": null,
+"stem": "資料庫系統的設計原則，是根據資料抽象化（data abstraction）的概念，將資料分作不同層，包含：實體層（physical level）、邏輯層（logical level）和視界層（view level）。請分別敘述每一層的功能或功用為何？並說明將資料分做三層的好處。（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為112年高考三級（第二份試卷 第1題），經與goldensun線上題庫核對後，確認並非112年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "table",
+"header": [
+"層次",
+"功能與功用"
+],
+"rows": [
+[
+"實體層\n（Physical Level）",
+"資料抽象化中最底層，描述資料實際上如何被儲存於實體儲存媒介之細節，包括檔案結構、索引方式、資料在磁碟上之實際存放位置與存取路徑等，此層由資料庫管理系統之儲存引擎負責管理。"
+],
+[
+"邏輯層\n（Logical Level）",
+"描述整個資料庫中儲存了那些資料，以及各資料項目間存在何種關係（即概念綱要，Conceptual Schema），此層獨立於實體層之實際儲存細節，資料庫設計者主要於此層次進行資料表、屬性及關聯之設計。"
+],
+[
+"視界層\n（View Level）",
+"資料抽象化中最高層，僅呈現整個資料庫中與特定使用者或應用程式相關之部分內容（即外部綱要，External Schema／View），隱藏邏輯層與實體層之其餘細節，不同使用者可依其權限與需求，擁有不同之資料檢視方式。"
+]
+]
+},
+{
+"type": "para",
+"text": "分層之好處"
+},
+{
+"type": "para",
+"text": "達成資料獨立性：包括實體資料獨立性（Physical Data Independence，得以變更實體儲存方式而不影響邏輯層綱要與應用程式）以及邏輯資料獨立性（Logical Data Independence，得以調整邏輯層綱要而儘量不影響既有使用者視界與應用程式）。"
+},
+{
+"type": "para",
+"text": "提升資料安全性：透過視界層限制不同使用者僅能存取與其權限相符之資料子集合，避免使用者接觸不應存取之機敏資料。"
+},
+{
+"type": "para",
+"text": "簡化使用者操作：使用者僅需理解與其業務相關之視界層內容，無需理解整個資料庫之完整邏輯結構或實體儲存細節，降低使用門檻。"
+},
+{
+"type": "para",
+"text": "降低系統維護與開發複雜度：各層次之變更得以侷限於該層次範圍內處理，避免變更牽一髮動全身，有助於資料庫系統長期之維護與擴充。"
+}
+],
+"origin_year": "112",
+"orig_section": "第二份試卷",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "112",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 7,
+"qlabel": null,
+"stem": "假設要為一個電子商務網站設計資料庫，請根據下列需求利用實體關係模式（ER model）進行規劃：每個物品要記錄編號、名稱、製造廠商和價錢；每個會員要記錄會員編號、姓名、地址和電話；每個訂單要記錄訂單編號、下訂會員、成立日期、應付總金額、包含物品及個數；一個訂單只能隸屬於一個會員，但可包含多項物品。請畫出對應的ER-diagram，標明實體集合、關係集合、屬性、主鍵和對應數量限制。（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為112年高考三級（第二份試卷 第2題），經與goldensun線上題庫核對後，確認並非112年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "table",
+"header": [
+"實體集合",
+"屬性（底線為主鍵）"
+],
+"rows": [
+[
+"Item（物品）",
+"itemID (PK), name, manufacturer, price"
+],
+[
+"Member（會員）",
+"memberID (PK), name, address, phone"
+],
+[
+"Order（訂單）",
+"orderID (PK), memberID (FK→Member), orderDate, totalAmount"
+]
+]
+},
+{
+"type": "para",
+"text": "關係集合"
+},
+{
+"type": "para",
+"text": "PlacedBy：Order與Member之關係，一筆訂單恰隸屬於1..1位會員；一位會員可下訂0..N筆訂單。"
+},
+{
+"type": "para",
+"text": "Contains：Order與Item之多對多關係，須另建立關聯（含屬性quantity表示購買個數）；一筆訂單可包含1..N項物品；一項物品可出現於0..N筆訂單中。"
+},
+{
+"type": "para",
+"text": "ER圖示（文字表示）"
+},
+{
+"type": "para",
+"text": "[Member] --(1)---PlacedBy---(N)-- [Order]"
+},
+{
+"type": "para",
+"text": "[Order] --(N)---Contains(quantity)---(N)-- [Item]"
+},
+{
+"type": "para",
+"text": "其中Contains關係本身具有quantity（購買個數）屬性，依關聯式對應規則，多對多關係須轉換為獨立之關聯資料表OrderDetail(orderID FK, itemID FK, quantity)，複合主鍵為(orderID, itemID)。"
+}
+],
+"origin_year": "112",
+"orig_section": "第二份試卷",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "112",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 8,
+"qlabel": null,
+"stem": "假設有一個商家的關聯式資料庫系統，以四個表格記錄會員、貨品、購買紀錄和每筆訂單的物品清單：Member(accountNO, name, telephone)／Item(itemNO, name, price)／ShoppingRecord(orderID, accountNO, amount)／ShoppingList(orderID, itemNO, quantity)。請利用SQL查詢指令回答：(a)找出名為「張三」會員的所有購買紀錄（編號、應付金額）。（10分）(b)針對「張三」，找出購買總數量超過5個以上（含）的貨品，輸出貨品編號和購買總數量。（10分）(c)找出累計所有會員花了最多錢購買的貨品，輸出該貨品編號。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為112年高考三級（第二份試卷 第3題），經與goldensun線上題庫核對後，確認並非112年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "(a) 「張三」之所有購買紀錄"
+},
+{
+"type": "para",
+"text": "SELECT sr.orderID, sr.amount"
+},
+{
+"type": "para",
+"text": "FROM   ShoppingRecord sr"
+},
+{
+"type": "para",
+"text": "JOIN Member m ON sr.accountNO = m.accountNO"
+},
+{
+"type": "para",
+"text": "WHERE  m.name = '張三';"
+},
+{
+"type": "para",
+"text": "(b) 「張三」購買總數量>=5之貨品"
+},
+{
+"type": "para",
+"text": "SELECT sl.itemNO, SUM(sl.quantity) AS total_qty"
+},
+{
+"type": "para",
+"text": "FROM   ShoppingList sl"
+},
+{
+"type": "para",
+"text": "JOIN ShoppingRecord sr ON sl.orderID = sr.orderID"
+},
+{
+"type": "para",
+"text": "JOIN Member m ON sr.accountNO = m.accountNO"
+},
+{
+"type": "para",
+"text": "WHERE  m.name = '張三'"
+},
+{
+"type": "para",
+"text": "GROUP BY sl.itemNO"
+},
+{
+"type": "para",
+"text": "HAVING SUM(sl.quantity) >= 5;"
+},
+{
+"type": "para",
+"text": "(c) 所有會員累計花費最多之貨品"
+},
+{
+"type": "para",
+"text": "SELECT sl.itemNO"
+},
+{
+"type": "para",
+"text": "FROM   ShoppingList sl"
+},
+{
+"type": "para",
+"text": "JOIN Item i ON sl.itemNO = i.itemNO"
+},
+{
+"type": "para",
+"text": "GROUP BY sl.itemNO"
+},
+{
+"type": "para",
+"text": "ORDER BY SUM(sl.quantity * i.price) DESC"
+},
+{
+"type": "para",
+"text": "LIMIT 1;"
+}
+],
+"origin_year": "112",
+"orig_section": "第二份試卷",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "112",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 9,
+"qlabel": null,
+"stem": "關聯式資料庫綱要設計的基本原則是要符合正規化的規定，請詳述何謂第一正規化（First Normal Form）？並設計一個表格舉例說明，若不符合第一正規化會帶來何種問題。反之，XML或JSON資料則支援巢狀（nested）的表示法，同樣舉出一個實例說明該表示法為何，以及可以帶來何種好處？（30分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為112年高考三級（第二份試卷 第4題），經與goldensun線上題庫核對後，確認並非112年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "第一正規化（1NF）之定義"
+},
+{
+"type": "para",
+"text": "一個關聯表格若其每一欄位之值均為不可再分割之單一值（Atomic Value），亦即不存在多重值屬性（Multivalued Attribute）或重複群組（Repeating Group），亦不存在於單一儲存格中巢狀嵌入另一組資料集合之情形，則稱該表格符合第一正規化，此為關聯式資料庫模型中最基本之正規化要求。"
+},
+{
+"type": "para",
+"text": "違反1NF之舉例與問題"
+},
+{
+"type": "para",
+"text": "例如「學生」表格若設計為：Student(StudId, StudName, Courses)，其中Courses欄位以單一儲存格存放「CS101, CS102, MATH201」等多筆課程代碼，此即違反1NF，因Courses欄位並非不可分割之單一值。"
+},
+{
+"type": "para",
+"text": "查詢困難：若欲查詢修習「CS101」課程之所有學生，須對Courses欄位進行字串比對或拆解，無法直接以標準之關聯式運算子（如等於比對）有效篩選，查詢效率與正確性均受影響。"
+},
+{
+"type": "para",
+"text": "難以維護參照完整性：由於課程代碼混雜於單一欄位之字串中，資料庫無法對個別課程代碼建立外來鍵約束，容易輸入不存在之課程代碼而未被偵測。"
+},
+{
+"type": "para",
+"text": "更新異常：若某課程代碼需要變更，須逐一掃描並修改所有包含該課程代碼之字串內容，容易發生遺漏或錯誤。"
+},
+{
+"type": "para",
+"text": "XML／JSON巢狀表示法之實例與好處"
+},
+{
+"type": "para",
+"text": "相對於關聯式模型須將多重值屬性另外拆分為獨立表格，XML與JSON等半結構化資料格式，得以直接以巢狀（Nested）方式表示一對多之資料關係，例如以JSON表示同一位學生與其修習之多門課程："
+},
+{
+"type": "para",
+"text": "{"
+},
+{
+"type": "para",
+"text": "\"studentID\": \"S001\","
+},
+{
+"type": "para",
+"text": "\"studentName\": \"王小明\","
+},
+{
+"type": "para",
+"text": "\"courses\": [\"CS101\", \"CS102\", \"MATH201\"]"
+},
+{
+"type": "para",
+"text": "}"
+},
+{
+"type": "para",
+"text": "此種巢狀表示法之好處在於：其結構天然符合現實世界中「一對多」或階層式之資料關係，無需額外建立關聯表格與join運算即可完整表達單一實體與其相關聯之多筆資料；其綱要具備高度彈性（半結構化或無固定綱要），得以因應欄位數量不固定或結構隨時間演變之應用情境；此外，此種格式亦廣泛應用於前後端資料交換（如RESTful API之回應格式）及文件導向NoSQL資料庫（如MongoDB）之資料儲存，便於程式直接以物件方式解析與操作，減少關聯式資料庫中多層join所需之額外運算成本。"
+}
+],
+"origin_year": "112",
+"orig_section": "第二份試卷",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "113",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 1,
+"qlabel": null,
+"stem": "請設計符合BCNF且考量OO（物件導向）的Enhanced-ER（EER）data model，可以滿足如下航空管理的需求，model中需註明合適的primary/foreign key，及資料表彼此關聯的maximum/minimum cardinality。（30分）［需求：查詢特定旅客飛行紀錄、特定航班特定座位範圍旅客名單、特定航線臺籍航班統計、特定機場行李轉盤卸載航班資訊、各航空公司載客飛行器與正副駕駛資訊、各型號飛行器生命週期統計等6項］",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為113年高考三級（第一份試卷 第1題），經與goldensun線上題庫核對後，確認並非113年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "依題目需求分析，共同設計出下列個體型態（Entity Type）：Manufacturer（製造商）、AirlineCompany（航空公司）、Aircraft（飛行器）、Airport（機場）、Flight（航班）、Person（人員，作為Pilot與Passenger之父類別，以滿足OO物件導向之Supertype/Subtype塑模需求）、FlightCrew（航班機組指派，聯繫Flight與Pilot之關聯實體）、Booking（訂位／機票，聯繫Flight與Passenger之關聯實體）及Baggage（行李）。"
+},
+{
+"type": "para",
+"text": "各資料表結構（屬性、主鍵、外來鍵）"
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（底線為PK，斜線標示FK）"
+],
+"rows": [
+[
+"Manufacturer",
+"manufacturer_ID (PK), name, nation"
+],
+[
+"AirlineCompany",
+"airline_ID (PK), name, nation, registration_date"
+],
+[
+"Aircraft",
+"aircraft_ID (PK), model, manufacture_date, retire_date, capacity, manufacturer_ID (FK→Manufacturer), airline_ID (FK→AirlineCompany)"
+],
+[
+"Airport",
+"airport_code (PK), name, nation"
+],
+[
+"Flight",
+"flight_number+flight_date (PK，複合鍵，因同一航班編號會於不同日期重複出現), departure_time, arrival_time, ticket_price, departure_airport (FK→Airport), arrival_airport (FK→Airport), aircraft_ID (FK→Aircraft)"
+],
+[
+"Person（父類別）",
+"person_ID (PK), name, gender, nationality, birth_date"
+],
+[
+"Pilot（子類別，繼承Person）",
+"person_ID (PK/FK→Person), license_no"
+],
+[
+"Passenger（子類別，繼承Person）",
+"person_ID (PK/FK→Person), phone, email"
+],
+[
+"FlightCrew（關聯實體）",
+"flight_number+flight_date (FK→Flight), pilot_ID (FK→Pilot), role（'Captain'或'CoPilot'）；PK＝(flight_number, flight_date, pilot_ID)"
+],
+[
+"Booking（關聯實體／機票）",
+"ticket_ID (PK), flight_number+flight_date (FK→Flight), passenger_ID (FK→Passenger), seat_number"
+],
+[
+"Baggage",
+"baggage_ID (PK), ticket_ID (FK→Booking), weight, carousel_no"
+]
+]
+},
+{
+"type": "para",
+"text": "關聯之最大／最小基數（Cardinality）"
+},
+{
+"type": "table",
+"header": [
+"關聯",
+"說明"
+],
+"rows": [
+[
+"Manufacturer — Aircraft",
+"1個製造商可製造0..N台飛行器；1台飛行器僅由1..1家製造商製造"
+],
+[
+"AirlineCompany — Aircraft",
+"1家航空公司可擁有0..N台飛行器；1台飛行器僅隸屬1..1家航空公司"
+],
+[
+"Aircraft — Flight",
+"1台飛行器可執飛0..N個航班實例；1個航班實例僅由1..1台飛行器執飛"
+],
+[
+"Airport — Flight",
+"1機場可為0..N航班之起飛地／降落地；1航班恰有1..1起飛機場與1..1降落機場"
+],
+[
+"Person — Pilot／Passenger",
+"EER特化（Specialization）關係，屬不相交（Disjoint）之部分特化（Partial），每人可為0或1個Pilot、可為0或1個Passenger"
+],
+[
+"Flight — FlightCrew — Pilot",
+"1航班實例恰有2..2位機組員（正、副駕駛各1人）；1位飛行員可服勤0..N個航班實例"
+],
+[
+"Flight — Booking — Passenger",
+"1航班實例可有0..N張機票（受飛行器載客數上限約束）；1位旅客可持有0..N張機票（分屬不同航班）"
+],
+[
+"Booking — Baggage",
+"1張機票可對應0..N件行李；1件行李僅屬於1..1張機票"
+]
+]
+},
+{
+"type": "para",
+"text": "結構示意（ER關聯圖，文字表示）"
+},
+{
+"type": "para",
+"text": "Manufacturer(1)--<(N)Aircraft(N)>--(1)AirlineCompany"
+},
+{
+"type": "para",
+"text": "Aircraft(1)--<(N)Flight(N)>--(1)Airport [departure]  Flight(N)>--(1)Airport [arrival]"
+},
+{
+"type": "para",
+"text": "Person <|--(disjoint)--|> Pilot ,  Person <|--(disjoint)--|> Passenger"
+},
+{
+"type": "para",
+"text": "Flight(1)--<(2)FlightCrew(N)>--(1)Pilot"
+},
+{
+"type": "para",
+"text": "Flight(1)--<(N)Booking(N)>--(1)Passenger ,  Booking(1)--<(N)Baggage"
+},
+{
+"type": "para",
+"text": "BCNF符合性說明"
+},
+{
+"type": "para",
+"text": "上述每一資料表之非鍵屬性均完全函數相依於該表之主鍵（無部分相依，因各表主鍵皆為單一屬性或屬性組合經正確拆分），亦無非鍵屬性間之遞移相依（例如Aircraft表之manufacturer_ID與airline_ID皆直接對主鍵aircraft_ID相依，並未透過其他非鍵屬性間接推導），故每一資料表決定屬性集合皆為超鍵，符合BCNF要求。並可逐一驗證6項查詢需求均可由上述資料表透過join運算取得：飛行紀錄查詢需join Booking-Flight-Aircraft-Manufacturer-AirlineCompany-Airport；座位範圍旅客查詢需join Flight-Booking-Passenger並以seat_number篩選；臺籍航班統計需以AirlineCompany.nation='TW'篩選並統計Booking與Passenger.nationality；行李轉盤查詢需join Booking-Baggage-Flight-Airport；飛行器與正副駕駛查詢需join Aircraft-Manufacturer-AirlineCompany-FlightCrew-Pilot-Person；飛行器生命週期統計需以Aircraft.manufacture_date與retire_date計算年限，並join Flight計算總飛行時間與旅程數、join Booking計算總載客數，依Manufacturer.nation分組顯示。"
+}
+],
+"origin_year": "113",
+"orig_section": "第一份試卷",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "113",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 2,
+"qlabel": null,
+"stem": "假設現有如下點歌紀錄的關聯式資料庫，請使用SQL回答相關的子問題：Publisher(nation, company_ID, name) PK: nation+company_ID／Song(song_ID, name, language, type, publish_year, nation, publisher_ID) PK: song_ID, FK: nation+publisher_ID ref. Publisher／Member(mobile, nickname, gender) PK: mobile／OnDemand_Record(member_ID, song_ID, date_time) PK: (member_ID, song_ID, date_time)。(a)2023年點播率最高前兩名英文歌曲。（5分）(b)Universal所發行歌曲，2023Q4-2024Q3間，同一發行年份點播歌曲數>1的歌曲。（5分）(c)2024/02/14點播歌曲，依歌曲類型及會員性別分類統計。（5分）(d)新增會員「小喬」之點歌紀錄，並保持參照完整性。（5分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為113年高考三級（第一份試卷 第2題），經與goldensun線上題庫核對後，確認並非113年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "(a) 2023年點播率最高前兩名英文歌曲"
+},
+{
+"type": "para",
+"text": "SELECT s.name AS song_name, p.name AS publisher_name,"
+},
+{
+"type": "para",
+"text": "s.publish_year, COUNT(*) AS play_count"
+},
+{
+"type": "para",
+"text": "FROM   OnDemand_Record r"
+},
+{
+"type": "para",
+"text": "JOIN Song s ON r.song_ID = s.song_ID"
+},
+{
+"type": "para",
+"text": "JOIN Publisher p ON s.nation = p.nation"
+},
+{
+"type": "para",
+"text": "AND s.publisher_ID = p.company_ID"
+},
+{
+"type": "para",
+"text": "WHERE  s.language = 'English'"
+},
+{
+"type": "para",
+"text": "AND YEAR(r.date_time) = 2023"
+},
+{
+"type": "para",
+"text": "GROUP BY s.song_ID, s.name, p.name, s.publish_year"
+},
+{
+"type": "para",
+"text": "ORDER BY play_count DESC"
+},
+{
+"type": "para",
+"text": "LIMIT 2;"
+},
+{
+"type": "para",
+"text": "(b) Universal所發行歌曲之查詢"
+},
+{
+"type": "para",
+"text": "說明：「同一發行年份點播歌曲數>1」解讀為：在該發行年份中，屬於Universal且於題目所述期間內曾被點播之相異歌曲數量須大於1首，方顯示該年份之歌曲。"
+},
+{
+"type": "para",
+"text": "SELECT s.name AS song_name, s.type AS song_type, s.publish_year"
+},
+{
+"type": "para",
+"text": "FROM   Song s"
+},
+{
+"type": "para",
+"text": "JOIN Publisher p ON s.nation = p.nation"
+},
+{
+"type": "para",
+"text": "AND s.publisher_ID = p.company_ID"
+},
+{
+"type": "para",
+"text": "WHERE  p.name = 'Universal'"
+},
+{
+"type": "para",
+"text": "AND  s.song_ID IN ("
+},
+{
+"type": "para",
+"text": "SELECT DISTINCT r.song_ID FROM OnDemand_Record r"
+},
+{
+"type": "para",
+"text": "WHERE r.date_time >= '2023-10-01'"
+},
+{
+"type": "para",
+"text": "AND r.date_time <  '2024-10-01')"
+},
+{
+"type": "para",
+"text": "AND  s.publish_year IN ("
+},
+{
+"type": "para",
+"text": "SELECT s2.publish_year"
+},
+{
+"type": "para",
+"text": "FROM   Song s2"
+},
+{
+"type": "para",
+"text": "JOIN Publisher p2 ON s2.nation = p2.nation"
+},
+{
+"type": "para",
+"text": "AND s2.publisher_ID = p2.company_ID"
+},
+{
+"type": "para",
+"text": "JOIN OnDemand_Record r2 ON r2.song_ID = s2.song_ID"
+},
+{
+"type": "para",
+"text": "WHERE  p2.name = 'Universal'"
+},
+{
+"type": "para",
+"text": "AND  r2.date_time >= '2023-10-01'"
+},
+{
+"type": "para",
+"text": "AND  r2.date_time <  '2024-10-01'"
+},
+{
+"type": "para",
+"text": "GROUP BY s2.publish_year"
+},
+{
+"type": "para",
+"text": "HAVING COUNT(DISTINCT s2.song_ID) > 1)"
+},
+{
+"type": "para",
+"text": "ORDER BY s.publish_year DESC;"
+},
+{
+"type": "para",
+"text": "(c) 2024/02/14點播歌曲，依歌曲類型與會員性別分類統計"
+},
+{
+"type": "para",
+"text": "SELECT s.type AS song_type, m.gender, COUNT(*) AS play_count"
+},
+{
+"type": "para",
+"text": "FROM   OnDemand_Record r"
+},
+{
+"type": "para",
+"text": "JOIN Song s ON r.song_ID = s.song_ID"
+},
+{
+"type": "para",
+"text": "JOIN Member m ON r.member_ID = m.mobile"
+},
+{
+"type": "para",
+"text": "WHERE  DATE(r.date_time) = '2024-02-14'"
+},
+{
+"type": "para",
+"text": "GROUP BY s.type, m.gender"
+},
+{
+"type": "para",
+"text": "ORDER BY s.type, m.gender;"
+},
+{
+"type": "para",
+"text": "(d) 新增會員「小喬」之點歌紀錄（保持參照完整性）"
+},
+{
+"type": "para",
+"text": "因OnDemand_Record.member_ID參照Member.mobile，須先新增Member資料列，再新增OnDemand_Record資料列，方能滿足參照完整性："
+},
+{
+"type": "para",
+"text": "INSERT INTO Member (mobile, nickname, gender)"
+},
+{
+"type": "para",
+"text": "VALUES ('0999654321', '小喬', 'F');"
+},
+{
+"type": "para",
+"text": "INSERT INTO OnDemand_Record (member_ID, song_ID, date_time)"
+},
+{
+"type": "para",
+"text": "VALUES ('0999654321', 'TWC_2024000001', '2024-03-28 22:00:00');"
+}
+],
+"origin_year": "113",
+"orig_section": "第一份試卷",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "113",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 3,
+"qlabel": null,
+"stem": "請以符合BCNF的RDB資料表表示如下的汽車保修紀錄資料，正規化後的資料表欄位，需同時註明primary/foreign key，並將正規化後的資料表資料內容，分別以json及XML的檔案格式描述。（30分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為113年高考三級（第一份試卷 第3題），經與goldensun線上題庫核對後，確認並非113年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "如前言所述，本題原始之「汽車保修紀錄」原始資料表內容，在公開來源之文字重製版本中僅顯示標題「紀…」即遭截斷，無法取得該表實際包含之欄位與範例資料列，故以下改以典型汽車保修紀錄情境之示範性設計作答，說明正規化至BCNF之標準方法論，並以此示範性結構產生JSON／XML格式範例；請讀者對照考選部官方PDF原始試題之實際資料內容，代入下述相同之正規化步驟即可得出正確答案。"
+},
+{
+"type": "para",
+"text": "典型情境之未正規化資料（示範用）"
+},
+{
+"type": "para",
+"text": "汽車保修紀錄通常包含：保修單號、保修日期、車牌號碼、車主姓名、車主電話、技師編號、技師姓名、保修項目編號、保修項目名稱、保修項目單價、數量等欄位，若合併為單一表，將因車主資訊隨車牌重複、技師資訊隨技師編號重複、保修項目資訊隨項目編號重複，而存在更新異常，故須正規化。"
+},
+{
+"type": "para",
+"text": "正規化至BCNF之資料表設計（示範）"
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK）"
+],
+"rows": [
+[
+"Vehicle（車輛）",
+"license_plate (PK), owner_name, owner_phone"
+],
+[
+"Technician（技師）",
+"tech_ID (PK), tech_name"
+],
+[
+"RepairItem（保修項目主檔）",
+"item_ID (PK), item_name, unit_price"
+],
+[
+"RepairOrder（保修單）",
+"order_ID (PK), order_date, license_plate (FK→Vehicle), tech_ID (FK→Technician)"
+],
+[
+"RepairOrderDetail（保修單明細）",
+"order_ID (FK→RepairOrder) + item_ID (FK→RepairItem) 為複合PK, quantity"
+]
+]
+},
+{
+"type": "para",
+"text": "JSON格式範例（示範資料）"
+},
+{
+"type": "para",
+"text": "{"
+},
+{
+"type": "para",
+"text": "\"RepairOrder\": {"
+},
+{
+"type": "para",
+"text": "\"order_ID\": \"RO2024001\","
+},
+{
+"type": "para",
+"text": "\"order_date\": \"2024-05-10\","
+},
+{
+"type": "para",
+"text": "\"license_plate\": \"ABC-1234\","
+},
+{
+"type": "para",
+"text": "\"tech_ID\": \"T001\","
+},
+{
+"type": "para",
+"text": "\"details\": ["
+},
+{
+"type": "para",
+"text": "{ \"item_ID\": \"I01\", \"quantity\": 1 },"
+},
+{
+"type": "para",
+"text": "{ \"item_ID\": \"I05\", \"quantity\": 4 }"
+},
+{
+"type": "para",
+"text": "]"
+},
+{
+"type": "para",
+"text": "}"
+},
+{
+"type": "para",
+"text": "}"
+},
+{
+"type": "para",
+"text": "XML格式範例（示範資料）"
+},
+{
+"type": "para",
+"text": "<RepairOrder>"
+},
+{
+"type": "para",
+"text": "<order_ID>RO2024001</order_ID>"
+},
+{
+"type": "para",
+"text": "<order_date>2024-05-10</order_date>"
+},
+{
+"type": "para",
+"text": "<license_plate>ABC-1234</license_plate>"
+},
+{
+"type": "para",
+"text": "<tech_ID>T001</tech_ID>"
+},
+{
+"type": "para",
+"text": "<details>"
+},
+{
+"type": "para",
+"text": "<item item_ID=\"I01\" quantity=\"1\"/>"
+},
+{
+"type": "para",
+"text": "<item item_ID=\"I05\" quantity=\"4\"/>"
+},
+{
+"type": "para",
+"text": "</details>"
+},
+{
+"type": "para",
+"text": "</RepairOrder>"
+}
+],
+"origin_year": "113",
+"orig_section": "第一份試卷",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "113",
+"track": "其他考試（來源不明）",
+"section": null,
+"qnum": 4,
+"qlabel": null,
+"stem": "假設現有如下T1, T2, T3, T4四筆交易同步存取帳號資料x, y，請以conflict equivalent的觀念，繪圖說明這四筆交易的執行排程，並說明這四筆交易是否具備排程循序性（serializability）？如果具備排程循序性，則此四筆交易的執行順序應為何，才不會出現衝突？如果不具備排程循序性，則衝突的cycle有那些？（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【來源不明】原始標示為113年高考三級（第一份試卷 第4題），經與goldensun線上題庫核對後，確認並非113年該考試之真考題，正確出處不明，僅供參考。"
+},
+{
+"type": "para",
+"text": "本題原始所附之T1-T4四筆交易實際讀寫（R/W）操作排程表，在公開來源之文字重製版本中完全缺漏（僅保留題幹文字說明，未附操作序列表格），故無法得知各交易對x、y實際執行讀寫之精確順序，無法代入求出唯一正確之衝突圖與序列性結論。以下改為說明判斷序列性之標準方法論，請讀者依考選部官方PDF原始試題所附之實際R/W排程表，依下述步驟逐一代入即可求出正確答案。"
+},
+{
+"type": "para",
+"text": "判斷排程序列性之標準方法（優先圖／衝突圖法）"
+},
+{
+"type": "para",
+"text": "步驟一：找出所有「衝突運算」（Conflicting Operations）——兩個分屬不同交易、存取同一資料項（如x或y）之運算，且至少有一方為Write運算（R-W、W-R或W-W皆屬衝突；R-R不衝突）。"
+},
+{
+"type": "para",
+"text": "步驟二：依排程中兩衝突運算實際執行之先後順序，建立優先圖（Precedence Graph，又稱Serialization Graph）：若交易Ti之運算先於交易Tj之衝突運算執行，則畫一條由Ti指向Tj之有向邊。"
+},
+{
+"type": "para",
+"text": "步驟三：檢查優先圖是否存在環（Cycle）。若優先圖為無環圖（Acyclic），則該排程具備衝突可序列性（Conflict Serializable）；此時將優先圖進行拓樸排序（Topological Sort），所得之交易順序即為一個與原排程衝突等價（Conflict Equivalent）之循序排程（Serial Schedule）執行順序。"
+},
+{
+"type": "para",
+"text": "步驟四：若優先圖存在環，則該排程不具備序列性；此時應列出構成環之交易節點順序（例如Ti→Tj→Tk→Ti），即為造成衝突、無法轉換為循序排程之衝突環（Conflict Cycle）。"
+},
+{
+"type": "para",
+"text": "範例示意（僅示範方法，非本題原始資料）"
+},
+{
+"type": "para",
+"text": "例如，若排程中觀察到T1對x之寫入先於T2對x之讀取（衝突，畫T1→T2），又觀察到T2對y之寫入先於T1對y之讀取（衝突，畫T2→T1），則優先圖中存在T1→T2→T1之環，故該排程不具備序列性，其衝突環即為（T1, T2）；反之，若優先圖中所有邊之方向一致且無環（例如僅存在T1→T2、T2→T3、T1→T3等邊），則該排程具備序列性，依拓樸排序結果（如T1→T2→T3→T4）執行即不會產生衝突。"
+}
+],
+"origin_year": "113",
+"orig_section": "第一份試卷",
+"orig_qnum": 4
 }
 ]
