@@ -65,3 +65,7 @@ main{padding:8px 12px 20px;max-width:720px;margin:0 auto;}
 .ans-list{display:grid;grid-template-columns:max-content 1fr;column-gap:12px;row-gap:10px;margin:6px 0 14px;align-items:start;}
 .ans-list .ans-label{font-weight:700;color:var(--accent2);line-height:1.6;}
 .ans-list .ans-body{line-height:1.65;white-space:pre-wrap;}
+.ans-table-wrap{overflow-x:auto;margin:6px 0 14px;-webkit-overflow-scrolling:touch;}
+.ans-table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
+.ans-table th,.ans-table td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;white-space:pre-wrap;}
+.ans-table th{background:var(--card2);color:var(--accent2);font-weight:700;white-space:nowrap;}

@@ -84,6 +84,7 @@ function searchableText(q){
     const parts = [q.stem];
     (q.blocks||[]).forEach(b=>{
       if(b.type==='list'){ (b.items||[]).forEach(it=>{ parts.push(it.label); parts.push(it.body); }); }
+      else if(b.type==='table'){ if(b.header) parts.push(b.header.join(' ')); (b.rows||[]).forEach(r=>parts.push(r.join(' '))); }
       else { parts.push(b.text); }
     });
     return parts.join(' ');
@@ -149,15 +150,24 @@ function renderAnswerBlock(b, term){
     });
     return `<div class="ans-list">${rows}</div>`;
   }
+  if(b.type === 'table'){
+    let thead = '';
+    if(b.header){
+      thead = '<thead><tr>' + b.header.map(h=>`<th>${highlight(h, term)}</th>`).join('') + '</tr></thead>';
+    }
+    const tbody = '<tbody>' + (b.rows||[]).map(row=>'<tr>' + row.map(c=>`<td>${highlight(c, term)}</td>`).join('') + '</tr>').join('') + '</tbody>';
+    return `<div class="ans-table-wrap"><table class="ans-table">${thead}${tbody}</table></div>`;
+  }
   return `<p class="ans-para">${highlight(b.text, term)}</p>`;
 }
 
 function renderEssayCard(q){
   const id = qid(q);
   const isStar = starred.has(id);
+  const qlabel = q.qlabel || ('第'+q.qnum+'題');
   let html = `<div class="qcard essay-card" data-id="${attrEsc(id)}">`;
   html += `<div class="qhead">
-      <div><span class="qnum-badge">${q.year}年・${q.track}${q.section?('・'+q.section):''}・第${q.qnum}題</span>
+      <div><span class="qnum-badge">${q.year}年・${q.track}${q.section?('・'+q.section):''}・${qlabel}</span>
       <div class="qstem">${highlight(q.stem, state.search)}</div></div>
       <button class="star-btn ${isStar?'on':''}" data-id="${attrEsc(id)}">${isStar?'★':'☆'}</button>
     </div>`;
