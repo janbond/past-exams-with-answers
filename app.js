@@ -79,11 +79,23 @@ function escapeHtml(s){
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+function searchableText(q){
+  if(q.type === 'essay'){
+    const parts = [q.stem];
+    (q.blocks||[]).forEach(b=>{
+      if(b.type==='list'){ (b.items||[]).forEach(it=>{ parts.push(it.label); parts.push(it.body); }); }
+      else { parts.push(b.text); }
+    });
+    return parts.join(' ');
+  }
+  return q.stem + (q.passage||'') + Object.values(q.options||{}).join(' ') + (q.explanation||[]).join(' ');
+}
+
 function currentList(){
   let list = ALL.filter(q=>q.subject===state.subject);
   if(state.search){
     const term = state.search.toLowerCase();
-    list = list.filter(q => (q.stem+ (q.passage||'') + Object.values(q.options).join(' ')).toLowerCase().includes(term));
+    list = list.filter(q => searchableText(q).toLowerCase().includes(term));
   } else {
     if(state.year) list = list.filter(q=>q.year===state.year);
     if(state.track) list = list.filter(q=>q.track===state.track);
@@ -95,6 +107,10 @@ function currentList(){
 }
 
 function renderQuestionCard(q){
+  return q.type === 'essay' ? renderEssayCard(q) : renderChoiceCard(q);
+}
+
+function renderChoiceCard(q){
   const id = qid(q);
   const isStar = starred.has(id);
   let html = '';
@@ -111,7 +127,7 @@ function renderQuestionCard(q){
       <button class="star-btn ${isStar?'on':''}" data-id="${attrEsc(id)}">${isStar?'★':'☆'}</button>
     </div>`;
   html += '<div class="opts">';
-  ['A','B','C','D'].forEach(k=>{
+  ['A','B','C','D','E'].forEach(k=>{
     if(q.options[k]===undefined) return;
     html += `<div class="opt" data-id="${attrEsc(id)}" data-k="${k}"><span class="lab">(${k})</span><span>${highlight(q.options[k], state.search)}</span></div>`;
   });
@@ -121,6 +137,37 @@ function renderQuestionCard(q){
   html += '</div>';
   return html;
 }
+
+function renderAnswerBlock(b, term){
+  if(b.type === 'heading'){
+    return `<div class="ans-heading">${highlight(b.text, term)}</div>`;
+  }
+  if(b.type === 'list'){
+    let rows = '';
+    (b.items||[]).forEach(it=>{
+      rows += `<div class="ans-label">${highlight(it.label, term)}</div><div class="ans-body">${highlight(it.body, term)}</div>`;
+    });
+    return `<div class="ans-list">${rows}</div>`;
+  }
+  return `<p class="ans-para">${highlight(b.text, term)}</p>`;
+}
+
+function renderEssayCard(q){
+  const id = qid(q);
+  const isStar = starred.has(id);
+  let html = `<div class="qcard essay-card" data-id="${attrEsc(id)}">`;
+  html += `<div class="qhead">
+      <div><span class="qnum-badge">${q.year}年・${q.track}${q.section?('・'+q.section):''}・第${q.qnum}題</span>
+      <div class="qstem">${highlight(q.stem, state.search)}</div></div>
+      <button class="star-btn ${isStar?'on':''}" data-id="${attrEsc(id)}">${isStar?'★':'☆'}</button>
+    </div>`;
+  const blocksHtml = (q.blocks||[]).map(b=>renderAnswerBlock(b, state.search)).join('');
+  html += `<div class="answer-panel" id="ap-${cssEsc(id)}">${blocksHtml}</div>`;
+  html += `<button class="reveal-btn" data-id="${attrEsc(id)}">顯示詳解</button>`;
+  html += '</div>';
+  return html;
+}
+
 function cssEsc(s){ return s.replace(/[^a-zA-Z0-9\-_]/g, c=>'_'+c.charCodeAt(0)+'_'); }
 function attrEsc(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 

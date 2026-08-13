@@ -58,3 +58,10 @@ main{padding:8px 12px 20px;max-width:720px;margin:0 auto;}
 .card-single{margin-top:4px;}
 .nav-btn{padding:8px 16px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13.5px;font-weight:600;cursor:pointer;}
 .nav-btn:disabled{opacity:.35;cursor:default;}
+.ans-heading{font-weight:700;color:var(--accent);margin:12px 0 4px;font-size:14px;}
+.ans-heading:first-child{margin-top:0;}
+.ans-para{margin:0 0 12px;line-height:1.75;white-space:pre-wrap;}
+.ans-para:last-child{margin-bottom:0;}
+.ans-list{display:grid;grid-template-columns:max-content 1fr;column-gap:12px;row-gap:10px;margin:6px 0 14px;align-items:start;}
+.ans-list .ans-label{font-weight:700;color:var(--accent2);line-height:1.6;}
+.ans-list .ans-body{line-height:1.65;white-space:pre-wrap;}
