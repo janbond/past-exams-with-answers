@@ -320,7 +320,7 @@ function bindCardEvents(){
     };
   });
   document.querySelectorAll('.reveal-btn').forEach(b=>{
-    b.onclick = ()=> revealAnswer(b.dataset.id);
+    b.onclick = ()=> toggleAnswer(b.dataset.id, b);
   });
   document.querySelectorAll('.opt').forEach(o=>{
     o.onclick = ()=>{
@@ -341,6 +341,15 @@ function cssAttrEsc(id){ return id.replace(/"/g,'\\"'); }
 function revealAnswer(id){
   const p = document.getElementById('ap-'+cssEsc(id));
   if(p) p.classList.add('show');
+  const btn = document.querySelector(`.reveal-btn[data-id="${cssAttrEsc(id)}"]`);
+  if(btn) btn.textContent = '隱藏詳解';
+}
+
+function toggleAnswer(id, btn){
+  const p = document.getElementById('ap-'+cssEsc(id));
+  if(!p) return;
+  const nowShown = p.classList.toggle('show');
+  if(btn) btn.textContent = nowShown ? '隱藏詳解' : '顯示詳解';
 }
 
 function updateStats(count){
