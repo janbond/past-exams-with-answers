@@ -69,3 +69,136 @@ main{padding:8px 12px 20px;max-width:720px;margin:0 auto;}
 .ans-table{border-collapse:collapse;width:100%;font-size:13px;line-height:1.5;}
 .ans-table th,.ans-table td{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:top;white-space:pre-wrap;}
 .ans-table th{background:var(--card2);color:var(--accent2);font-weight:700;white-space:nowrap;}
+
+/* ============================================================
+   Desktop (>=1024px): Claude-style warm/cream interface.
+   Mobile and tablet (<1024px) are completely untouched above.
+   ============================================================ */
+@media (min-width:1024px){
+  :root{
+    --bg:#F5F3EC; --sidebar:#F0EDE3; --card:#FFFFFF; --card2:#F7F4EC;
+    --text:#33302A; --muted:#8C8778;
+    --accent:#C1613B; --accent2:#A6512F; --accent-soft:rgba(193,97,59,.10);
+    --good:#4C8A63; --bad:#B23A3A; --star:#C1613B;
+    --border:#E7E1D2; --radius:16px;
+    --shadow:0 1px 2px rgba(51,48,42,.04), 0 6px 20px -8px rgba(51,48,42,.10);
+  }
+  html,body{background:var(--bg);}
+  body{
+    font-family:'Inter','PingFang TC','Microsoft JhengHei',-apple-system,BlinkMacSystemFont,sans-serif;
+    padding-bottom:0;
+  }
+
+  /* ---- sidebar (was the mobile top header/tabbar) ---- */
+  .app-header{
+    position:fixed; top:0; left:0; bottom:0; width:288px; height:100vh;
+    background:var(--sidebar); border-right:1px solid var(--border); border-bottom:none;
+    padding:28px 20px 20px; display:flex; flex-direction:column; gap:18px;
+    overflow-y:auto; z-index:30;
+  }
+  .title-row{
+    flex-direction:column; align-items:flex-start; gap:14px; padding:0 2px;
+  }
+  .title-row h1{
+    font-size:20px; font-weight:700; letter-spacing:.2px;
+    font-family:'Noto Serif TC','PingFang TC',serif;
+    color:var(--accent2); order:-1;
+  }
+  .title-row h1::after{ content:'考古題複習'; margin-left:8px; }
+  .search-wrap{ width:100%; order:1; }
+  #searchBox{
+    background:var(--card); border:1px solid var(--border); border-radius:11px;
+    padding:9px 12px; font-size:13.5px; color:var(--text);
+  }
+  #searchBox:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  #modeToggle{ order:2; align-self:flex-start; font-size:16px; }
+  .tabbar{
+    flex-direction:column; overflow-x:visible; gap:3px; padding-bottom:0;
+    margin-top:4px;
+  }
+  .tab{
+    text-align:left; border-radius:10px; padding:9px 12px; font-size:13.5px;
+    color:var(--text); background:transparent; transition:background .12s ease;
+  }
+  .tab:hover{ background:var(--card2); }
+  .tab.active{
+    background:var(--accent); color:#fff; font-weight:600; box-shadow:var(--shadow);
+  }
+
+  /* ---- main content column, offset for the sidebar ---- */
+  main{
+    margin-left:288px; margin-right:0; max-width:820px;
+    padding:44px 48px 100px; box-sizing:border-box;
+  }
+  .crumb{ font-size:12.5px; color:var(--muted); padding:4px 2px 8px; }
+
+  .year-grid{ grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0; }
+  .year-btn{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px 6px; box-shadow:var(--shadow); transition:transform .12s ease,border-color .12s ease;
+  }
+  .year-btn:hover{ border-color:var(--accent); transform:translateY(-1px); }
+  .year-btn.active{ border-color:var(--accent); background:var(--accent-soft); color:var(--accent2); }
+
+  .subtabs{ margin:14px 0; }
+  .tab.track-tab,.tab.sec-tab{
+    display:inline-block; background:var(--card); border:1px solid var(--border);
+    padding:7px 16px; border-radius:999px;
+  }
+  .tab.track-tab:hover,.tab.sec-tab:hover{ background:var(--card2); }
+  .tab.track-tab.active,.tab.sec-tab.active{ background:var(--accent); border-color:var(--accent); color:#fff; }
+
+  .qlist{ gap:16px; margin-top:16px; }
+  .qcard{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:22px 26px; box-shadow:var(--shadow);
+  }
+  .qnum-badge{
+    background:var(--card2); color:var(--accent2); font-weight:600; font-size:12px;
+    padding:3px 10px;
+  }
+  .qstem{ font-size:16px; line-height:1.7; }
+  .star-btn{ color:var(--muted); }
+  .star-btn.on{ color:var(--star); }
+
+  .passage{ background:var(--card2); border:1px solid var(--border); }
+  .passage-toggle{ color:var(--accent); }
+
+  .opt{ background:var(--card2); border:1px solid var(--border); }
+  .opt:hover{ border-color:var(--accent); }
+  .opt.correct{ border-color:var(--good); background:rgba(76,138,99,.08); }
+  .opt.wrong{ border-color:var(--bad); background:rgba(178,58,58,.08); }
+
+  .answer-panel{
+    background:var(--accent-soft); border:1px solid var(--border); border-radius:12px;
+    padding:16px 18px; font-size:14.5px;
+  }
+  .answer-panel .ans-line{ color:var(--good); }
+  .reveal-btn{
+    border:1px solid var(--border); border-radius:11px; background:var(--card);
+    color:var(--accent2); font-weight:600; padding:10px; transition:background .12s ease;
+  }
+  .reveal-btn:hover{ background:var(--card2); }
+
+  .back-link{ color:var(--accent); }
+  .card-mode-btn{
+    border:1px solid var(--accent); background:var(--card); color:var(--accent2);
+    border-radius:999px; padding:8px 18px; transition:background .12s ease;
+  }
+  .card-mode-btn:hover{ background:var(--accent-soft); }
+  .nav-btn{ background:var(--card); border:1px solid var(--border); color:var(--text); }
+  .nav-btn:hover:not(:disabled){ border-color:var(--accent); color:var(--accent2); }
+
+  .ans-heading{ color:var(--accent2); font-size:14.5px; }
+  .ans-list .ans-label{ color:var(--accent2); }
+  .ans-table th{ background:var(--card2); color:var(--accent2); }
+
+  .stats-bar{
+    left:288px; background:var(--card); border-top:1px solid var(--border);
+    padding:10px 48px; font-size:12.5px;
+  }
+
+  body.card-mode main{ margin-left:auto; margin-right:auto; }
+  body.card-mode .stats-bar{ left:0; }
+}
+
