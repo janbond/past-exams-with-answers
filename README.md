@@ -1,0 +1,57 @@
+# 考古題複習網站（多檔版）
+
+## 檔案結構
+
+```
+index.html          網頁主結構
+style.css           樣式
+app.js              互動邏輯（讀取 data/ 底下的題庫）
+data/manifest.json  科目清單，列出要載入哪些 JSON 檔
+data/guowen.json          國文題庫（160題）
+data/faxue_yingwen.json   法學知識與英文題庫（789題）
+```
+
+新增科目時，只要把新的 JSON 檔放進 `data/`，再把檔名加進 `manifest.json` 的陣列裡即可，不用改 `app.js`。
+
+每題的 JSON 格式：
+
+```json
+{
+  "track": "高考三級",
+  "subject": "國文",
+  "year": "114",
+  "section": "測驗",
+  "qnum": 1,
+  "group": null,
+  "passage": null,
+  "stem": "題目敘述…",
+  "options": {"A": "…", "B": "…", "C": "…", "D": "…"},
+  "answer": "A",
+  "explanation": ["詳解段落一", "詳解段落二"]
+}
+```
+
+## 重要：這個版本必須「用網頁伺服器方式」開啟
+
+`app.js` 是用 `fetch()` 去讀 `data/` 底下的 JSON 檔。瀏覽器基於安全考量，**不允許**網頁用 `fetch()` 讀取本機檔案（也就是直接雙擊 `index.html` 打開會讀不到資料，畫面只會停在「載入題庫中…」）。
+
+所以這個多檔版本適合：
+- 部署到 GitHub Pages（見下方步驟）
+- 或在資料夾內執行 `python3 -m http.server` 後用 `http://localhost:8000` 開啟
+
+如果只是想要「雙擊就能開、完全離線」的版本，請用另外提供的單一檔案版 `考古題複習.html`（資料已經包在檔案裡，不需要伺服器）。
+
+## 部署到 GitHub Pages（不需要指令列）
+
+1. 到 [github.com](https://github.com) 註冊／登入帳號。
+2. 右上角「+」→「New repository」，取個名字（例如 `exam-review`），設為 Public，建立。
+3. 進入剛建立的 repo，點「Add file」→「Upload files」。
+4. 把這個資料夾內的 `index.html`、`style.css`、`app.js`，以及整個 `data` 資料夾，一起拖曳上傳（大部分瀏覽器支援直接拖資料夾；若不支援，就把 `data` 資料夾內的檔案逐一上傳到 `data/` 路徑下）。
+5. 送出 commit。
+6. 到 repo 的「Settings」→左側選單「Pages」→ Source 選擇「Deploy from a branch」，Branch 選 `main`、資料夾選 `/(root)`，按 Save。
+7. 等 1-2 分鐘，頁面會顯示網址，格式類似 `https://你的帳號.github.io/exam-review/`，之後手機打開這個網址就能隨時複習。
+8. 之後想更新題庫，只要在 GitHub 網頁上編輯或重新上傳對應的 JSON 檔案，存檔後網站會自動更新（通常幾十秒內生效）。
+
+## 手機加到主畫面
+
+用手機瀏覽器打開部署好的網址後，Safari／Chrome 都有「加入主畫面」功能，加進去後圖示會跟一般App一樣，點開就直接進入複習頁面。
