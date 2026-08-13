@@ -125,6 +125,7 @@ function cssEsc(s){ return s.replace(/[^a-zA-Z0-9\-_]/g, c=>'_'+c.charCodeAt(0)+
 function attrEsc(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
 function render(){
+  document.body.classList.toggle('card-mode', !!state.cardMode);
   renderSubjectTabs();
   const main = document.getElementById('main');
   if(!state.subject){ state.subject = SUBJECTS[0]; }

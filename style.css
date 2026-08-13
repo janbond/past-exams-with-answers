@@ -8,18 +8,21 @@
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif;}
-body{padding-bottom:70px;}
-.app-header{position:sticky;top:0;z-index:20;background:var(--bg);padding:10px 12px 0;border-bottom:1px solid var(--border);}
-.title-row{display:flex;align-items:center;justify-content:space-between;padding:4px 2px 8px;}
-.title-row h1{font-size:17px;margin:0;font-weight:700;}
-.search-wrap{padding:0 0 10px;}
-#searchBox{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:15px;}
-.tabbar{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+body{padding-bottom:56px;}
+.app-header{position:sticky;top:0;z-index:20;background:var(--bg);padding:6px 12px 0;border-bottom:1px solid var(--border);}
+.title-row{display:flex;align-items:center;gap:8px;padding:2px 2px 5px;}
+.title-row h1{font-size:14px;margin:0;font-weight:700;flex:0 0 auto;}
+.search-wrap{flex:1;padding:0;}
+#searchBox{width:100%;padding:6px 10px;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13.5px;}
+#modeToggle{flex:0 0 auto;}
+.tabbar{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .tabbar::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;padding:8px 14px;border-radius:999px;background:var(--card2);color:var(--muted);font-size:14px;white-space:nowrap;border:1px solid transparent;cursor:pointer;}
+.tab{flex:0 0 auto;padding:5px 12px;border-radius:999px;background:var(--card2);color:var(--muted);font-size:12.5px;white-space:nowrap;border:1px solid transparent;cursor:pointer;}
+body.card-mode .app-header{display:none;}
+body.card-mode{padding-bottom:52px;}
 .tab.active{background:var(--accent);color:#fff;font-weight:600;}
 .crumb{font-size:12px;color:var(--muted);padding:6px 2px 2px;}
-main{padding:10px 12px 30px;max-width:720px;margin:0 auto;}
+main{padding:8px 12px 20px;max-width:720px;margin:0 auto;}
 .year-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0;}
 .year-btn{padding:16px 4px;text-align:center;border-radius:12px;background:var(--card);border:1px solid var(--border);font-size:15px;font-weight:600;cursor:pointer;}
 .year-btn .cnt{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:2px;}
@@ -46,13 +49,12 @@ main{padding:10px 12px 30px;max-width:720px;margin:0 auto;}
 .answer-panel .ans-line{font-weight:700;color:var(--good);margin-bottom:6px;}
 .reveal-btn{margin-top:10px;width:100%;padding:9px;border-radius:10px;border:1px dashed var(--border);background:transparent;color:var(--muted);font-size:13.5px;cursor:pointer;}
 .empty{text-align:center;color:var(--muted);padding:40px 10px;font-size:14px;}
-.stats-bar{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);padding:8px 14px;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;z-index:20;}
+.stats-bar{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);padding:6px 14px;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;z-index:20;}
 .back-link{display:inline-block;margin:6px 0 4px;font-size:13px;color:var(--accent);cursor:pointer;}
 .group-note{font-size:12px;color:var(--muted);margin:14px 0 -2px;padding-left:2px;}
 .list-toolbar{display:flex;justify-content:flex-end;margin-top:8px;}
 .card-mode-btn{padding:7px 14px;border-radius:999px;border:1px solid var(--accent);background:rgba(79,141,253,.1);color:var(--accent);font-size:13px;cursor:pointer;font-weight:600;}
 .card-toolbar{display:flex;justify-content:space-between;align-items:center;margin:8px 0 4px;}
-.card-single{margin-top:6px;}
-.card-single .qcard{min-height:60vh;}
+.card-single{margin-top:4px;}
 .nav-btn{padding:8px 16px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13.5px;font-weight:600;cursor:pointer;}
 .nav-btn:disabled{opacity:.35;cursor:default;}
