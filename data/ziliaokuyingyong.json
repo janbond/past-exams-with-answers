@@ -2,6 +2,2156 @@
 {
 "type": "essay",
 "subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 1,
+"qlabel": "第1題",
+"stem": "目前人工智慧廣泛應用於製造業、醫療、食衣住行及賦稅等領域，需要大量資料作為訓練及測試資料。如你/妳被委以建立資料庫來儲存這些大量資料的工作，請寫出資料庫設計的階段（Phases of Database Design），並說明之。（12分）如果資料庫設計階段決定採用關聯式資料庫模型，請寫出四項「好」的關聯式資料庫設計的關聯式綱要設計原則。（8分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "資料庫設計之階段"
+},
+{
+"type": "para",
+"text": "需求蒐集與分析（Requirements Collection and Analysis）：訪談使用者、蒐集並分析未來資料庫系統之功能與資料需求。"
+},
+{
+"type": "para",
+"text": "概念資料庫設計（Conceptual Database Design）：依據需求分析結果，建立高階、不涉及實作細節之概念資料模型（如ER/EER Model），描述實體、屬性與關係。"
+},
+{
+"type": "para",
+"text": "邏輯資料庫設計／資料模式轉換（Logical Design / Data Model Mapping）：將概念模型轉換為所選用DBMS所支援之邏輯資料模式（如關聯式模式），產生關聯式綱要。"
+},
+{
+"type": "para",
+"text": "實體資料庫設計（Physical Database Design）：決定資料實際儲存於磁碟之方式，包括索引設計、檔案組織方式、儲存參數調校，以達到理想之存取效能。"
+},
+{
+"type": "para",
+"text": "四項「好」的關聯式資料庫設計綱要原則"
+},
+{
+"type": "para",
+"text": "屬性語意明確原則（Semantics of Attributes）：每一關聯應僅描述單一實體或單一關係類型之屬性，語意清楚明確，避免將多個不相關概念混雜於同一關聯中。"
+},
+{
+"type": "para",
+"text": "減少資訊重複、避免更新異常（Redundant Information in Tuples / Update Anomalies）：綱要設計應儘量避免因資料重複儲存而導致插入、刪除、更新異常，符合較高之正規化形式。"
+},
+{
+"type": "para",
+"text": "減少值組中的Null值（Null Values in Tuples）：應儘量避免屬性經常出現大量NULL值，必要時將經常為NULL之屬性另立獨立資料表。"
+},
+{
+"type": "para",
+"text": "避免產生偽元組（Spurious Tuples）：資料表分解時應確保為無損接合分解（Lossless-Join Decomposition），避免因分解不當（如分解後之關聯間缺乏正確之共同鍵）而導致重新join後產生原本不存在之偽資料列。"
+}
+],
+"orig_section": "第一份試卷（A卷）",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 2,
+"qlabel": "第2題",
+"stem": "給予一ER圖，其中「works-for」關係型態描述一個部門有許多員工，但一個員工只能屬於某一部門，一個部門可位於多個地方；「works-on」關係型態描述一個員工可以參與多個計畫，一個計畫也可以由多個員工參與，並記錄每一員工參與每一計畫的時間；請將之轉換成關聯式資料庫綱要。（7分＋7分）在ER概念模型有參與限制（Participation Constraints），請問選擇性（Optional）與必須（Mandatory）限制，在關聯式資料庫模型如何表示上述限制。（6分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "轉換為關聯式資料庫綱要"
+},
+{
+"type": "para",
+"text": "依題目文字描述之基數限制（1個部門對多個員工＝1:N；1個部門對多個地點＝多值屬性；員工與計畫之間為M:N，並帶有Hours屬性），轉換結果如下："
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK）",
+"對應關係"
+],
+"rows": [
+[
+"DEPARTMENT",
+"Dnumber (PK), Dname",
+""
+],
+[
+"DEPT_LOCATIONS",
+"Dnumber (FK→DEPARTMENT) + Dlocation，複合PK",
+"部門之多值屬性「可位於多個地方」須獨立轉換為一關聯"
+],
+[
+"EMPLOYEE",
+"Ssn (PK), Name, ..., Dno (FK→DEPARTMENT)",
+"works-for：1(部門):N(員工)，故將「1」方DEPARTMENT之主鍵，作為外鍵置於「N」方EMPLOYEE中"
+],
+[
+"PROJECT",
+"Pnumber (PK), Pname",
+""
+],
+[
+"WORKS_ON",
+"Essn (FK→EMPLOYEE) + Pno (FK→PROJECT)，複合PK, Hours",
+"works-on：員工與計畫為M:N關係且帶有Hours屬性，須另建一連結關聯，其PK為雙方主鍵組合"
+]
+]
+},
+{
+"type": "para",
+"text": "Optional／Mandatory參與限制於關聯式模型之表示方式"
+},
+{
+"type": "para",
+"text": "Mandatory（必須／全部參與，Total Participation）：於關聯式模型中，以該實體對應之外鍵欄位加上NOT NULL限制來表示。例如「一個員工只能屬於某一部門」表示EMPLOYEE對works-for關係為全部參與，故EMPLOYEE.Dno欄位須設為NOT NULL，每一員工列必須有一個有效的部門編號。"
+},
+{
+"type": "para",
+"text": "Optional（選擇性／部分參與，Partial Participation）：於關聯式模型中，以該實體對應之外鍵欄位允許為NULL來表示，即該欄位不加NOT NULL限制。若某關係中一方之參與為選擇性（如並非每個部門都設有經理），則對應之外鍵欄位可以是NULL，表示該值組尚未（或不需要）與另一方建立該關係。"
+}
+],
+"orig_section": "第一份試卷（A卷）",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 3,
+"qlabel": "第3題",
+"stem": "給予EMPLOYEE(ssn,salary,dno)及DEPARTMENT(dnum,dname)兩個關聯綱要，EMPLOYEE的外來鍵dno參考DEPARTMENT的主鍵dnum。DEPARTMENT資料：(1,R&D),(2,Administration),(3,Accounting),(4,Finances),(5,Personnel)。執行下列⑴與⑵的SQL查詢後的結果分別為何？其意義分別為何？（20分）⑴SELECT dno,COUNT(*) FROM DEPARTMENT,EMPLOYEE WHERE dnum=dno AND salary>25000 GROUP BY dno HAVING COUNT(*)>2　⑵SELECT dno,COUNT(*) FROM DEPARTMENT,EMPLOYEE WHERE dnum=dno AND salary>25000 AND dno IN (SELECT dno FROM EMPLOYEE GROUP BY dno HAVING COUNT(*)>2) GROUP BY dno",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "重要說明：法律人網站將本題EMPLOYEE資料表（ssn 1~13）於PDF重製過程中因跨頁拆分，部分薪水/部門代號數值遭誤植為獨立題號（第4~8題）之零散片段。其中ssn=1,2,3及ssn=8~13之資料可清楚重建：(1,30000,5),(2,40000,5),(3,38000,5),(8,55000,1),(9,45000,1),(10,30000,1),(11,50000,2),(12,25000,2),(13,30000,3)；惟ssn=4~7之薪水與部門代號因拆散片段（「25000」「5,25000,4」「43000,4」「25000,4」）交錯不明，無法可靠還原其正確對應關係，故以下說明以可清楚重建之9筆資料具體示範查詢邏輯與計算方式，讀者可依考選部官方PDF原始試題之完整13筆資料，代入相同方法即可得出確切最終數字。"
+},
+{
+"type": "para",
+"text": "可重建之EMPLOYEE資料（部分）"
+},
+{
+"type": "table",
+"header": [
+"ssn",
+"salary",
+"dno"
+],
+"rows": [
+[
+"1",
+"30000",
+"5"
+],
+[
+"2",
+"40000",
+"5"
+],
+[
+"3",
+"38000",
+"5"
+],
+[
+"8",
+"55000",
+"1"
+],
+[
+"9",
+"45000",
+"1"
+],
+[
+"10",
+"30000",
+"1"
+],
+[
+"11",
+"50000",
+"2"
+],
+[
+"12",
+"25000",
+"2"
+],
+[
+"13",
+"30000",
+"3"
+]
+]
+},
+{
+"type": "heading",
+"text": "⑴ 查詢邏輯與意義"
+},
+{
+"type": "para",
+"text": "此查詢先篩選出salary>25000之員工，再依dno分組計數，並僅保留分組後計數>2的部門，亦即：找出「薪水超過25000的員工人數超過2人」的部門編號及其（高薪）人數。以可重建資料為例：dno=5之高薪員工(salary>25000)為ssn1,2,3共3人（均符合>25000）>2，故dno=5會出現在結果中，計數為3；dno=1之高薪員工為ssn8(55000),ssn9(45000)，ssn10為30000亦>25000，共3人，同樣>2；dno=2僅ssn11(50000)一筆>25000（ssn12=25000不符合嚴格大於），故僅1人，不滿足>2，不會出現；dno=3僅ssn13一筆，不滿足。此查詢之意義在於篩選出「高薪員工人數眾多」的部門。"
+},
+{
+"type": "heading",
+"text": "⑵ 查詢邏輯與意義"
+},
+{
+"type": "para",
+"text": "此查詢之外層條件為salary>25000，並額外要求dno須屬於子查詢「依dno分組、計算EMPLOYEE表格中該部門全體員工總人數(不限薪水)、且總人數>2」之部門集合，最後才依dno分組計數。亦即：查詢範圍限定在「部門總人數(不論薪水高低)超過2人」的部門中，計算這些部門裡薪水超過25000之員工人數。此查詢與⑴的關鍵差異在於：⑴的HAVING COUNT(*)>2係針對「篩選後(僅高薪員工)」計數，而⑵的子查詢COUNT(*)>2係針對「該部門全體員工(不限薪水)」計數，兩者篩選邏輯不同，可能得出不同的部門集合與計數結果——⑴傾向找出「高薪員工人數多」的部門，⑵則先限定「規模較大(員工總數多)」的部門，再看其中高薪員工的人數，兩查詢用以說明HAVING子句作用範圍（篩選後子集 vs. 巢狀子查詢限定範圍）之差異，為關聯式資料庫SQL查詢設計中常見的易混淆情境。"
+}
+],
+"orig_section": "第一份試卷（A卷）",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 4,
+"qlabel": "第4題",
+"stem": "給予一關聯綱要R(A,B,C,D,E,F)及一組功能依附性F={{A}→{B,C,D,E,F}, {B,C}→{A,D,E,F}, {B}→{F}, {D}→{E}}，請將R分別分割成2NF及3NF的關聯綱要。（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "候選鍵與質數屬性判定"
+},
+{
+"type": "para",
+"text": "由A→BCDEF，可知A+=ABCDEF=R的全部屬性，故{A}為一候選鍵。由BC→ADEF，可知(BC)+=BC∪ADEF=ABCDEF=R，且B或C單獨均未給定可決定其餘所有屬性，故{B,C}為另一候選鍵（最小化）。質數屬性（Prime Attribute，出現於任一候選鍵中）為A、B、C；非質數屬性為D、E、F。"
+},
+{
+"type": "para",
+"text": "2NF正規化"
+},
+{
+"type": "para",
+"text": "檢視是否存在部分相依（Partial Dependency）：候選鍵{B,C}為複合鍵，而已知函數相依B→F，其中F為非質數屬性，B僅為候選鍵{B,C}之真子集，故B→F構成部分相依，違反2NF。依此分解："
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK）"
+],
+"rows": [
+[
+"R1",
+"B (PK), F"
+],
+[
+"R2",
+"A, B, C, D, E（移除F後之剩餘屬性），候選鍵為{A}或{B,C}"
+]
+]
+},
+{
+"type": "para",
+"text": "分解後R2中僅剩D、E為非質數屬性，且未給定D或E依附於B或C單獨（僅D→E，與鍵之子集無關），故R2已無部分相依，符合2NF。"
+},
+{
+"type": "para",
+"text": "3NF正規化"
+},
+{
+"type": "para",
+"text": "檢視R2(A,B,C,D,E)是否存在遞移相依：已知D→E，D為非質數屬性，E亦為非質數屬性，此即非質數屬性D決定另一非質數屬性E之遞移相依，違反3NF。依此再分解R2："
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK）"
+],
+"rows": [
+[
+"R1",
+"B (PK), F"
+],
+[
+"R2a",
+"D (PK), E"
+],
+[
+"R2b",
+"A, B, C, D（移除E後之剩餘屬性），候選鍵為{A}或{B,C}，FK: D→R2a"
+]
+]
+},
+{
+"type": "para",
+"text": "驗證：R1、R2a、R2b三者屬性聯集為{A,B,C,D,E,F}=R，符合無損接合；原有全部函數相依（A→BCDEF、BC→ADEF、B→F、D→E）均可由分解後各關聯所保留之相依（A→BCD及BC→AD於R2b、D→E於R2a、B→F於R1）推導還原，符合相依保留。最終R1(B,F)、R2a(D,E)、R2b(A,B,C,D)三個關聯，每一關聯中僅存在以候選鍵（或單一決定因子鍵）為determinant之函數相依，均已達3NF（且實際上亦已達BCNF）。"
+}
+],
+"orig_section": "第一份試卷（A卷）",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 5,
+"qlabel": "第5題",
+"stem": "分散式資料庫系統的優點是擁有透明度（Transparency），請寫出三種分散式資料庫的透明度並說明之。（8分）為確保資料庫交易能正確被執行，資料庫管理系統的並行控制與回復方式應具備那四項特性？請說明之。（12分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "三種分散式資料庫透明度"
+},
+{
+"type": "para",
+"text": "位置透明（Location Transparency）：使用者存取資料時，不需知道資料實際儲存於哪一個實體節點或位置，即可如同存取單一集中式資料庫般進行查詢與異動。"
+},
+{
+"type": "para",
+"text": "分割透明（Fragmentation Transparency）：使用者不需知道資料表是否已被水平或垂直分割並分散儲存於不同節點，可直接以邏輯關聯名稱查詢，由系統自動整合各分割片段之資料。"
+},
+{
+"type": "para",
+"text": "複製透明（Replication Transparency）：使用者不需知道資料是否於多個節點存有複本，系統自動確保各複本間資料一致，並自動選擇適當之複本回應使用者的查詢或異動請求。"
+},
+{
+"type": "para",
+"text": "並行控制與回復方式應具備之四項特性（ACID）"
+},
+{
+"type": "para",
+"text": "原子性（Atomicity）：一筆交易中的所有操作，要嘛全部成功執行完成，要嘛完全不執行，不允許只執行一部分。"
+},
+{
+"type": "para",
+"text": "一致性（Consistency）：交易執行前後，資料庫都必須維持在合法且一致的狀態，不得違反資料庫已定義之任何完整性限制。"
+},
+{
+"type": "para",
+"text": "隔離性（Isolation）：多筆交易並行執行時，其最終執行結果應等同於依某一先後順序循序執行之結果，即滿足可循序性，交易間彼此的中間執行狀態不應互相干擾。"
+},
+{
+"type": "para",
+"text": "持久性（Durability）：一筆交易一旦成功提交（Commit），其對資料庫所造成的異動效果即為永久性，即使系統其後發生故障，該異動效果也不會遺失。"
+}
+],
+"orig_section": "第一份試卷（A卷）",
+"orig_qnum": 5
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 6,
+"qlabel": "第1題",
+"stem": "檔案系統之後發展資料庫管理系統，請說明資料庫管理系統出現的主要緣由與主要議題。（10分）古典資料庫管理系統之後發展出NoSQL資料庫系統，請說明NoSQL資料庫系統出現的主要緣由與主要議題。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "資料庫管理系統出現之主要緣由與議題"
+},
+{
+"type": "para",
+"text": "傳統檔案系統存在多項問題：資料重複（Data Redundancy）與不一致（Inconsistency，同一資料存於多個檔案，易產生版本不一致）；資料存取困難（每次查詢均須撰寫專屬程式）；資料隔離（Data Isolation，不同應用程式各自使用不同檔案格式，難以整合）；完整性問題（缺乏統一之一致性限制機制）；原子性問題（缺乏交易Transaction概念，操作中斷易致資料損毀）；並行存取異常（多使用者同時存取同一檔案易生衝突）；安全性問題（難以做細緻的存取權限控制）。資料庫管理系統即為解決上述議題而生，提供資料獨立性（Data Independence）、集中共享存取、完整性限制機制、交易管理（ACID）與存取權限控制等機制，取代檔案系統各自為政之管理方式。"
+},
+{
+"type": "para",
+"text": "NoSQL資料庫系統出現之主要緣由與議題"
+},
+{
+"type": "para",
+"text": "隨著網際網路服務規模擴大，巨量資料（Big Data）、高速讀寫、需具備水平擴展（Horizontal Scalability）能力、且資料結構彈性多變（Schema-less，半結構化或非結構化資料）等需求日增，傳統關聯式資料庫因強調嚴謹的ACID特性與固定schema，且多以垂直擴展（Scale-up）為主，在超大規模、高並行、分散式部署情境下面臨效能與擴充瓶頸，因而發展出NoSQL資料庫系統。其主要議題包括：CAP定理下一致性（Consistency）與可用性（Availability）於網路分割（Partition Tolerance）情況下的取捨；為追求可用性與擴展性而採用之最終一致性（Eventual Consistency）模型；多樣化的資料模型（如Key-Value、Document、Column-family、Graph）；以及分散式叢集架構下的資料分片（Sharding）與水平擴展設計。"
+}
+],
+"orig_section": "第二份試卷（B卷）",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 7,
+"qlabel": "第2題",
+"stem": "關聯式資料庫在新增（insert）和刪除（delete）時，為了維持關聯式資料庫狀態的一致性（integrity），各需先做那些檢查？若不合有幾種處理的方法？（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "新增（Insert）時應檢查之項目"
+},
+{
+"type": "para",
+"text": "定義域限制（Domain Constraint）：欲新增之屬性值是否屬於該屬性所定義之合法值域範圍。"
+},
+{
+"type": "para",
+"text": "鍵限制／實體完整性（Key Constraint / Entity Integrity）：新增之主鍵值是否與既有值組重複（不可重複），主鍵欄位是否為NULL（不允許為NULL）。"
+},
+{
+"type": "para",
+"text": "參考完整性（Referential Integrity）：若新增之值組含有外鍵欄位，其外鍵值必須等於被參照關聯中已存在之主鍵值，或者為NULL（若該外鍵欄位允許NULL）。"
+},
+{
+"type": "para",
+"text": "一般語意完整性限制（General Semantic Constraints）：如使用者自訂之CHECK限制、觸發器（Trigger）所定義之業務規則等。"
+},
+{
+"type": "para",
+"text": "若新增值組違反上述任一檢查，通常之處理方式為：拒絕（Reject）該筆新增操作，並回報錯誤訊息予使用者或應用程式。"
+},
+{
+"type": "para",
+"text": "刪除（Delete）時應檢查之項目"
+},
+{
+"type": "para",
+"text": "主要檢查參考完整性：欲刪除之值組的主鍵值，是否正被其他關聯中的外鍵所參照（即是否有子關聯之資料列引用此值）。"
+},
+{
+"type": "para",
+"text": "若違反參考完整性時之處理方法（三種）"
+},
+{
+"type": "para",
+"text": "限制（Restrict）：拒絕該刪除操作，若仍有其他值組參照該筆將被刪除之值，則不允許刪除。"
+},
+{
+"type": "para",
+"text": "連鎖刪除（Cascade）：一併刪除所有參照到該筆被刪除值的相關值組（子關聯中之對應資料列一併刪除）。"
+},
+{
+"type": "para",
+"text": "設為空值（Set Null）：將所有參照到該筆被刪除值的外鍵欄位值設為NULL（前提是該外鍵欄位須允許NULL），保留子關聯之值組但切斷其參照關係。"
+},
+{
+"type": "para",
+"text": "部分資料庫系統另提供「設為預設值（Set Default）」之第四種處理方式，將受影響之外鍵值設為預先定義之預設值。"
+}
+],
+"orig_section": "第二份試卷（B卷）",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 8,
+"qlabel": "第3題",
+"stem": "假設有一關聯R(A,B,C,D,E)，其主鍵係由A與B兩屬性所組成，並已知關聯R的C與E兩屬性間具有功能相依：C→E。試問：若關聯R未進行正規化之處理，則關聯R在資料庫的使用上會有怎樣的問題存在？舉出資料實例加以說明。（20分）請用關聯式資料庫正規型式處理這個問題。（10分）請檢驗此更新過的綱要能否符合BCNF並陳述理由。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "未正規化之問題（舉例說明）"
+},
+{
+"type": "para",
+"text": "由於PK=(A,B)，而C→E中之決定因子C並非(A,B)之超鍵，且E並非質數屬性，此一函數相依違反BCNF（乃至3NF），會造成資料重複與下列各類異常。舉例如下（PK底線標示）："
+},
+{
+"type": "table",
+"header": [
+"A",
+"B",
+"C",
+"D",
+"E"
+],
+"rows": [
+[
+"1",
+"1",
+"C1",
+"D1",
+"E1"
+],
+[
+"1",
+"2",
+"C1",
+"D2",
+"E1"
+],
+[
+"2",
+"1",
+"C2",
+"D3",
+"E2"
+]
+]
+},
+{
+"type": "para",
+"text": "更新異常（Update Anomaly）：C1對應之E值為E1，重複儲存於兩列中；若僅更新其中一列之E值而遺漏另一列，將導致同一C值對應到不一致的E值。"
+},
+{
+"type": "para",
+"text": "插入異常（Insertion Anomaly）：若欲記錄「C3對應E5」此一事實，但目前尚無任何(A,B)組合使用C3，則因PK(A,B)不可為NULL，將無法單獨插入此筆C-E對應關係。"
+},
+{
+"type": "para",
+"text": "刪除異常（Deletion Anomaly）：若將僅有的兩筆C1相關列全數刪除，則「C1對應E1」此一事實將隨之從資料庫中完全遺失，即使該事實本身仍然成立。"
+},
+{
+"type": "para",
+"text": "正規化處理"
+},
+{
+"type": "para",
+"text": "依函數相依C→E，將R分解為以下兩個關聯，把C與E的對應關係獨立儲存："
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK）"
+],
+"rows": [
+[
+"R1",
+"C (PK), E"
+],
+[
+"R2",
+"A, B (複合PK), C (FK→R1), D"
+]
+]
+},
+{
+"type": "para",
+"text": "BCNF驗證"
+},
+{
+"type": "para",
+"text": "分解後之R1(C,E)：唯一存在的函數相依為C→E，其決定因子C恰為R1之主鍵（超鍵），故符合BCNF。R2(A,B,C,D)：移除E之後，原關聯中僅剩之函數相依為主鍵(A,B)→(C,D)（由原PK隱含），其決定因子(A,B)本身即為R2之超鍵，且不再包含C→E此一相依（因E已移至R1），故R2亦符合BCNF。兩關聯均只存在以超鍵為決定因子之函數相依，故此更新過之綱要（R1、R2）符合BCNF。"
+}
+],
+"orig_section": "第二份試卷（B卷）",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 9,
+"qlabel": "第4題",
+"stem": "區塊鏈（blockchain）是新興的資料庫態樣，請說明其主要特性。（10分）請分析提出如何將區塊鏈應用於改善鐵路售票系統。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "區塊鏈之主要特性"
+},
+{
+"type": "para",
+"text": "去中心化（Decentralization）：資料不儲存於單一中央伺服器，而是分散儲存於網路中多個節點，無單一控制權威。"
+},
+{
+"type": "para",
+"text": "不可竄改性（Immutability）：每一區塊透過雜湊值（Hash）與前一區塊鏈結，一旦資料寫入並經共識確認後，極難被竄改，任何竄改均會導致後續所有區塊之雜湊值不一致而被偵測。"
+},
+{
+"type": "para",
+"text": "透明可追溯性（Transparency & Traceability）：所有交易紀錄公開透明（或依權限公開），且可完整追溯歷史交易紀錄。"
+},
+{
+"type": "para",
+"text": "共識機制（Consensus Mechanism）：透過如工作量證明（PoW）、權益證明（PoS）等機制，讓分散式節點對新區塊之加入達成一致共識，確保資料一致性。"
+},
+{
+"type": "para",
+"text": "智能合約（Smart Contract）：可將業務邏輯以程式碼形式部署於區塊鏈上，於滿足特定條件時自動執行，無需第三方仲介。"
+},
+{
+"type": "para",
+"text": "應用於改善鐵路售票系統之分析"
+},
+{
+"type": "para",
+"text": "防止黃牛與重複售票：利用區塊鏈之不可竄改性，將每張票券之發行、轉售、使用紀錄鏈上記錄，可有效防止偽造票券或同一車票被重複販售之情形。"
+},
+{
+"type": "para",
+"text": "去中心化訂票紀錄：訂票資料分散儲存於多節點，避免單一中央訂票系統故障導致全面停擺，提升系統可用性與容錯能力。"
+},
+{
+"type": "para",
+"text": "以智能合約自動化退換票規則：透過智能合約，將退票、換票、優惠票規則寫入程式化合約中，符合條件時自動執行退款或轉讓，減少人工作業與爭議。"
+},
+{
+"type": "para",
+"text": "票券轉讓透明化：允許旅客間合法轉讓車票，並將轉讓紀錄公開記錄於鏈上，增加轉售交易之透明度與可信度，同時可設計限制轉讓次數或加價上限之規則。"
+}
+],
+"orig_section": "第二份試卷（B卷）",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 10,
+"qlabel": "第1題",
+"stem": "請為如下的醫療院所設計符合BCNF且考量OO的EER data model，model中請註明合適的primary/foreign/candidate keys，資料表間的關聯亦請適當地說明彼此間的maximum/minimum cardinality。需求：醫師或護理人員只屬於一個科別但可支援其他科別門診；同一診間同一看診時段只安排一位醫師與一位護理人員；醫師護理人員同屬工作人員，醫師另記錄主治項目/學歷/經歷/現職，護理人員另記錄專長；可依科系/科別查詢科別醫療項目；可依醫師查詢醫師資料與門診時刻表；可依科系科別查詢門診時刻表；可依病患查詢預約掛號資料；可列印各日期時段診間掛號資料。（30分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "依需求，設計「工作人員」（STAFF）為父類別，依角色特化（Specialization，不相交）出DOCTOR、NURSE兩個子類別，滿足OO物件導向父子型態塑模需求，並符合醫師、護理人員各自記錄不同專屬屬性、但共用基本人員資料之業務語意。"
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK/候選鍵）"
+],
+"rows": [
+[
+"DEPT_GROUP（科系）",
+"GroupID (PK), GroupName"
+],
+[
+"DEPARTMENT（科別）",
+"DeptID (PK), DeptName, GroupID (FK→DEPT_GROUP)"
+],
+[
+"MEDICAL_ITEM（科別醫療項目）",
+"DeptID (FK→DEPARTMENT) + ItemName，複合PK"
+],
+[
+"STAFF（工作人員，父類別）",
+"StaffID (PK), Name, Gender, BirthDate, DeptID (FK→DEPARTMENT，所屬科別)"
+],
+[
+"DOCTOR（醫師子類別）",
+"StaffID (PK/FK→STAFF), Specialty（主治項目）, Education（學歷）, Experience（經歷）, CurrentPosition（現職）"
+],
+[
+"NURSE（護理人員子類別）",
+"StaffID (PK/FK→STAFF), Expertise（專長）"
+],
+[
+"SUPPORT（支援其他科別門診）",
+"StaffID (FK→STAFF) + DeptID (FK→DEPARTMENT)，複合PK"
+],
+[
+"CLINIC_ROOM（診間）",
+"RoomID (PK)"
+],
+[
+"CLINIC_SCHEDULE（門診時刻表）",
+"RoomID (FK→CLINIC_ROOM) + Date + TimeSlot，複合PK, DoctorID (FK→DOCTOR), NurseID (FK→NURSE)"
+],
+[
+"PATIENT（病患）",
+"PatientID (PK), MedicalRecordNo（病歷號碼）, Name, Gender, BirthDate"
+],
+[
+"REGISTRATION（掛號／預約）",
+"RegID (PK), PatientID (FK→PATIENT), RoomID+Date+TimeSlot (FK→CLINIC_SCHEDULE), Status（掛號現況）"
+]
+]
+},
+{
+"type": "para",
+"text": "關聯之最大／最小基數"
+},
+{
+"type": "para",
+"text": "DEPT_GROUP — DEPARTMENT：1科系對應0..N科別；每一科別恰屬1..1科系。"
+},
+{
+"type": "para",
+"text": "DEPARTMENT — MEDICAL_ITEM：1科別對應0..N醫療項目。"
+},
+{
+"type": "para",
+"text": "DEPARTMENT — STAFF（所屬）：1科別對應0..N工作人員；每一工作人員恰屬1..1科別（全部參與，符合「只屬於一個科別」）。"
+},
+{
+"type": "para",
+"text": "STAFF — SUPPORT — DEPARTMENT（支援）：多對多，工作人員0..N支援其他科別，科別0..N被工作人員支援（部分參與，非強制）。"
+},
+{
+"type": "para",
+"text": "STAFF — DOCTOR／NURSE：特化關係，不相交，1工作人員至多對應0..1筆DOCTOR或0..1筆NURSE子類別資料。"
+},
+{
+"type": "para",
+"text": "CLINIC_ROOM — CLINIC_SCHEDULE：1診間對應0..N時刻表紀錄。"
+},
+{
+"type": "para",
+"text": "DOCTOR — CLINIC_SCHEDULE：1醫師可安排0..N門診時段；每一診間每一時段恰安排1..1醫師。"
+},
+{
+"type": "para",
+"text": "NURSE — CLINIC_SCHEDULE：1護理人員可安排0..N門診時段；每一診間每一時段恰安排1..1護理人員。"
+},
+{
+"type": "para",
+"text": "CLINIC_SCHEDULE — REGISTRATION：1門診時段可有0..N筆掛號紀錄；每筆掛號恰屬1..1門診時段。"
+},
+{
+"type": "para",
+"text": "PATIENT — REGISTRATION：1病患可有0..N筆掛號紀錄；每筆掛號恰屬1..1病患。"
+},
+{
+"type": "para",
+"text": "依此設計可滿足全部查詢需求：依科系/科別查詢醫療項目需join DEPT_GROUP-DEPARTMENT-MEDICAL_ITEM；依醫師查詢主治項目/學歷/經歷/現職/性別/門診時刻表需join DOCTOR-STAFF-CLINIC_SCHEDULE；依科系科別查詢門診時刻表需join DEPARTMENT-STAFF(DoctorID)-CLINIC_SCHEDULE；依病患查詢預約掛號需join PATIENT-REGISTRATION-CLINIC_SCHEDULE-DOCTOR-STAFF-DEPARTMENT；列印各日期時段診間掛號資料需join CLINIC_SCHEDULE-DOCTOR/NURSE-STAFF-REGISTRATION-PATIENT，並可由PATIENT.BirthDate計算年齡。"
+}
+],
+"orig_section": "第三份試卷（C卷）",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 11,
+"qlabel": "第2題",
+"stem": "假設現有推拿就醫資訊的關聯式資料庫：Naprapathist(nID,name,speciality)、Patient(pID,name,gender,birthday)、MedicalItem(mID,subject,description,charge)、MedicalRecord(mID,nID,pID,dateTime,extraCharge,totalCharge)，FK: mID ref.MedicalItem, nID ref.Naprapathist, pID ref.Patient，totalCharge由charge與extraCharge加總而來。定義資料表MedicalRecord（應適當表示primary/foreign key）。（10分）請依推拿師代號分群，找出日期為2018-06-06，且該日期該推拿師經手醫療次數大於零時，個別推拿師在該日期經手之醫療總收費金額及醫療次數（結果含推拿師名字、別名「收費總金額」、別名「醫療次數」，並依醫療次數降冪排列）。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "(1) MedicalRecord資料表定義"
+},
+{
+"type": "para",
+"text": "CREATE TABLE MedicalRecord ("
+},
+{
+"type": "para",
+"text": "mID         INT,"
+},
+{
+"type": "para",
+"text": "nID         INT,"
+},
+{
+"type": "para",
+"text": "pID         INT,"
+},
+{
+"type": "para",
+"text": "dateTime    DATETIME NOT NULL,"
+},
+{
+"type": "para",
+"text": "extraCharge DECIMAL(10,2) NOT NULL,"
+},
+{
+"type": "para",
+"text": "totalCharge DECIMAL(10,2) NOT NULL,"
+},
+{
+"type": "para",
+"text": "PRIMARY KEY (mID, nID, pID, dateTime),"
+},
+{
+"type": "para",
+"text": "FOREIGN KEY (mID) REFERENCES MedicalItem(mID),"
+},
+{
+"type": "para",
+"text": "FOREIGN KEY (nID) REFERENCES Naprapathist(nID),"
+},
+{
+"type": "para",
+"text": "FOREIGN KEY (pID) REFERENCES Patient(pID)"
+},
+{
+"type": "para",
+"text": ");"
+},
+{
+"type": "para",
+"text": "PK取(mID,nID,pID,dateTime)複合鍵，係考量同一次看診(同一nID/pID/dateTime)可能對應多項醫療項目(mID)，故須四者共同組成方能唯一識別一筆醫療紀錄明細。"
+},
+{
+"type": "para",
+"text": "(2) 2018-06-06各推拿師之醫療總收費金額及醫療次數（依次數降冪排序）"
+},
+{
+"type": "para",
+"text": "SELECT n.name,"
+},
+{
+"type": "para",
+"text": "SUM(mr.totalCharge) AS 收費總金額,"
+},
+{
+"type": "para",
+"text": "COUNT(*) AS 醫療次數"
+},
+{
+"type": "para",
+"text": "FROM   Naprapathist n"
+},
+{
+"type": "para",
+"text": "JOIN MedicalRecord mr ON n.nID = mr.nID"
+},
+{
+"type": "para",
+"text": "WHERE  mr.dateTime >= '2018-06-06 00:00:00'"
+},
+{
+"type": "para",
+"text": "AND  mr.dateTime <  '2018-06-07 00:00:00'"
+},
+{
+"type": "para",
+"text": "GROUP BY n.nID, n.name"
+},
+{
+"type": "para",
+"text": "HAVING COUNT(*) > 0"
+},
+{
+"type": "para",
+"text": "ORDER BY 醫療次數 DESC;"
+},
+{
+"type": "para",
+"text": "HAVING COUNT(*)>0在此因採INNER JOIN而必然成立（能形成群組者即代表至少有一筆紀錄），惟依題目要求明確寫出此條件以呼應「醫療次數大於零」之敘述。"
+}
+],
+"orig_section": "第三份試卷（C卷）",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 12,
+"qlabel": "第3題",
+"stem": "請將如下的投票候選人陣列Key-Value資料，以符合BCNF的RDB資料表來表示（假設一個ID只能投一票）：候選人C01(Mary Wang,Rock,2000/01/01,Score2)投票者[{A11,A1},{B11,BB}]；候選人C02(Jack Lee,Blues,1999/12/31,Score2)投票者[{A22,A2},{B22,BB}]；候選人C03(Lily Su,Lyric,2001/06/01,Score3)投票者[{A33,A3},{B33,BB},{C33,C3}]。（15分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "資料表設計"
+},
+{
+"type": "para",
+"text": "依「一個ID只能投一票」之限制，投票者ID本身即可唯一識別一筆投票紀錄（含其姓名與所投候選人），故投票資料表之PK可直接取VoterID，滿足BCNF（唯一存在之函數相依VoterID→{VoterName,CandidateID}，決定因子VoterID恰為主鍵）。"
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK）"
+],
+"rows": [
+[
+"CANDIDATE",
+"CandidateID (PK), CandidateName, Introduction, Birthday, Score"
+],
+[
+"VOTE",
+"VoterID (PK), VoterName, CandidateID (FK→CANDIDATE)"
+]
+]
+},
+{
+"type": "para",
+"text": "資料表內容"
+},
+{
+"type": "table",
+"header": [
+"CandidateID",
+"CandidateName",
+"Introduction",
+"Birthday",
+"Score"
+],
+"rows": [
+[
+"C01",
+"Mary Wang",
+"Rock",
+"2000/01/01",
+"2"
+],
+[
+"C02",
+"Jack Lee",
+"Blues",
+"1999/12/31",
+"2"
+],
+[
+"C03",
+"Lily Su",
+"Lyric",
+"2001/06/01",
+"3"
+]
+]
+},
+{
+"type": "table",
+"header": [
+"VoterID",
+"VoterName",
+"CandidateID"
+],
+"rows": [
+[
+"A11",
+"A1",
+"C01"
+],
+[
+"B11",
+"BB",
+"C01"
+],
+[
+"A22",
+"A2",
+"C02"
+],
+[
+"B22",
+"BB",
+"C02"
+],
+[
+"A33",
+"A3",
+"C03"
+],
+[
+"B33",
+"BB",
+"C03"
+],
+[
+"C33",
+"C3",
+"C03"
+]
+]
+},
+{
+"type": "para",
+"text": "投票者姓名「BB」重複出現於B11、B22、B33三筆不同紀錄中，惟其VoterID均不相同，符合「一個ID只能投一票」之限制（此三筆代表三位不同、恰好同名或同暱稱的投票者，而非重複投票），資料表設計本身並未違反此限制。"
+}
+],
+"orig_section": "第三份試卷（C卷）",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 13,
+"qlabel": "第4題",
+"stem": "假設現有三個transactions同步存取資料A,B,C，請使用conflict equivalent說明圖中同步執行的非序列排程（non-serial schedule），是否具有排程循序性（serializability）；如果具備，執行結果可以等同於三個Transactions的那種序列排程；如果不具備，衝突的cycle為何？（15分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "重要說明：法律人網站對本題原始附圖（三個transactions存取A,B,C之非序列排程時程表）之文字重製，僅保留題幹敘述，實際排程中各交易讀寫操作之交錯順序內容於重製過程中已隨圖形一併流失，無法可靠還原。以下僅就「衝突可序列化」（Conflict Serializability）判定之標準方法論作答，並以一組具代表性之示範性通用排程呈現完整判定流程，請讀者依考選部官方PDF原始試題之實際排程圖示，代入下列方法即可得出本題之確切答案。"
+},
+{
+"type": "para",
+"text": "衝突可序列化之判定方法論"
+},
+{
+"type": "para",
+"text": "找出排程中所有「衝突操作對」：兩操作屬於不同交易、存取同一資料項、且至少一方為Write操作（Read-Read不構成衝突）。"
+},
+{
+"type": "para",
+"text": "依每一衝突操作對之執行先後順序，建立優先圖（Precedence Graph）：若交易Ti的操作先於交易Tj對同一資料項之衝突操作執行，則畫一有向邊Ti→Tj。"
+},
+{
+"type": "para",
+"text": "檢查優先圖是否存在環路（Cycle）：若無環路，該排程為衝突可序列化，且其等價之序列排程順序，即為對優先圖進行拓樸排序（Topological Sort）後所得之交易順序；若存在環路，該排程不具衝突可序列化，環路中所涉及的交易即為造成衝突之交易集合。"
+},
+{
+"type": "para",
+"text": "示範性排程與判定範例"
+},
+{
+"type": "para",
+"text": "假設一組示範性排程如下：T1:Read(A) → T2:Read(A) → T1:Write(A) → T3:Read(B) → T2:Write(B) → T1:Read(C) → T3:Write(C)。"
+},
+{
+"type": "table",
+"header": [
+"衝突操作對",
+"衝突資料項",
+"先後順序",
+"優先圖邊"
+],
+"rows": [
+[
+"T1:Write(A) 與 T2:Read(A)",
+"A",
+"T2先讀，T1後寫",
+"T2→T1"
+],
+[
+"T2:Write(B) 與 T3:Read(B)",
+"B",
+"T3先讀，T2後寫",
+"T3→T2"
+],
+[
+"T1:Read(C) 與 T3:Write(C)",
+"C",
+"T1先讀，T3後寫",
+"T1→T3"
+]
+]
+},
+{
+"type": "para",
+"text": "依上表建立優先圖：T2→T1、T3→T2、T1→T3，此三條邊恰形成一個環路（T1→T3→T2→T1），故此示範排程不具備衝突可序列化，衝突的cycle為T1→T3→T2→T1（或等價地T2→T1→T3→T2）。若讀者依原始附圖之實際排程重新繪製優先圖後未發現環路，則排程具備衝突可序列化，其等價序列順序即為優先圖拓樸排序後之交易執行順序（例如優先圖為T1→T2→T3且無環路時，等價序列排程即為T1,T2,T3之循序執行順序）。"
+}
+],
+"orig_section": "第三份試卷（C卷）",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 14,
+"qlabel": "第5題",
+"stem": "以跨國電商年度銷售資料（國別、日期、銷售金額…）為例，圖解說明Map-Reduce的運算架構，並說明Map、Shuffle、跟Reduce是如何分工而得到年度區域（如亞洲、歐洲、非洲、美洲、大洋洲）的總銷售金額？（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "Map-Reduce運算架構圖解"
+},
+{
+"type": "para",
+"text": "原始銷售紀錄                Map階段                  Shuffle階段              Reduce階段"
+},
+{
+"type": "para",
+"text": "(國別,日期,金額)      -->  <洲別,金額>        -->   依洲別分組聚集   -->   各洲別加總金額"
+},
+{
+"type": "para",
+"text": "(台灣,2024-01-05,1000) -> <亞洲,1000>"
+},
+{
+"type": "para",
+"text": "(法國,2024-02-10,2000) -> <歐洲,2000>          洲別=亞洲的所有        <亞洲, 總和>"
+},
+{
+"type": "para",
+"text": "(日本,2024-03-15,1500) -> <亞洲,1500>    -->   金額聚集在一起   -->   <歐洲, 總和>"
+},
+{
+"type": "para",
+"text": "(美國,2024-04-20,3000) -> <美洲,3000>          洲別=歐洲的所有        <美洲, 總和>"
+},
+{
+"type": "para",
+"text": "(埃及,2024-05-25,500)  -> <非洲,500>            金額聚集在一起          <非洲, 總和>"
+},
+{
+"type": "para",
+"text": "(澳洲,2024-06-30,800)  -> <大洋洲,800>                                  <大洋洲, 總和>"
+},
+{
+"type": "para",
+"text": "Map階段"
+},
+{
+"type": "para",
+"text": "讀取每一筆原始銷售紀錄（國別、日期、銷售金額），依據「國別→洲別」對照表（如台灣、日本→亞洲；法國→歐洲；美國→美洲；埃及→非洲；澳洲→大洋洲），將每筆紀錄轉換並輸出中間形式之Key-Value配對<洲別, 銷售金額>，此階段可將龐大原始資料分散於多個節點平行處理，各節點僅需獨立處理自己負責的資料切片。"
+},
+{
+"type": "para",
+"text": "Shuffle階段"
+},
+{
+"type": "para",
+"text": "將所有Map階段所產生之中間Key-Value配對，依據Key（即洲別）重新分組排序，將Key相同（同一洲別）的所有<洲別,金額>資料，透過網路傳送並聚集至同一個Reduce工作節點，確保後續加總運算時，同一洲別的所有資料都在同一處理節點上。"
+},
+{
+"type": "para",
+"text": "Reduce階段"
+},
+{
+"type": "para",
+"text": "針對每一洲別分組（每個Reduce節點負責一個或多個洲別），將該洲別底下所有Map階段輸出之銷售金額全部加總，最終輸出<洲別,該洲別年度總銷售金額>之結果，即分別得到亞洲、歐洲、非洲、美洲、大洋洲各洲之年度總銷售金額。三階段透過「先平行轉換與標記(Map)、再依Key分組聚集(Shuffle)、最後平行加總(Reduce)」之分工方式，達成大規模銷售資料之高效彙總分析。"
+}
+],
+"orig_section": "第三份試卷（C卷）",
+"orig_qnum": 5
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 1,
+"qlabel": "第1題",
+"stem": "在現今大數據（Big Data）盛行的時代，已經有許多大數據平台提供各種不同的服務，而在這些平台上運行的軟體多半包括有Data Warehouse、Data Mining、OLTP、OLAP、ETL等：試說明此五個軟體的主要功用。（15分）試說明此五個軟體的相互運作關係，以達成提供大數據服務的目的。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "五個軟體之主要功用"
+},
+{
+"type": "table",
+"header": [
+"軟體",
+"主要功用"
+],
+"rows": [
+[
+"Data Warehouse",
+"整合來自各種來源系統之大量歷史性、主題導向資料，提供集中式儲存庫，作為決策支援分析之資料基礎。"
+],
+[
+"Data Mining",
+"運用統計、機器學習等技術，從大量資料中發掘隱藏的樣式(Pattern)、規則或知識。"
+],
+[
+"OLTP",
+"支援企業日常營運交易處理，強調即時性、高並行、短交易之新增/修改/刪除操作。"
+],
+[
+"OLAP",
+"支援多維度資料分析與決策支援，提供切片(Slice)/切塊(Dice)/上捲(Roll-up)/下鑽(Drill-down)等互動式多維度查詢。"
+],
+[
+"ETL",
+"將來自不同來源系統之異質資料，經擷取(Extract)、轉換(Transform)、載入(Load)之過程，整合進資料倉儲。"
+]
+]
+},
+{
+"type": "para",
+"text": "五者之相互運作關係"
+},
+{
+"type": "para",
+"text": "OLTP系統為企業日常交易資料之原始來源；ETL將OLTP等來源系統之異質資料，經擷取、轉換（含清理、格式統一、彙總）後，載入Data Warehouse進行整合儲存；Data Warehouse所儲存之整合性歷史資料，即成為OLAP多維度分析與Data Mining探勘之共同資料基礎；OLAP在Data Warehouse之上，提供決策者互動式、多維度之彙總分析，Data Mining則在同一資料基礎上，運用演算法進一步發掘更深層之樣式與知識規則；五者依此順序串接（OLTP→ETL→Data Warehouse→{OLAP, Data Mining}），共同構成完整的大數據分析服務鏈。"
+}
+],
+"orig_section": "第一份試卷（A卷）",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 2,
+"qlabel": "第2題",
+"stem": "某一資料庫系統內有以下資料表（實底線欄位為主鍵：課程,教師,課本）：資料庫應用/王大明/CS、資料庫應用/王大明/BA、資料庫應用/李大華/CS、資料庫應用/李大華/BA、資料庫實務/王大明/CS、資料庫實務/王大明/CE。試說明此資料表為何符合BCNF正規化形式、但不符合第四階正規化形式？（15分）應如何修改使之符合第四階正規化形式？（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "為何符合BCNF但不符合4NF"
+},
+{
+"type": "para",
+"text": "本資料表(課程,教師,課本)中，「教師」欄位不因固定「課程」而唯一決定（如「資料庫應用」課程有王大明、李大華兩位教師），「課本」欄位亦不因固定「課程」而唯一決定，三個屬性彼此間不存在任何非顯然(Non-trivial)的函數相依（Functional Dependency）；換言之，本關聯中並無任何函數相依之決定因子(Determinant)不是超鍵(Superkey)（因為唯一存在的鍵即為(課程,教師,課本)三者全體），故本關聯符合BCNF（BCNF僅規範函數相依，未違反）。"
+},
+{
+"type": "para",
+"text": "然而，本關聯中存在兩個多值相依（Multivalued Dependency, MVD）：課程→→教師 與 課程→→課本；亦即對固定之「課程」而言，其對應之「教師」集合與「課本」集合彼此獨立（互不影響），形成兩組獨立多值事實之卡氏積(Cartesian Product)組合，此即為觀察到之資料重複樣式（「資料庫應用」對應2位教師×2本課本＝4列；「資料庫實務」對應1位教師×2本課本＝2列）之根本原因。由於存在非顯然的多值相依，且決定因子「課程」並非超鍵，故本關聯違反第四正規化形式(4NF)，形成insertion/deletion/update異常（例如新增一本「資料庫應用」課程之課本時，須連同兩位教師各新增一列，造成不必要之重複）。"
+},
+{
+"type": "para",
+"text": "修改為符合4NF之分解方式"
+},
+{
+"type": "para",
+"text": "依兩個獨立的多值相依，將原關聯分解為以下兩個關聯，即可消除多值相依所致之冗餘，並符合4NF（分解後每一關聯僅各自對應一組多值事實，其上之多值相依成為顯然多值相依）："
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK）",
+"對應資料列"
+],
+"rows": [
+[
+"COURSE_TEACHER",
+"課程,教師（複合PK）",
+"(資料庫應用,王大明),(資料庫應用,李大華),(資料庫實務,王大明)"
+],
+[
+"COURSE_TEXTBOOK",
+"課程,課本（複合PK）",
+"(資料庫應用,CS),(資料庫應用,BA),(資料庫實務,CS),(資料庫實務,CE)"
+]
+]
+},
+{
+"type": "para",
+"text": "此分解為無損接合分解(Lossless-Join Decomposition)，將原本課程與教師、課程與課本間各自獨立的多值事實分離儲存後，即不再產生因兩組獨立多值事實交叉組合而導致之重複列，達成4NF之要求。"
+}
+],
+"orig_section": "第一份試卷（A卷）",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 3,
+"qlabel": "第3題",
+"stem": "當資料庫系統發生故障時，回復處理常採用交易記錄回復處理（Log-based Recovery）。試說明此種回復處理方式的原理以及運作過程。（25分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "原理"
+},
+{
+"type": "para",
+"text": "資料庫系統於執行交易過程中，將每一筆資料異動操作之相關資訊（包含異動前之舊值Before-Image與異動後之新值After-Image），依循「先寫日誌」原則(Write-Ahead Logging, WAL，即Log記錄必須早於對應之資料頁真正寫回磁碟前，先行寫入穩定儲存媒體）記錄於交易日誌(Log)中。當系統因軟硬體錯誤而故障時，回復管理程式（Recovery Manager）即可依據Log中所記錄之異動歷程，將資料庫回復至一個一致且正確之狀態，同時確保交易之原子性（Atomicity）與持久性（Durability）。"
+},
+{
+"type": "para",
+"text": "運作過程"
+},
+{
+"type": "para",
+"text": "交易開始執行時，於Log記錄一筆<Ti start>記錄。"
+},
+{
+"type": "para",
+"text": "交易每次異動資料項前，先將該資料項之Before-Image與After-Image寫入Log（依WAL原則，早於實際資料頁寫回磁碟）。"
+},
+{
+"type": "para",
+"text": "交易正常完成（Commit）時，於Log記錄一筆<Ti commit>記錄，表示該交易已確定提交。"
+},
+{
+"type": "para",
+"text": "系統故障重新啟動後，回復管理程式掃描整份Log，依<Ti commit>記錄之有無，將交易區分為「已提交交易」與「未提交（或未完成）交易」兩類。"
+},
+{
+"type": "para",
+"text": "對已提交但其異動尚未確實寫回磁碟之交易，依Log中之After-Image重做（REDO），確保已提交交易之效果不遺失。"
+},
+{
+"type": "para",
+"text": "對故障當時仍在執行中、尚未提交之交易，依Log中之Before-Image撤銷（UNDO）其已執行之異動，將資料回復至交易開始前之狀態，確保交易之原子性（要嘛全部生效，要嘛完全不生效）。"
+},
+{
+"type": "para",
+"text": "完成REDO與UNDO程序後，資料庫即回復至一致且正確之狀態，系統得以繼續正常對外服務。"
+}
+],
+"orig_section": "第一份試卷（A卷）",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 4,
+"qlabel": "第4題",
+"stem": "某一資料庫系統內有以下三個資料表：教師資料表(教師編號PK,姓名,科系)：P001/王大明/CS、P002/李大華/BA；課程資料表(課程編號PK,名稱,學分數)：C101/資料庫應用/3、C102/網路概論/3、C103/多媒體導論/4；修課資料表(教師編號,課程編號,學生編號為PK,教室,時間,成績)：(P001,C101,S2003,A513,13:30,86)、(P002,C103,S6121,A226,14:30,72)、(P002,C103,S6186,A226,14:30,80)。試寫出一個SQL指令，建立一個視界（View），以顯示每位教師的開課資料以及修習這些課程的學生資料。（10分）試寫出一個SQL指令，建立一個統計性摘要視界（View），以顯示每位教師的開課數以及開課總學分數。（15分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "(1) 每位教師之開課資料及修課學生資料視界"
+},
+{
+"type": "para",
+"text": "CREATE VIEW TeacherCourseStudent AS"
+},
+{
+"type": "para",
+"text": "SELECT t.教師編號, t.姓名 AS 教師姓名, e.課程編號, c.名稱 AS 課程名稱,"
+},
+{
+"type": "para",
+"text": "e.學生編號, e.教室, e.時間, e.成績"
+},
+{
+"type": "para",
+"text": "FROM   教師 t"
+},
+{
+"type": "para",
+"text": "JOIN 修課 e ON t.教師編號 = e.教師編號"
+},
+{
+"type": "para",
+"text": "JOIN 課程 c ON e.課程編號 = c.課程編號;"
+},
+{
+"type": "para",
+"text": "(2) 每位教師開課數及開課總學分數之統計摘要視界"
+},
+{
+"type": "para",
+"text": "因「修課」表格每一列對應一位學生之選課紀錄，若直接join課程表格加總學分數，會因同一課程有多位學生選修而重複計算學分數，故須先取(教師編號,課程編號)相異組合，再join課程表格加總："
+},
+{
+"type": "para",
+"text": "CREATE VIEW TeacherCourseSummary AS"
+},
+{
+"type": "para",
+"text": "SELECT tc.教師編號, t.姓名,"
+},
+{
+"type": "para",
+"text": "COUNT(*) AS 開課數,"
+},
+{
+"type": "para",
+"text": "SUM(c.學分數) AS 開課總學分數"
+},
+{
+"type": "para",
+"text": "FROM   (SELECT DISTINCT 教師編號, 課程編號 FROM 修課) tc"
+},
+{
+"type": "para",
+"text": "JOIN 課程 c ON tc.課程編號 = c.課程編號"
+},
+{
+"type": "para",
+"text": "JOIN 教師 t ON tc.教師編號 = t.教師編號"
+},
+{
+"type": "para",
+"text": "GROUP BY tc.教師編號, t.姓名;"
+}
+],
+"orig_section": "第一份試卷（A卷）",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 5,
+"qlabel": "第1題",
+"stem": "請具體舉例說明關聯式資料庫模型（relational data model）的資料結構（data structures）、資料整合限制（integrity constraints）與基本的關聯式代數運算（relational algebra operations）。（15分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "資料結構（Data Structures）"
+},
+{
+"type": "para",
+"text": "關聯式模型以「關聯」（Relation，即表格Table）作為基本資料結構，由「屬性」（Attribute，即欄位）與「值組」（Tuple，即資料列）構成。例如STUDENT(SID, Name, Age)表格，其中SID、Name、Age為屬性，每一列（如(S001,王小明,20)）即為一個值組，代表一位學生之完整記錄。"
+},
+{
+"type": "para",
+"text": "資料整合限制（Integrity Constraints）"
+},
+{
+"type": "para",
+"text": "定義域限制（Domain Constraint）：每一屬性之值須屬於其定義域範圍，例如Age須為正整數。"
+},
+{
+"type": "para",
+"text": "實體完整性（Entity Integrity）／鍵限制（Key Constraint）：主鍵欄位不可為NULL，且不可有兩個值組之主鍵值相同，例如SID為主鍵時，不可有兩位學生SID重複或為空值。"
+},
+{
+"type": "para",
+"text": "參考完整性（Referential Integrity）：外鍵之值必須等於被參照表格中已存在之主鍵值，或為NULL，例如選課表格ENROLL(SID,CourseID)中之SID，必須存在於STUDENT表格之SID欄位中，否則會產生無效的參照。"
+},
+{
+"type": "para",
+"text": "基本關聯式代數運算（Relational Algebra Operations）"
+},
+{
+"type": "para",
+"text": "選擇（Selection, σ）：例如σAge>20(STUDENT)，篩選出年齡大於20歲之學生列。"
+},
+{
+"type": "para",
+"text": "投影（Projection, π）：例如πName(STUDENT)，僅取出Name欄位之值，並去除重複。"
+},
+{
+"type": "para",
+"text": "聯集（Union, ∪）、差集（Set Difference, −）：需作用於兩個具相同屬性結構(schema-compatible)之關聯間，例如兩學期修課學生名單之聯集。"
+},
+{
+"type": "para",
+"text": "卡氏積（Cartesian Product, ×）與連接（Join, ⋈）：例如STUDENT⋈ENROLL依SID進行自然連接（Natural Join），取得每位學生所修課程之組合資訊。"
+}
+],
+"orig_section": "第二份試卷（B卷）",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 6,
+"qlabel": "第2題",
+"stem": "公路資訊管理中心的資料庫系統所設計的關聯式表格：ROAD(R_ID,R_NAME,R_LEN)、MAINTAIN(R_ID,D_ID,START,END)、DEPT(D_ID,D_NAME,TEL_NO)、R_STUCK(R_ID,KM,STATUS,E_DAY,P_DAY)，並附有樣本資料。請指出每一表格最適合的主鍵欄位集合與相關的外鍵欄位。（5分）寫出建立MAINTAIN綱要的SQL語法（含主鍵與外鍵）。（5分）寫出新增一筆資料「A190,65,路面積水,2018/11/20,2018/11/20」至R_STUCK的SQL語法。（5分）寫出查詢「第一區工程處所養護的公路名稱與該公路所有的路況里程及狀況」的SQL語法。（5分）寫出查詢「台1線101公里處的養護單位名稱與聯絡電話」的SQL語法。（5分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "heading",
+"text": "(1) 各表格之主鍵與外鍵"
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"主鍵(PK)",
+"外鍵(FK)"
+],
+"rows": [
+[
+"ROAD",
+"R_ID",
+"（無）"
+],
+[
+"DEPT",
+"D_ID",
+"（無）"
+],
+[
+"MAINTAIN",
+"(R_ID, D_ID)",
+"R_ID→ROAD(R_ID)；D_ID→DEPT(D_ID)"
+],
+[
+"R_STUCK",
+"(R_ID, KM, E_DAY)",
+"R_ID→ROAD(R_ID)"
+]
+]
+},
+{
+"type": "para",
+"text": "MAINTAIN之PK取(R_ID,D_ID)，表示同一養護單位對同一公路之養護紀錄僅一筆；R_STUCK之PK納入E_DAY，係考量同一公路同一里程處，可能於不同日期發生不同之通阻事件，須以日期共同識別。"
+},
+{
+"type": "para",
+"text": "(2) 建立MAINTAIN綱要之SQL"
+},
+{
+"type": "para",
+"text": "CREATE TABLE MAINTAIN ("
+},
+{
+"type": "para",
+"text": "R_ID     CHAR(4),"
+},
+{
+"type": "para",
+"text": "D_ID     CHAR(3),"
+},
+{
+"type": "para",
+"text": "START_KM INT,"
+},
+{
+"type": "para",
+"text": "END_KM   INT,"
+},
+{
+"type": "para",
+"text": "PRIMARY KEY (R_ID, D_ID),"
+},
+{
+"type": "para",
+"text": "FOREIGN KEY (R_ID) REFERENCES ROAD(R_ID),"
+},
+{
+"type": "para",
+"text": "FOREIGN KEY (D_ID) REFERENCES DEPT(D_ID)"
+},
+{
+"type": "para",
+"text": ");"
+},
+{
+"type": "para",
+"text": "原始欄位名稱START/END為多數SQL方言之保留字，故以START_KM、END_KM命名，避免語法衝突。"
+},
+{
+"type": "heading",
+"text": "(3) 新增一筆R_STUCK資料"
+},
+{
+"type": "para",
+"text": "INSERT INTO R_STUCK (R_ID, KM, STATUS, E_DAY, P_DAY)"
+},
+{
+"type": "para",
+"text": "VALUES ('A190', 65, '路面積水', '2018-11-20', '2018-11-20');"
+},
+{
+"type": "para",
+"text": "(4) 查詢「第一區工程處」所養護公路名稱與路況里程及狀況"
+},
+{
+"type": "para",
+"text": "SELECT r.R_NAME, s.KM, s.STATUS"
+},
+{
+"type": "para",
+"text": "FROM   ROAD r"
+},
+{
+"type": "para",
+"text": "JOIN MAINTAIN m ON r.R_ID = m.R_ID"
+},
+{
+"type": "para",
+"text": "JOIN DEPT d ON m.D_ID = d.D_ID"
+},
+{
+"type": "para",
+"text": "JOIN R_STUCK s ON r.R_ID = s.R_ID"
+},
+{
+"type": "para",
+"text": "WHERE  d.D_NAME = '第一區工程處';"
+},
+{
+"type": "para",
+"text": "(5) 查詢「台1線」101公里處之養護單位名稱與聯絡電話"
+},
+{
+"type": "para",
+"text": "SELECT d.D_NAME, d.TEL_NO"
+},
+{
+"type": "para",
+"text": "FROM   MAINTAIN m"
+},
+{
+"type": "para",
+"text": "JOIN DEPT d ON m.D_ID = d.D_ID"
+},
+{
+"type": "para",
+"text": "JOIN ROAD r ON m.R_ID = r.R_ID"
+},
+{
+"type": "para",
+"text": "WHERE  r.R_NAME = '台1線'"
+},
+{
+"type": "para",
+"text": "AND  101 BETWEEN m.START_KM AND m.END_KM;"
+}
+],
+"orig_section": "第二份試卷（B卷）",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 7,
+"qlabel": "第3題",
+"stem": "某資訊系統經資料庫系統分析師分析後獲得E-R model（含實體A,B,C,D、屬性、部分/全部參與、多值屬性等標示，有底線者為主鍵屬性）。請將以上E-R Model轉成符合第二正規化格式以上的關聯式表格綱要，並明確表達出各表格間所關聯的參考屬性以及各關聯綱要的主鍵與外鍵。（15分）假設實體C的屬性中另有以下二個功能相依存在：C3→C2，C3→C4。請將本題中所得到的關聯式表格綱要轉成符合第三正規化格式以上的表格綱要。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "重要說明：法律人網站對本題原始ER圖之文字重製，僅呈現實體、關係、屬性、參與度與多值屬性等標籤名稱之片段列表（如「A B C R1 R2 R4 B1 B2 A1 B3 A2 C1 C2 D2 D1 1 N M...」），惟圖形中各實體與關係間之連線關係、確切的cardinality標示位置(1:N、M:N等)及各屬性歸屬何實體，於文字重製過程中已隨圖形結構一併流失，無法可靠還原。以下僅就ER model轉換為關聯式綱要之標準方法論作答，並以一組具代表性之示範性通用範例呈現轉換流程，請讀者依考選部官方PDF原始試題之實際ER圖示，代入下列方法即可得出本題之確切答案。"
+},
+{
+"type": "para",
+"text": "ER Model轉關聯式綱要之標準方法論（含2NF）"
+},
+{
+"type": "para",
+"text": "一般實體（Regular Entity）：轉換為一個關聯，其屬性即為該實體之所有簡單屬性，主鍵屬性即為該關聯之主鍵。"
+},
+{
+"type": "para",
+"text": "弱實體（Weak Entity）：轉換為一個關聯，並納入其擁有者(Owner)實體之主鍵作為外鍵，弱實體之關聯主鍵為（擁有者主鍵＋弱實體之部分鍵Partial Key）。"
+},
+{
+"type": "para",
+"text": "1:1關係：可將任一方（建議為全部參與total participation之一方）之主鍵，作為外鍵併入另一方之關聯中。"
+},
+{
+"type": "para",
+"text": "1:N關係：將「1」方之主鍵，作為外鍵併入「N」方之關聯中。"
+},
+{
+"type": "para",
+"text": "M:N關係：須另建一個獨立的關聯（連結表），其主鍵為雙方主鍵之組合，並各自以外鍵參照兩端實體。"
+},
+{
+"type": "para",
+"text": "多值屬性（Multivalued Attribute）：須獨立轉換為一個關聯，並納入其所屬實體之主鍵作為外鍵，以（擁有者主鍵＋多值屬性值）作為此關聯之主鍵，此舉本身即滿足2NF（消除多值屬性所致之非1NF問題後，不存在部分相依）。"
+},
+{
+"type": "para",
+"text": "依此方法論轉換後所得之各關聯，均只包含單一實體或關係之屬性，非主鍵屬性皆完全函數相依於各自關聯之主鍵整體，故均已達2NF以上之要求。"
+},
+{
+"type": "para",
+"text": "依C3→C2、C3→C4進一步正規化至3NF"
+},
+{
+"type": "para",
+"text": "假設依上述方法論轉換後，實體C所對應之關聯為C_TABLE(C1,C2,C3,C4,C5)，其中C1為主鍵。今若另存在函數相依C3→C2、C3→C4，且C3並非C_TABLE之超鍵（C3本身不足以決定C1、C5），則C2、C4透過C3遞移相依（Transitive Dependency）於主鍵C1，違反3NF。為消除此遞移相依，須將C_TABLE分解為："
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK）"
+],
+"rows": [
+[
+"C_MAIN",
+"C1 (PK), C3, C5"
+],
+[
+"C_DETAIL",
+"C3 (PK), C2, C4，並以C3為外鍵參照C_MAIN（或另建C3為候選鍵之獨立關聯）"
+]
+]
+},
+{
+"type": "para",
+"text": "分解後，C_MAIN中僅保留C1直接決定之屬性（不透過C3遞移），C_DETAIL則單獨儲存由C3決定之C2、C4，消除了遞移相依，使兩關聯均符合3NF。此分解原則同樣適用於實際ER圖中C實體所對應之關聯，讀者可依原始圖示中C實體之確切屬性列表，套用相同的「找出遞移相依決定因子、獨立拆表」原則進行分解。"
+}
+],
+"orig_section": "第二份試卷（B卷）",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 8,
+"qlabel": "第4題",
+"stem": "請分別就系統目標、對象資料、常用的資料模型、資料處理相關運算、系統使用者等項目，製表具體說明資料庫管理系統（DBMS）和資料倉儲（Data Warehouse）系統之間有何不同。（15分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "table",
+"header": [
+"比較項目",
+"資料庫管理系統（DBMS）",
+"資料倉儲（Data Warehouse）系統"
+],
+"rows": [
+[
+"系統目標",
+"支援日常交易處理，確保資料之即時性、正確性與一致性",
+"支援決策分析與商業智慧，提供歷史趨勢與彙總分析"
+],
+[
+"對象資料",
+"當前(current)、即時更新之營運資料",
+"大量歷史性、彙整性、主題導向(subject-oriented)之整合資料"
+],
+[
+"常用資料模型",
+"關聯式模型（Relational Model）為主",
+"多維度模型（Multidimensional Model），如星狀綱要(Star Schema)、雪花綱要(Snowflake Schema)"
+],
+[
+"資料處理相關運算",
+"短交易之新增/修改/刪除(OLTP)，強調高並行與ACID特性",
+"複雜多維度分析查詢(OLAP)，如Roll-up/Drill-down/Slice/Dice，強調唯讀彙總查詢"
+],
+[
+"系統使用者",
+"前線作業人員、客服人員等日常操作人員",
+"管理階層、決策者、資料分析師等決策支援人員"
+]
+]
+}
+],
+"orig_section": "第二份試卷（B卷）",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 9,
+"qlabel": "第1題",
+"stem": "資料模式（Data Model）很多，就其特性大致可以歸類為三類：高階（High-Level, 或觀念Conceptual）資料模式、低階（Low-Level, 或實體Physical）資料模式、表示（Representational, 或實作Implementation）資料模式。請分別說明這三類資料模式為何？並為每一類資料模式各舉至少2個資料模式的例子。（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "table",
+"header": [
+"分類",
+"說明",
+"例子"
+],
+"rows": [
+[
+"高階（觀念）資料模式\nHigh-Level / Conceptual",
+"提供貼近使用者概念認知之資料塑模方式，強調實體、屬性與關係之描述，不涉及資料實際儲存或實作細節，適合作為需求分析與溝通之工具。",
+"Entity-Relationship (ER) Model；Enhanced ER (EER) Model；Object-Oriented Model (如UML類別圖)"
+],
+[
+"表示（實作）資料模式\nRepresentational / Implementation",
+"提供使用者可理解，但同時貼近資料庫實際邏輯儲存結構之模式，介於概念層與實體層之間，為多數DBMS實際採用之模式。",
+"Relational Model（關聯式模式）；Network Model（網狀模式）；Hierarchical Model（階層式模式）"
+],
+[
+"低階（實體）資料模式\nLow-Level / Physical",
+"描述資料在儲存媒體上實際儲存之細節，包含記錄格式、定址方式、索引與檔案組織方式等，最貼近實際硬體儲存層。",
+"B+-Tree索引結構；Hashing雜湊儲存結構；記錄格式與檔案組織方式（如Heap File、Sequential File）"
+]
+]
+}
+],
+"orig_section": "第三份試卷（C卷）",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 10,
+"qlabel": "第2題",
+"stem": "某出版社要用關聯式資料模式建立記錄其出版書籍的資料庫：BOOK(BookId,Title,PubDate,Category), PK:BookId；AUTHOR(AuthId,Name,Birthday,Tel), PK:AuthId。如果每本書可以有好幾位作者，每一位作者也可以出版好幾本書，請對前項資料庫設計進行增修，使得出版社的資料庫可記錄每本書的作者，也可記錄每個作者所出版的書。（10分）承續運用前一子題之資料庫增修，請寫出可查得屬於「資料庫」分類的所有書籍之SQL命令，此命令必須列出書籍的BookId,Title及作者人數，並依BookId由小而大依序列出。（15分）請運用子題之資料庫增修寫出可查得曾經與名字叫「張山峰」的作者共同著作過的作者之SQL命令，列出其姓名及電話。（15分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "(1) 資料庫增修：新增連結表以表示M:N關係"
+},
+{
+"type": "para",
+"text": "由於一本書可有多位作者、一位作者也可出版多本書，屬多對多(M:N)關係，須新增一連結表WRITES，以雙方主鍵組合作為複合主鍵，並各自以外鍵參照BOOK與AUTHOR："
+},
+{
+"type": "para",
+"text": "WRITES (BookId, AuthId)"
+},
+{
+"type": "para",
+"text": "PRIMARY KEY (BookId, AuthId)"
+},
+{
+"type": "para",
+"text": "FOREIGN KEY (BookId) REFERENCES BOOK(BookId)"
+},
+{
+"type": "para",
+"text": "FOREIGN KEY (AuthId) REFERENCES AUTHOR(AuthId)"
+},
+{
+"type": "para",
+"text": "(2) 「資料庫」分類書籍之BookId、Title及作者人數（依BookId遞增排序）"
+},
+{
+"type": "para",
+"text": "SELECT b.BookId, b.Title, COUNT(w.AuthId) AS AuthorCount"
+},
+{
+"type": "para",
+"text": "FROM   BOOK b"
+},
+{
+"type": "para",
+"text": "JOIN WRITES w ON b.BookId = w.BookId"
+},
+{
+"type": "para",
+"text": "WHERE  b.Category = '資料庫'"
+},
+{
+"type": "para",
+"text": "GROUP BY b.BookId, b.Title"
+},
+{
+"type": "para",
+"text": "ORDER BY b.BookId ASC;"
+},
+{
+"type": "para",
+"text": "(3) 曾與「張山峰」共同著作之作者姓名及電話"
+},
+{
+"type": "para",
+"text": "SELECT DISTINCT a2.Name, a2.Tel"
+},
+{
+"type": "para",
+"text": "FROM   AUTHOR a1"
+},
+{
+"type": "para",
+"text": "JOIN WRITES w1 ON a1.AuthId = w1.AuthId"
+},
+{
+"type": "para",
+"text": "JOIN WRITES w2 ON w1.BookId = w2.BookId"
+},
+{
+"type": "para",
+"text": "JOIN AUTHOR a2 ON w2.AuthId = a2.AuthId"
+},
+{
+"type": "para",
+"text": "WHERE  a1.Name = '張山峰'"
+},
+{
+"type": "para",
+"text": "AND  a2.AuthId <> a1.AuthId;"
+}
+],
+"orig_section": "第三份試卷（C卷）",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 11,
+"qlabel": "第3題",
+"stem": "某企業建立電子商務平台，商品分類系統中每一細分類號唯一（不會同屬不同次分類），每一次分類號唯一（不會同屬不同大分類），一個商品只歸類為單一細分類。設計出資料表PRODUCT(MajorCate,SubCate,FineCate,SeqNo,ProdName,Price)，PK=(MajorCate,SubCate,FineCate,SeqNo)，SeqNo為商品所屬細分類之流水號，同一細分類中不會重複，不同細分類間會有相同SeqNo。請檢視此一設計，指出其設計錯誤或不良之處，並在不更動屬性設計的前提下修正之。（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "設計錯誤／不良之處分析"
+},
+{
+"type": "para",
+"text": "依題目條件：「細分類號唯一，不會同屬不同次分類」意謂FineCate→SubCate；「次分類號唯一，不會同屬不同大分類」意謂SubCate→MajorCate；故MajorCate、SubCate皆可由FineCate遞移決定（FineCate→SubCate→MajorCate）。又「SeqNo在同一細分類中不重複，不同細分類間可重複」意謂真正足以唯一識別一筆商品的最小鍵，僅需(FineCate,SeqNo)即可，因為FineCate已可遞移決定MajorCate與SubCate。"
+},
+{
+"type": "para",
+"text": "然而本設計卻將PK宣告為完整的(MajorCate,SubCate,FineCate,SeqNo)四個屬性，使得非主鍵屬性ProdName、Price實際上僅完全函數相依於鍵之真子集合(FineCate,SeqNo)，而非相依於宣告鍵之整體，形成部分相依(Partial Dependency)，違反2NF；同時MajorCate、SubCate這兩個本可由FineCate遞移決定的屬性，卻隨每一筆商品（即每一個SeqNo）重複儲存，造成嚴重的資料冗餘與更新異常（例如：若某一細分類被重新歸類至不同的次分類或大分類，須連帶修改該細分類下所有商品列的MajorCate、SubCate欄位，否則會產生資料不一致）。"
+},
+{
+"type": "para",
+"text": "修正方式（不更動屬性設計，僅重新分解資料表）"
+},
+{
+"type": "para",
+"text": "在保留原有全部屬性（MajorCate,SubCate,FineCate,SeqNo,ProdName,Price）不變的前提下，依各屬性間之函數相依關係，將原單一資料表分解為以下四個正規化資料表："
+},
+{
+"type": "table",
+"header": [
+"資料表",
+"屬性（PK/FK）"
+],
+"rows": [
+[
+"MAJORCATE",
+"MajorCate (PK)"
+],
+[
+"SUBCATE",
+"SubCate (PK), MajorCate（FK→MAJORCATE）"
+],
+[
+"FINECATE",
+"FineCate (PK), SubCate（FK→SUBCATE）"
+],
+[
+"PRODUCT",
+"FineCate + SeqNo（複合PK），FineCate（FK→FINECATE）, ProdName, Price"
+]
+]
+},
+{
+"type": "para",
+"text": "此分解消除了MajorCate、SubCate於PRODUCT表格中隨每筆商品重複儲存之冗餘，各分類層級之歸屬關係僅需於SUBCATE、FINECATE表格中各記錄一次，PRODUCT表格之PK則精簡為真正足以唯一識別商品之(FineCate,SeqNo)，非主鍵屬性ProdName、Price完全函數相依於此鍵整體，各表均達3NF（甚至BCNF），且完全未變動原有屬性之定義與內容，僅重新分配其歸屬之資料表。"
+}
+],
+"orig_section": "第三份試卷（C卷）",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 12,
+"qlabel": "第4題",
+"stem": "兩階段鎖定（Two-Phase Locking）技術可以用來做並行控制（Concurrency Control），請詳細說明符合兩階段鎖定協定的交易應遵循的規範為何？時程（Schedule）是指多個交易並行執行時，各交易內的操作間的執行順序。請以此觀點說明若所有交易都遵循兩階段鎖定協定撰寫，則這些交易並行執行時，時程必定是什麼時程？並說明為何遵循這種時程執行可以達到並行控制的目的？（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "兩階段鎖定協定應遵循之規範"
+},
+{
+"type": "para",
+"text": "擴張階段（Growing Phase）：交易只能取得（acquire/lock）新的鎖，不得釋放任何已持有之鎖。"
+},
+{
+"type": "para",
+"text": "收縮階段（Shrinking Phase）：交易一旦開始釋放（unlock）任一鎖之後，即不得再取得任何新的鎖，僅能持續釋放鎖直至交易結束。"
+},
+{
+"type": "para",
+"text": "換言之，每一交易存在一個明確的「鎖定點（Lock Point）」，在鎖定點之前只取得鎖（擴張階段），鎖定點之後只釋放鎖（收縮階段），兩階段不得交錯反覆。"
+},
+{
+"type": "para",
+"text": "遵循2PL之交易並行執行後，時程必定為何"
+},
+{
+"type": "para",
+"text": "若所有交易均遵循兩階段鎖定協定撰寫，則這些交易並行執行後所產生之時程，必定是可衝突序列化的時程（Conflict Serializable Schedule）。"
+},
+{
+"type": "para",
+"text": "為何此時程可達成並行控制之目的"
+},
+{
+"type": "para",
+"text": "因為2PL協定確保任兩交易之間，若存在衝突操作（同時存取同一資料項，且至少一方為寫入），則其中一交易必須先完全進入收縮階段（釋放對該資料項之鎖）後，另一交易才可能取得鎖以進行該衝突操作；此一機制使得任兩交易間之衝突操作執行順序具有明確且一致的先後關係，其優先圖（Precedence Graph）不會產生環路(Cycle)，因此並行執行之時程必為衝突可序列化。可序列化之時程可保證並行執行之最終結果，與依某一固定順序循序執行（Serial Schedule）之結果一致，因而能維持資料庫在多交易並行存取下之一致性與正確性，達成並行控制之目的。"
+}
+],
+"orig_section": "第三份試卷（C卷）",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "高考三級",
+"section": "高考三級真題",
+"qnum": 13,
+"qlabel": "第5題",
+"stem": "有關交易管理中並行控制的主要目的，是維持各別不同交易在共時情況下，在完成後仍然保有可循序性（serializability）。請說明何謂交易的可循序性？並用以下交易1與交易2二筆交易所進行的動作，具體舉例在何種共時狀況下會違反可循序性，造成問題。（10分）交易1：read(x); x=x+1000; write(x); commit。交易2：read(x); if x>=100: x=x-100; write(x); commit。請您提出一種控制機制可以保證共時交易的可循序性，並請使用該控制機制，以交易1與交易2二筆交易為例，簡要說明如何達成共時交易的可循序性。（10分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "何謂交易的可循序性"
+},
+{
+"type": "para",
+"text": "可循序性（Serializability）係指多筆交易並行（交錯）執行後所得之最終結果，恰與這些交易依某一先後順序、逐一循序（Serial）個別執行所得之結果相同；亦即該並行時程（Concurrent Schedule）在效果上等價於某一循序時程（Serial Schedule）。可循序性為評估並行時程是否「正確」（不破壞資料一致性）之基本準則。"
+},
+{
+"type": "para",
+"text": "違反可循序性之具體示例（遺失更新問題，Lost Update）"
+},
+{
+"type": "para",
+"text": "假設資料項x之初始值為200，考慮以下共時交錯執行順序："
+},
+{
+"type": "table",
+"header": [
+"步驟",
+"操作",
+"說明"
+],
+"rows": [
+[
+"1",
+"T1: read(x)",
+"T1讀取x=200（存於T1本地）"
+],
+[
+"2",
+"T2: read(x)",
+"T2讀取x=200（存於T2本地，尚未感知T1稍後之更新）"
+],
+[
+"3",
+"T1: x = x+1000",
+"T1本地計算：x = 200+1000 = 1200"
+],
+[
+"4",
+"T1: write(x); commit",
+"資料庫中x被更新為1200，T1提交"
+],
+[
+"5",
+"T2: 檢查 x>=100（依T2本地讀取之200）為真，x = x-100 = 100",
+"T2依其自己讀取之舊值200計算，而非T1提交後的1200"
+],
+[
+"6",
+"T2: write(x); commit",
+"資料庫中x被覆寫為100，T1剛才寫入的1200被完全覆蓋、遺失"
+]
+]
+},
+{
+"type": "para",
+"text": "最終x=100。然而若依任一循序順序執行：T1→T2循序執行，結果為x=200+1000=1200，再1200-100=1100；T2→T1循序執行，結果為x=200-100=100（因初始200>=100成立），再100+1000=1100。兩種循序順序皆得x=1100，但上述交錯執行卻得到x=100，此結果無法由任何一種循序執行方式產生，證明該交錯時程違反可循序性，此即典型的「遺失更新（Lost Update）」問題：T1對x所做的+1000更新，因T2依據自己讀取之舊值計算並覆寫，而被完全遺失。"
+},
+{
+"type": "para",
+"text": "控制機制：兩階段鎖定（2PL）"
+},
+{
+"type": "para",
+"text": "可採用兩階段鎖定協定（或至少要求交易在讀寫共享資料前，須先取得該資料之互斥鎖Exclusive Lock，並直到交易結束才釋放）作為並行控制機制。以T1、T2為例：若T1先對x取得互斥鎖，則T2之read(x)操作必須等待，直到T1完成write(x)並commit、釋放鎖後，T2才能取得鎖執行read(x)（此時讀到的已是T1更新後的1200），T2再依此正確計算x=1200-100=1100並write、commit；如此可保證最終結果（x=1100）與某一循序執行順序（T1先於T2）之結果一致，避免上述遺失更新問題發生，達成共時交易之可循序性。"
+}
+],
+"orig_section": "第三份試卷（C卷）",
+"orig_qnum": 5
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
 "year": "109",
 "track": "高考三級",
 "section": "高考三級真題",
@@ -1398,6 +3548,938 @@
 ],
 "orig_section": "套題",
 "orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "地特三等",
+"section": null,
+"qnum": 1,
+"qlabel": null,
+"stem": "⑴　目前人工智慧廣泛應用於如製造業、醫療、食衣住行及賦稅等領域，其中需要很大量資料來當作訓練及測試資料，以訓練出好的學習模型（Learning Model），如你／妳被委以建立資料庫來儲存這些大量資料的工作，請寫出資料庫設計的階段（Phases of Database Design），並說明之。（12分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "資料庫設計的五個階段"
+},
+{
+"type": "para",
+"text": "①需求蒐集與分析（Requirements Collection and Analysis）：與未來資料庫的使用者（如AI模型開發團隊、各應用領域之業務人員）進行訪談與討論，蒐集並記錄他們對資料庫的實際需求，包括：需儲存哪些資料類型（如製造業之感測器數據、醫療之病歷影像、賦稅之申報紀錄）、資料量與成長速度、資料存取模式（讀取或寫入頻率）、需要支援哪些查詢與分析功能（如供模型訓練批次讀取巨量歷史資料）等，並將需求整理為正式的需求規格文件。"
+},
+{
+"type": "para",
+"text": "②概念設計（Conceptual Design）：依據需求規格，建立與特定資料庫管理系統實作技術無關的高階概念資料模型，通常以實體關係模型（ER Model）或增強式ER模型（EER Model）描繪出核心的實體型態、屬性與關係型態，此階段著重於正確捕捉各應用領域資料間的語意關聯（例如醫療領域中病患、就診紀錄、檢驗結果之間的關聯），且概念模型應具備足夠的彈性以應對巨量、多樣資料類型的擴充需求。"
+},
+{
+"type": "para",
+"text": "③邏輯設計／資料模型對應（Logical Design / Data Model Mapping）：將概念設計階段之ER/EER模型，轉換對應為特定資料庫管理系統所採用的邏輯資料模型；若決定採用關聯式資料庫模型，則依標準ER-to-Relational轉換規則，將各實體型態、關係型態逐一對應轉換為關聯式綱要（Relation Schemas），並可能視巨量資料的特性（如高速串流資料、非結構化多媒體資料）額外考量NoSQL等非關聯式模型作為輔助。"
+},
+{
+"type": "para",
+"text": "④實體/物理設計（Physical Design）：決定資料庫在實際儲存媒介上的內部儲存結構，包括檔案組織方式、索引設計、資料分割（partitioning）與分散式儲存策略，以因應巨量訓練資料的高效存取與查詢效能需求，並考量硬體資源（如分散式叢集儲存）之配置。"
+},
+{
+"type": "para",
+"text": "⑤實作與資料庫系統之運轉（Implementation and Database System Operation）：依前述設計，實際建立資料庫綱要、載入初始資料，並開發應用程式介面供資料存取；此階段亦包括建置資料蒐集與前處理管線，將巨量原始資料清理、轉換為可供人工智慧模型訓練與測試使用之標準格式資料集，並持續監控、維護資料庫系統之正常運作。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "地特三等",
+"section": null,
+"qnum": 2,
+"qlabel": null,
+"stem": "⑵　如果資料庫設計階段決定採用關聯式資料庫模型（Relational Database Model），請寫出四項「好」的關聯式資料庫設計的關聯式綱要（Relation Schemas）設計原則（Principles or Guidelines）。（8分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "四項良好關聯式綱要設計原則"
+},
+{
+"type": "para",
+"text": "①屬性語意明確原則：每一個關聯式綱要中的屬性語意應該清楚明確，且每一個關聯應僅代表單一種實體型態或單一種關係型態的資訊；設計時應避免將多個不相關或僅鬆散相關的概念，混雜設計在同一個關聯表格之中，以確保綱要易於理解，也易於維護。"
+},
+{
+"type": "para",
+"text": "②減少資料重複、避免更新異常原則：關聯式綱要的設計應盡量減少資料重複（redundant information）的情形，藉此避免插入異常（insertion anomaly）、刪除異常（deletion anomaly）與修改異常（update anomaly）等問題發生；此原則通常透過正規化理論（Normalization），逐步將關聯依功能相依關係分解為更精簡的子關聯表格來達成。"
+},
+{
+"type": "para",
+"text": "③減少空值（Null Value）原則：關聯式綱要的設計應盡量減少屬性中出現空值（NULL）的情形；若某些屬性僅適用於關聯中的部分值組（tuple），應考慮將這些屬性拆分至獨立的子關聯表格中，避免大量值組因不適用某些屬性而必須存放null值，造成儲存空間浪費，也可能使某些聚合函數（如COUNT）的運算結果產生混淆。"
+},
+{
+"type": "para",
+"text": "④避免產生虛假值組（Spurious Tuples）原則：若因正規化或其他考量而將關聯分解（decompose）為多個較小的關聯表格，此分解必須具備「無損連接（Lossless Join）」的性質——亦即，將分解後的多個關聯表格依其主鍵／外來鍵條件重新自然連接（natural join）回來時，必須能夠精確還原出原始關聯的所有資訊，不可產生原本不存在、多餘或錯誤的「虛假值組」，否則將導致查詢結果錯誤，喪失資料的正確性。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "地特三等",
+"section": null,
+"qnum": 3,
+"qlabel": null,
+"stem": "⑴　給予如下⑴與⑵實體關係（Entity-Relationship, ER）圖，其中「works-for」關係型態（Relationship Types）描述一個部門有許多員工，但一個員工只能屬於某一部門，一個部門可位於多個地方；「works-on」關係型態（Relationship Types）描述一個員工可以參與多個計畫，一個計畫也可以由多個員工參與，並記錄每一員工參與每一計畫的時間；請將之轉換成關聯式資料庫綱要（Relational Database Schemas）。（7分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "原卷此處⑴之ER圖為內嵌圖片（檔名5c19e19ebeb94.jpg），本工具無法讀取圖片中確切的實體屬性名稱。惟依題組文字說明，「works-for」關係型態之業務語意已完整給出（部門有許多員工、員工僅屬於一個部門、部門可位於多個地點），此即經典的Company資料庫schema中DEPARTMENT-EMPLOYEE之標準1:N關係與部門多值地點屬性，可據以完整推導出正確之關聯式綱要如下。"
+},
+{
+"type": "para",
+"text": "DEPARTMENT(dnum, dname)　　　　　　　　主鍵：dnum"
+},
+{
+"type": "para",
+"text": "DEPARTMENT_LOCATIONS(dnum, dlocation)　主鍵：(dnum, dlocation)"
+},
+{
+"type": "para",
+"text": "dnum為外鍵，參照DEPARTMENT(dnum)"
+},
+{
+"type": "para",
+"text": "EMPLOYEE(ssn, ename, dnum)　　　　　　主鍵：ssn"
+},
+{
+"type": "para",
+"text": "dnum為外鍵，參照DEPARTMENT(dnum)，因每位員工必屬於一個部門，此欄位應設為NOT NULL"
+},
+{
+"type": "para",
+"text": "說明：DEPARTMENT為獨立實體，主鍵為部門代碼dnum；因「一部門可位於多個地方」屬於多值屬性（multivalued attribute），依ER-to-Relational標準轉換規則，多值屬性不可直接置於DEPARTMENT表格內，須另建一個獨立的DEPARTMENT_LOCATIONS關聯表格，以(dnum, dlocation)之組合作為主鍵，dnum並作為外鍵參照DEPARTMENT。EMPLOYEE與DEPARTMENT間為1:N之works-for關係（一部門多員工、一員工僅屬一部門），依規則將「1」端（DEPARTMENT）之主鍵dnum，以外鍵形式置入「N」端（EMPLOYEE）之中，並因每位員工必然隸屬於某一部門（完全參與），故此dnum外鍵欄位應設為NOT NULL。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "地特三等",
+"section": null,
+"qnum": 4,
+"qlabel": null,
+"stem": "⑵　（承上題ER圖）請將「works-on」關係型態轉換成關聯式資料庫綱要（Relational Database Schemas）。（7分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "原卷此處⑵之ER圖亦為內嵌圖片（檔名5c19e1a8a71c4.jpg），本工具無法讀取圖片中確切的PROJECT實體屬性名稱。惟依題組文字說明，「works-on」關係型態之業務語意已完整給出（員工可參與多個計畫、計畫可由多個員工參與、並記錄每位員工參與每項計畫的工作時數），此為經典的M:N關係，可據以完整推導出正確之關聯式綱要如下。"
+},
+{
+"type": "para",
+"text": "PROJECT(pno, pname, ……)　　　　　　　　主鍵：pno（計畫編號）"
+},
+{
+"type": "para",
+"text": "WORKS_ON(essn, pno, hours)　　　　　　　主鍵：(essn, pno)"
+},
+{
+"type": "para",
+"text": "essn為外鍵，參照EMPLOYEE(ssn)"
+},
+{
+"type": "para",
+"text": "pno為外鍵，參照PROJECT(pno)"
+},
+{
+"type": "para",
+"text": "說明：由於「一個員工可以參與多個計畫，一個計畫也可以由多個員工參與」，此為M:N（多對多）關係，依ER-to-Relational標準轉換規則，M:N關係不可僅以外鍵置入任一端即可表示，必須另外建立一個獨立的關聯表格（此處命名為WORKS_ON），其屬性由EMPLOYEE與PROJECT兩端之主鍵（分別以essn、pno作為外鍵）組合而成，並附加關係本身的描述性屬性hours（記錄每位員工參與每項計畫的工作時數）；此新關聯表格之主鍵即為兩個外鍵之組合(essn, pno)，藉此確保「每位員工對每項計畫」僅有一筆對應的工時記錄。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "地特三等",
+"section": null,
+"qnum": 5,
+"qlabel": null,
+"stem": "⑶　在ER概念模型有參與限制（Participation Constraints），請問選擇性（Optional）與必須（Mandatory）限制，在關聯式資料庫模型如何表示上述限制。（6分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "ER概念模型中的參與限制，實質上即對應到部分參與（Partial Participation）與完全參與（Total Participation）之概念：「選擇性（Optional）」對應部分參與，「必須（Mandatory）」對應完全參與。在轉換為關聯式資料庫模型後，這兩種限制透過外來鍵欄位是否允許存放null值來加以表示："
+},
+{
+"type": "para",
+"text": "①必須（Mandatory）限制：若某實體對某關係型態具有「必須（完全）參與」之限制，代表該實體集合中的每一個實體，都必然對應到該關係的某一筆記錄，不允許例外。在關聯式模型中，此限制透過將對應的外來鍵欄位設定為NOT NULL來強制實施——確保每一筆記錄的該外來鍵欄位都必須填入一個有效的參照值，不可留白。②選擇性（Optional）限制：若某實體對某關係型態僅具有「選擇性（部分）參與」之限制，代表該實體集合中的實體不一定要參與該關係，允許存在完全未參與該關係的實體。在關聯式模型中，此限制則透過允許對應的外來鍵欄位存放null值來表示——當該實體確實未參與此關係時，其外來鍵欄位即可留白（NULL），表示尚無對應之關聯記錄。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 5
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "地特三等",
+"section": null,
+"qnum": 6,
+"qlabel": null,
+"stem": "給予如下兩個關聯綱要（Relation Schemas）及其內容，EMPLOYEE關聯記錄員工編號、薪水及所在部門，DEPARTMENT關聯記錄部門編號及名稱，其中EMPLOYEE的外來鍵（Foreign Key）「dno」參考到DEPARTMENT的主鍵（Primary Key）「dnum」，執行下列⑴與⑵的SQL查詢後的結果分別為何？其意義分別為何？（20分）⑴SELECT dno, COUNT(*) FROM DEPARTMENT, EMPLOYEE WHERE dnum = dno AND salary > 25000 GROUP BY dno HAVING COUNT(*) > 2　⑵（第二道SQL查詢）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "原卷此處DEPARTMENT與EMPLOYEE兩表格之實際資料內容為內嵌圖片（檔名5c19e1cdacce5.jpg、5c19e1d462082.jpg），且第⑵小題之SQL查詢語法本身亦為內嵌圖片（檔名5c19e22179120.jpg），本工具均無法讀取其確切內容，故無法代入計算出精確的查詢執行結果數值。惟第⑴小題之SQL查詢語法已完整以文字給出，其查詢意義可完整解析如下；第⑵小題則因語法本身不可見，改以同類型之代表性範例示範解析方法。"
+},
+{
+"type": "para",
+"text": "⑴ SELECT dno, COUNT(*) FROM DEPARTMENT, EMPLOYEE WHERE dnum = dno AND salary > 25000 GROUP BY dno HAVING COUNT(*) > 2"
+},
+{
+"type": "para",
+"text": "查詢意義解析：此查詢先將DEPARTMENT與EMPLOYEE兩關聯依「dnum = dno」條件進行卡氏積後之等值連接（相當於join），僅保留部門主鍵dnum與員工外鍵dno相符的記錄組合；再以salary > 25000篩選出薪水超過25000元的員工記錄；接著以GROUP BY dno依部門分組，並以COUNT(*)計算各部門中薪水超過25000元的員工人數；最後以HAVING COUNT(*) > 2篩選出「薪水超過25000元之員工人數超過2人」的部門。故此查詢的意義為：找出「有3位（含）以上員工薪水超過25000元」的部門編號，並列出各該部門符合此條件的員工人數。至於實際執行後dno與COUNT(*)欄位之具體數值，需依原卷DEPARTMENT、EMPLOYEE兩表格實際資料內容代入計算，請讀者依原卷圖片中之實際資料逐一核對統計。"
+},
+{
+"type": "para",
+"text": "⑵ 第二道SQL查詢（語法本身為圖片，無法讀取確切內容）"
+},
+{
+"type": "para",
+"text": "由於本小題SQL查詢語法本身即為無法讀取的內嵌圖片，且緊接於⑴之後（多為考科命題慣例，⑵常與⑴形成對照，例如將GROUP BY／HAVING改為子查詢寫法、或改用NOT EXISTS表示全稱查詢等），以下提供一個同樣以EMPLOYEE、DEPARTMENT為背景、屬同類型且具代表性的SQL查詢範例，示範查詢結果的判讀方法，供讀者參照分析原卷⑵之實際語法："
+},
+{
+"type": "para",
+"text": "範例：SELECT dname FROM DEPARTMENT"
+},
+{
+"type": "para",
+"text": "WHERE dnum IN ("
+},
+{
+"type": "para",
+"text": "SELECT dno FROM EMPLOYEE"
+},
+{
+"type": "para",
+"text": "WHERE salary > 25000"
+},
+{
+"type": "para",
+"text": "GROUP BY dno"
+},
+{
+"type": "para",
+"text": "HAVING COUNT(*) > 2"
+},
+{
+"type": "para",
+"text": ");"
+},
+{
+"type": "para",
+"text": "此範例查詢之判讀方式：先以子查詢找出「薪水超過25000元員工人數超過2人」的部門編號集合（與⑴的邏輯相同），再以外層查詢從DEPARTMENT表格中，取出dnum屬於此集合的部門名稱dname——即把⑴查詢結果中的部門編號，進一步轉換顯示為對應的部門名稱。讀者可將此判讀邏輯（先釐清FROM/WHERE的連結與篩選條件、再看是否有GROUP BY/HAVING分組聚合、最後看SELECT取出哪些欄位）套用於原卷⑵之實際圖片語法，並代入原卷資料表之真實內容，即可得出正確的查詢結果與其意義。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 6
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "地特三等",
+"section": null,
+"qnum": 7,
+"qlabel": null,
+"stem": "給予一關聯綱要R(A, B, C, D, E, F)及一組功能依附性（Functional Dependencies）F = {{A}→{B, C, D, E, F}, {B, C}→{A, D, E, F}, {B}→{F}, {D}→{E}}，請將R分別分割（Decompose）成2NF及3NF的關聯綱要。（20分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "步驟一：求出R的候選鍵"
+},
+{
+"type": "para",
+"text": "計算A的屬性閉包：A+ = {A}，套用A→BCDEF，得A+ = {A,B,C,D,E,F} = R的全部屬性。故{A}本身即為超鍵，且因僅單一屬性，自動具最小性，{A}為一候選鍵。"
+},
+{
+"type": "para",
+"text": "計算{B,C}的屬性閉包：{B,C}+ = {B,C}，套用BC→ADEF，得{B,C}+ = {A,B,C,D,E,F} = R的全部屬性。故{B,C}亦為超鍵；檢查最小性：B+ = {B,F}（套用B→F，不含A,C,D,E，不足）、C+ = {C}（無任何FD可套用，不足），故{B,C}無法再化簡，具最小性，{B,C}為另一候選鍵。"
+},
+{
+"type": "para",
+"text": "經檢驗其餘單一屬性（B、C、D、E、F分別之閉包）均無法涵蓋全部屬性，故R僅有兩個候選鍵：{A}與{B,C}。依此可得主屬性（Prime Attribute，存在於某候選鍵中之屬性）為A、B、C；非主屬性（Non-prime Attribute）為D、E、F。"
+},
+{
+"type": "para",
+"text": "步驟二：檢驗2NF並分解"
+},
+{
+"type": "para",
+"text": "2NF要求所有非主屬性必須完全功能相依於「每一個」候選鍵，不允許部分相依（僅相依候選鍵之真子集）。檢視功能相依B→F：F為非主屬性，而B是候選鍵{B,C}的真子集（proper subset），故此為部分相依，違反2NF。（D→E雖然D亦非候選鍵之子集，但D本身為非主屬性，此屬於非主屬性間之遞移相依，屬3NF檢驗範疇，不影響2NF判定。）"
+},
+{
+"type": "para",
+"text": "依標準2NF分解程序，將造成部分相依的B→F獨立分解出一個子關聯，原關聯移除F屬性後保留其餘部分："
+},
+{
+"type": "para",
+"text": "R1(B, F)　　　　　　　主鍵：B　　　　── 對應B→F"
+},
+{
+"type": "para",
+"text": "R2(A, B, C, D, E)　　主鍵：A 或 (B,C) ── 移除F後的剩餘關聯，維持原有兩個候選鍵"
+},
+{
+"type": "para",
+"text": "驗證R2已符合2NF：R2中非主屬性為D、E；檢視是否還有部分相依——D、E僅能透過完整的A或完整的(B,C)推導得出（單獨的B或C都無法推出D或E），故不存在非主屬性僅相依於候選鍵真子集的情形，R2已滿足2NF。故R之2NF分解結果為：{ R1(B,F)，R2(A,B,C,D,E) }。"
+},
+{
+"type": "para",
+"text": "步驟三：檢驗3NF並進一步分解"
+},
+{
+"type": "para",
+"text": "3NF要求在2NF基礎上，不允許非主屬性之間存在遞移相依（transitive dependency）。檢視R2(A,B,C,D,E)中的功能相依D→E：D為非主屬性，E亦為非主屬性，且D本身是透過候選鍵（A或BC）才被決定的，形成「候選鍵→D→E」的遞移相依鏈，故R2尚未符合3NF。"
+},
+{
+"type": "para",
+"text": "依標準3NF分解程序，將造成遞移相依的D→E獨立分解出一個子關聯："
+},
+{
+"type": "para",
+"text": "R2a(D, E)　　　　　　主鍵：D　　　　　── 對應D→E"
+},
+{
+"type": "para",
+"text": "R2b(A, B, C, D)　　　主鍵：A 或 (B,C) ── 移除E後的剩餘關聯"
+},
+{
+"type": "para",
+"text": "驗證R2b已符合3NF（甚至BCNF）：R2b中僅剩之非平凡功能相依為A→BCD與BC→AD，其決定因子A、(B,C)分別皆為R2b的候選鍵（超鍵），不存在任何遞移或部分相依，故R2b不僅滿足3NF，實際上已達到更嚴格的BCNF。"
+},
+{
+"type": "para",
+"text": "最終結果"
+},
+{
+"type": "para",
+"text": "R之3NF分解結果為：{ R1(B, F)，R2a(D, E)，R2b(A, B, C, D) }。三個子關聯彼此透過原候選鍵中的公共屬性（B、D）相連，且此分解同時具備無損連接（Lossless Join，因每次分解皆保留了原關聯之候選鍵於某一子關聯中）與功能相依保存（Dependency Preserving，F→、B→F、D→E三條原始FD均可在分解後的某一子關聯中完整驗證）兩項良好分解性質，且經檢驗三個子關聯實際上均已達到BCNF等級，是本題理想的正規化分解結果。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 7
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "地特三等",
+"section": null,
+"qnum": 8,
+"qlabel": null,
+"stem": "⑴　分散式資料庫系統的優點是擁有透明度（Transparency），請寫出三種分散式資料庫的透明度並說明之。（8分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "①分割透明度（Fragmentation Transparency）：使用者在存取分散式資料庫中的資料時，無需知曉該資料實際上是否已被分割（水平分割或垂直分割）成多個片段分別儲存於不同站台，系統會自動為使用者處理跨片段的資料存取與整合，使用者感覺上如同存取一個完整、未分割的單一資料表。"
+},
+{
+"type": "para",
+"text": "②複製透明度（Replication Transparency）：使用者存取資料時，無需知曉該資料是否於多個不同站台存有複本（replica），系統會自動負責維護各複本間的資料一致性（如同步更新所有複本），並自動選擇適當的複本來源以回應使用者的查詢請求，使用者無須關心複製的存在與同步細節。"
+},
+{
+"type": "para",
+"text": "③位置透明度（Location Transparency）：使用者於下達查詢或操作指令時，無需知曉所要存取的資料實際儲存於哪一個實體站台（伺服器）之上，系統會自動根據內部的資料位置對照資訊，將使用者的請求轉送到正確的站台進行處理，使用者僅需以邏輯名稱參照資料，如同存取本機資料一般，無須指定實體位置。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 8
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "107",
+"track": "地特三等",
+"section": null,
+"qnum": 9,
+"qlabel": null,
+"stem": "⑵　為確保資料庫交易（Transactions）能正確被執行，資料庫管理系統（DBMS）的並行控制（Concurrency Control）與回復方式（Recovery Methods）應具備那四項特性（Properties）？請說明之。（12分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "此即交易正確執行所須具備的ACID四大特性："
+},
+{
+"type": "para",
+"text": "①原子性（Atomicity）：一個交易中所包含的所有資料庫操作，必須被視為一個不可分割的整體單位，要嘛全部成功執行並確定提交（commit），要嘛在任一操作失敗時全部復原（rollback），絕不允許只完成其中一部分操作而遺留在資料庫中。"
+},
+{
+"type": "para",
+"text": "②一致性（Consistency）：交易執行前後，資料庫都必須維持在一致（合乎所有完整性限制條件，如主鍵、外來鍵、使用者自訂限制等）的狀態；亦即交易只能將資料庫從一個一致的狀態，轉換到另一個同樣一致的狀態，不允許交易執行後產生違反完整性限制的資料庫狀態。"
+},
+{
+"type": "para",
+"text": "③隔離性（Isolation）：多個交易同時（並行）執行時，每一個交易的執行過程與中間結果，都不應受到其他同時執行中交易的干擾，其效果應如同這些交易依序、一個接一個單獨執行一般（即並行執行的結果須等同於某種可序列化的序列執行結果），藉此避免諸如更新遺失、讀到髒資料等並行存取異常問題。"
+},
+{
+"type": "para",
+"text": "④永續性（Durability）：一旦交易成功提交（commit）之後，其對資料庫所做的所有變更，必須被永久地保存下來，即使系統隨後發生當機、電源中斷等故障，這些已提交的變更結果也不會遺失，資料庫回復機制須確保能將這些已確定的變更重新恢復到資料庫中。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 9
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "地特三等",
+"section": null,
+"qnum": 1,
+"qlabel": null,
+"stem": "(一)　假設我們要設計某物流公司的資料庫，其中某事實是記錄其司機（Driver）每天使用某輛卡車（Truck）負責某趟運送（Delivery）。每趟運送剛好用到一部卡車；但出車時，有時會有雙司機出勤，輪流駕駛。司機有編號（ID）、姓名（Name）、薪水（Salary）的資料，卡車有牌照號碼（License_No）、品牌（Make）、款式（Model）、噸數（Tonnage）的資料，運送有運送編號（D_Number）、日期（Date）、送達地址（Address）、送達時間（Time）、載送內容（Content）的資料。圖一為實體關係圖（Entity-Relationship Diagram）。對所用符號的約略說明：其中每一實體鄰近某關係間均有一個對應比率（min,max），代表該實體參與該關係之min（至少）、max（至多）次數，＊代表沒有限制。屬性劃實底線者為Primary Key（主鍵）。請暫時不考慮其他實體、屬性，並假設所有對應比率均為正確反映該企業實況。請說明圖一的設計有何問題？（5分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "原卷此處附有實體關係圖「圖一」之內嵌圖片（檔名5df9cb37b1270.jpg），本工具無法讀取圖片中DRIVER、TRUCK、DELIVERY三實體之確切關係結構與屬性/主鍵標示方式。惟依題目說明「假設所有對應比率均為正確反映該企業實況」，可知問題並非出在min/max基數比數字本身，而是出在ER圖的「結構設計」上。綜合資料庫設計文獻中常見的ER設計缺陷類型（如扇出陷阱Fan Trap、主鍵誤置等），並參照本題之業務情境，以下提出最可能之診斷，讀者仍應以原卷圖一之實際結構為準進行核對。"
+},
+{
+"type": "para",
+"text": "可能問題診斷：主鍵誤置與資訊表達上的結構性缺陷"
+},
+{
+"type": "para",
+"text": "依業務規則，「運送（Delivery）」本身是一個具有獨立存在意義、且擁有自己專屬屬性（運送編號D_Number、日期、送達地址、送達時間、載送內容）的實體，理應以D_Number作為其主鍵。若圖一將DELIVERY與TRUCK之間1:N關係的主鍵處理錯置——例如誤將DELIVERY的主鍵D_Number標示為由TRUCK端決定、或反過來將License_No誤植於錯誤的一方——將導致關聯式綱要轉換時外鍵方向錯誤，使得「每趟運送使用哪一部卡車」與「每部卡車曾執行過哪些運送」的對應關係無法正確表達或產生歧義。此外，若圖一係採用DRIVER與TRUCK各自透過獨立的二元關係連接至DELIVERY（即DELIVERY同時身為兩個1:N關係的「N」端），而未妥善處理「運送需同時對應特定司機（可能兩位）與特定卡車」這項合而為一的業務事實，則可能形成資料庫設計理論中所稱的「扇出陷阱（Fan Trap）」——即當兩個彼此獨立的一對多關係，各自從不同角度連接到同一個中心實體時，若後續查詢企圖同時追蹤三方（司機、卡車、運送）之間的正確對應組合，容易因為ER圖結構本身無法唯一鎖定「這一趟運送、這部卡車、這一（兩）位司機」三者的正確配對關係，而產生語意混淆或資訊遺失的風險。"
+},
+{
+"type": "para",
+"text": "讀者務請對照原卷圖一之實際實體、屬性主鍵標示與對應比率數字，確認上述診斷是否與原圖所示之確切結構相符；若原圖之確切缺陷與上述不同，仍請以圖一實際內容為準。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 1
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "地特三等",
+"section": null,
+"qnum": 2,
+"qlabel": null,
+"stem": "(二)　可否將圖一改為只有司機（Driver）與卡車（Truck）兩個實體，而將運送（Delivery）放在其中、當成關係？這樣的設計有何問題？（8分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "不可行。此提案將「運送」由一個獨立實體降級為連接DRIVER與TRUCK的一個關係（relationship），會產生以下幾項嚴重問題："
+},
+{
+"type": "para",
+"text": "①運送本身的描述性屬性難以正確附掛，且會造成資料重複"
+},
+{
+"type": "para",
+"text": "運送本身擁有專屬的識別碼（D_Number）與多項描述性屬性（日期、送達地址、送達時間、載送內容）。若將「運送」降格為DRIVER與TRUCK之間的關係，這些屬性只能依附在該關係實例上；然而，依題目「有時會有雙司機出勤，輪流駕駛」的規則，一趟運送若配置兩位司機，勢必需要建立「司機一－卡車」與「司機二－卡車」兩筆各自獨立的關係實例，才能將兩位司機都連結到同一輛卡車；但如此一來，同一趟運送的日期、送達地址、送達時間、載送內容等描述性屬性，將被迫在這兩筆關係實例中重複記錄兩次，造成資料重複（redundancy），且日後若運送資訊有變更（如送達時間更改），須同步修改兩處，容易發生修改異常（update anomaly），資料一致性風險大增。"
+},
+{
+"type": "para",
+"text": "②無法保證兩筆關係實例確實屬於「同一趟」運送"
+},
+{
+"type": "para",
+"text": "由於「運送」已不具備獨立的實體識別碼（D_Number原本作為Delivery實體的主鍵，現在僅能作為關係的描述性屬性，而非可強制唯一辨識的鍵值），系統無法從結構上保證、驗證「司機一－卡車」與「司機二－卡車」這兩筆分開的關係實例，事實上是對應同一趟運送事件，而非被誤認為兩趟各自獨立、恰好使用相同卡車的不同運送。換言之，將運送化為關係，會使「這是同一趟運送」這項關鍵業務事實，在結構上變得無法被明確表達與強制查核，此為資訊表達不完整（incomplete）的問題。"
+},
+{
+"type": "para",
+"text": "③喪失了「運送」作為獨立概念被其他實體參照的可能性"
+},
+{
+"type": "para",
+"text": "運送在企業實務中往往是一個具有獨立生命週期、可能需要被其他實體或流程參照的核心概念（例如未來若企業想記錄「運送與貨物內容明細」或「運送與客戶」之間的關聯），一旦運送僅是DRIVER與TRUCK間的一段關係，而非獨立實體，將難以再讓其他實體對其建立參照關聯，大幅降低此資料模型未來的擴充彈性。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 2
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "地特三等",
+"section": null,
+"qnum": 3,
+"qlabel": null,
+"stem": "(三)　請提出改進版本。請注意：你的改進版本必須同時滿足「提供完整（Complete）的資訊，且無多餘的（Redundant）關係」的要求。（12分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "改進版本設計"
+},
+{
+"type": "para",
+"text": "維持DRIVER、TRUCK、DELIVERY三個獨立實體，並依業務規則建立以下兩個關係："
+},
+{
+"type": "para",
+"text": "DRIVER(ID 主鍵, Name, Salary)"
+},
+{
+"type": "para",
+"text": "TRUCK(License_No 主鍵, Make, Model, Tonnage)"
+},
+{
+"type": "para",
+"text": "DELIVERY(D_Number 主鍵, Date, Address, Time, Content)"
+},
+{
+"type": "para",
+"text": "①使用卡車（USES_TRUCK）關係：TRUCK ──(1,N)──使用卡車──(1,1)── DELIVERY"
+},
+{
+"type": "para",
+"text": "對應比率：每趟運送恰使用一部卡車（DELIVERY端為(1,1)，完全參與）；"
+},
+{
+"type": "para",
+"text": "每部卡車可執行零至多趟運送（TRUCK端為(0,N)或(1,N)，視卡車是否必然出勤而定）。"
+},
+{
+"type": "para",
+"text": "②駕駛（DRIVES）關係：DRIVER ══(0,N)══駕駛══(1,2)══ DELIVERY"
+},
+{
+"type": "para",
+"text": "對應比率：每趟運送需配置1至2位司機（DELIVERY端為(1,2)，反映『有時雙司機輪流駕駛』之規則）；"
+},
+{
+"type": "para",
+"text": "每位司機可負責零至多趟運送（DRIVER端為(0,N)）。"
+},
+{
+"type": "para",
+"text": "設計理由與如何滿足「完整且無多餘關係」之要求"
+},
+{
+"type": "para",
+"text": "①完整性（Complete）：DELIVERY維持為獨立實體，保有自己的主鍵D_Number與全部描述性屬性（Date、Address、Time、Content），確保運送資訊只需記錄一次、不因司機人數增加而重複；「使用卡車」關係之(1,1)限制，完整表達「每趟運送恰使用一部卡車」的規則；「駕駛」關係之(1,2)限制，完整表達「每趟運送可能有1或2位司機、輪流駕駛」的規則，且透過DELIVERY實體的D_Number主鍵，可明確且唯一地將「同一趟運送」對應到的1~2位司機正確地連結在一起，不會產生無法確認是否屬於同一趟運送的疑慮（解決了(二)小題所提设計的問題）。"
+},
+{
+"type": "para",
+"text": "②無多餘關係（No Redundant Relationship）：DRIVER與TRUCK之間並未建立任何直接關係，兩者僅透過DELIVERY實體間接產生關聯——這是正確的設計，因為「司機與卡車的搭配」本身並非一項獨立、需要單獨記錄的業務事實，而是附隨於「某趟運送」這個具體事件才有意義；若額外在DRIVER與TRUCK之間畫出第三個直接關係，將會是多餘（redundant）且語意重複的關係，因為此資訊已可透過DRIVER-DELIVERY-TRUCK之間接路徑完整取得，無需畫蛇添足。此設計以最精簡的兩個關係，完整涵蓋了原題所有業務規則，且不含任何贅餘連結。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 3
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "地特三等",
+"section": null,
+"qnum": 4,
+"qlabel": null,
+"stem": "(一)　假設關連式資料庫包含下列三個表格：Student（SID, Name, Address, Phone, Major）代表學生學號、姓名、地址、電話、主修；Course（CNo, CName, Credit, Dept, Instructor）代表課程編號、名稱、學分數、開課系所、授課教師；Grade（SNo, CNo, Score）代表SNo的學號學生修習CNo的課程得分（0-100分）。「主修」、「開課系所」之內容值可為MIS、CS、Business等，分別代表資管系、資科系、企管系等。為教師'王大維'，依課程編號、名稱，列出其授課的每門課之修課人數（8分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【已修正】原答案使用逗號隱式連接(FROM Course C, Grade G WHERE C.CNo=G.CNo)，已改寫為現代ANSI SQL明確JOIN...ON語法，邏輯結果不變但更嚴謹、可移植性更高。"
+},
+{
+"type": "para",
+"text": "SELECT C.CNo, C.CName, COUNT(G.SNo) AS 修課人數"
+},
+{
+"type": "para",
+"text": "FROM Course C"
+},
+{
+"type": "para",
+"text": "JOIN Grade G ON C.CNo = G.CNo"
+},
+{
+"type": "para",
+"text": "WHERE C.Instructor = '王大維'"
+},
+{
+"type": "para",
+"text": "GROUP BY C.CNo, C.CName;"
+},
+{
+"type": "para",
+"text": "說明：先以C.Instructor='王大維'篩選出王大維教師開授的所有課程，並將Course與Grade依CNo連結，取得每門課的修課記錄；再以GROUP BY依課程（CNo、CName）分組，以COUNT(G.SNo)計算各組（各課程）之修課學生人數（即該課程在Grade表格中出現的記錄筆數）。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 4
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "地特三等",
+"section": null,
+"qnum": 5,
+"qlabel": null,
+"stem": "(二)　找出其所修的每科成績均至少為90分之資管系學生姓名。（8分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "SELECT S.Name"
+},
+{
+"type": "para",
+"text": "FROM Student S"
+},
+{
+"type": "para",
+"text": "WHERE S.Major = 'MIS'"
+},
+{
+"type": "para",
+"text": "AND S.SID IN (SELECT SNo FROM Grade)"
+},
+{
+"type": "para",
+"text": "AND NOT EXISTS ("
+},
+{
+"type": "para",
+"text": "SELECT * FROM Grade G"
+},
+{
+"type": "para",
+"text": "WHERE G.SNo = S.SID AND G.Score < 90"
+},
+{
+"type": "para",
+"text": ");"
+},
+{
+"type": "para",
+"text": "說明：本題屬於「對其所修的每一科」皆須滿足條件之全稱量詞（for all）查詢，標準作法是改用「不存在反例」的雙重否定手法：先篩選出主修為'MIS'（資管系）的學生，再以NOT EXISTS子查詢排除「存在任何一科修課記錄其Score小於90分」的學生，換言之，剩下的學生即為「所修的每一科成績皆至少90分」者；額外加上S.SID IN (SELECT SNo FROM Grade)的限制，是為了避免將「完全沒有修過任何課」的資管系學生也誤判為符合條件（因該生沒有任何一筆Grade記錄，NOT EXISTS條件會呈現空真vacuously true而被誤選入），確保只列出實際修過課且每科都達90分（含）以上的學生。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 5
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "地特三等",
+"section": null,
+"qnum": 6,
+"qlabel": null,
+"stem": "(三)　找出在企管系所開所有課程中沒有一科及格過之學生姓名及其主修。（註：及格分數為60分）（9分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "【已修正】原答案兩個子查詢皆使用逗號隱式連接(FROM Grade G, Course C WHERE G.CNo=C.CNo)，已改寫為現代ANSI SQL明確JOIN...ON語法，邏輯結果不變但更嚴謹、可移植性更高。"
+},
+{
+"type": "para",
+"text": "SELECT S.Name, S.Major"
+},
+{
+"type": "para",
+"text": "FROM Student S"
+},
+{
+"type": "para",
+"text": "WHERE EXISTS ("
+},
+{
+"type": "para",
+"text": "    SELECT * FROM Grade G"
+},
+{
+"type": "para",
+"text": "    JOIN Course C ON G.CNo = C.CNo"
+},
+{
+"type": "para",
+"text": "    WHERE G.SNo = S.SID AND C.Dept = 'Business'"
+},
+{
+"type": "para",
+"text": ")"
+},
+{
+"type": "para",
+"text": "AND NOT EXISTS ("
+},
+{
+"type": "para",
+"text": "    SELECT * FROM Grade G"
+},
+{
+"type": "para",
+"text": "    JOIN Course C ON G.CNo = C.CNo"
+},
+{
+"type": "para",
+"text": "    WHERE G.SNo = S.SID"
+},
+{
+"type": "para",
+"text": "      AND C.Dept = 'Business' AND G.Score >= 60"
+},
+{
+"type": "para",
+"text": ");"
+},
+{
+"type": "para",
+"text": "說明：題意為「該學生曾修過企管系（Business）所開的課程，且在他修過的這些企管系課程中，沒有一科及格（即全部都低於60分）」。故須以兩個條件並列：①EXISTS子查詢確認該學生確實至少修過一門企管系開設的課程（排除完全沒修過企管系課程、無從談及格與否的學生）；②NOT EXISTS子查詢確認「不存在」該學生修過的企管系課程中，有任何一科成績達60分（含）以上及格——即他所修的企管系課程全數不及格。兩條件同時成立，才代表該生「在企管系所開課程中沒有一科及格過」，最後取出其姓名與主修。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 6
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "地特三等",
+"section": null,
+"qnum": 7,
+"qlabel": null,
+"stem": "假設某資料庫管理系統採用時間戳記（Timestamp）來管理並行控制（Concurrency Control），它採用的不是基本的時間戳記排序，而是修改版的Thomas的編寫規則（Write Rule）。假設某交易T的時間戳記是10010，請問下列情況，資料庫管理系統會如何處理？（每小題5分，共20分）(一)欲寫某項目X時，得知X已有寫的時間戳記write_TS（X）是10015。(二)欲寫某項目X時，得知X已有讀的時間戳記read_TS（X）是10012。(三)欲讀某項目X時，得知X已有寫的時間戳記write_TS（X）是10020。(四)欲讀某項目X時，得知X已有寫的時間戳記write_TS（X）是10005。",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "Thomas編寫規則（Thomas' Write Rule）之原理回顧"
+},
+{
+"type": "para",
+"text": "Thomas編寫規則是對基本時間戳記排序協定（Basic TO）中「寫入規則」的修正（讀取規則維持不變）：①讀取規則（不變）：交易T欲讀取X時，若TS(T) < write_TS(X)，則拒絕並撤銷T（因已有時間戳記較大的交易寫入了較新的值，T若讀取將違反序列化順序）；否則允許讀取，並將read_TS(X)更新為max(read_TS(X), TS(T))。②寫入規則（Thomas修正）：若TS(T) < read_TS(X)，仍拒絕並撤銷T（此情形不可放寬，因已有較晚時間戳記的交易讀取過X，若仍讓T寫入將回溯性地使該筆已發生的讀取變得不正確）；但若僅是TS(T) < write_TS(X)（即已有較晚時間戳記的交易寫入過更新的值），Thomas規則不再要求撤銷T，而是直接忽略（ignore）T這次的寫入動作即可（因為T這次寫入的值，即使真的執行，也必然會被時間戳記較大、已經寫入的交易之結果所覆蓋，等同於這次寫入從未發生過也不影響最終序列化結果，故忽略不寫即可，不需要透過昂貴的撤銷/重新啟動來處理，藉此提升並行效率）；否則（TS(T)不小於read_TS(X)與write_TS(X)）才正常執行寫入，並將write_TS(X)更新為TS(T)。"
+},
+{
+"type": "para",
+"text": "(一) 欲寫X，write_TS(X)=10015（T之TS=10010）"
+},
+{
+"type": "para",
+"text": "由於TS(T)=10010 < write_TS(X)=10015，屬於「已有時間戳記較大的交易寫入過更新值」之情形。依Thomas編寫規則，此情況「不需撤銷T」，資料庫管理系統會直接忽略（ignore）T這次對X的寫入操作，不實際執行寫入，也不撤銷交易T，T可以繼續執行後續其他操作。（若依基本時間戳記排序協定，此情形則會直接撤銷T；但Thomas規則對此情形放寬為忽略即可，此為Thomas規則與基本TO最主要的差異所在。）"
+},
+{
+"type": "para",
+"text": "(二) 欲寫X，read_TS(X)=10012（T之TS=10010）"
+},
+{
+"type": "para",
+"text": "由於TS(T)=10010 < read_TS(X)=10012，屬於「已有時間戳記較大的交易讀取過X」之情形。此規則Thomas並未放寬修正，資料庫管理系統會拒絕T這次的寫入操作，並將交易T撤銷（rollback），因為若仍允許T寫入，將會回溯性地使那筆時間戳記較大、已經完成的讀取動作所讀到的值變得不正確（該讀取應該要讀到T尚未寫入前，或是T已經寫入後的值，但無論如何都不該是現在這種「讀取發生在T的寫入判斷之後才被追溯改變」的矛盾狀態），故必須撤銷T以維持序列化正確性。"
+},
+{
+"type": "para",
+"text": "(三) 欲讀X，write_TS(X)=10020（T之TS=10010）"
+},
+{
+"type": "para",
+"text": "由於TS(T)=10010 < write_TS(X)=10020，依讀取規則（Thomas規則並未修改讀取規則），資料庫管理系統會拒絕T這次的讀取操作，並將交易T撤銷（rollback），因為已有時間戳記較大的交易寫入了較新的值，若T現在才讀取，將讀到一個「相對於T自身時間位置而言屬於未來」的值，違反了序列化排程應遵循的時間戳記先後順序，故須撤銷T。"
+},
+{
+"type": "para",
+"text": "(四) 欲讀X，write_TS(X)=10005（T之TS=10010）"
+},
+{
+"type": "para",
+"text": "由於TS(T)=10010 ≥ write_TS(X)=10005，並未違反讀取規則（沒有時間戳記更大的交易已寫入過更新的值），故資料庫管理系統會允許T正常執行這次的讀取操作，並將read_TS(X)更新為max(read_TS(X), TS(T)) = 10010（假設目前read_TS(X)小於10010）。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 7
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "地特三等",
+"section": null,
+"qnum": 8,
+"qlabel": null,
+"stem": "(一)　假設某關連式資料庫有下列表格R，目前僅有的四筆資料分別是t1,t2,t3,t4。沒有人告訴我們各屬性的相互關係，不過，從我們觀察到資料，可以確認有些功能相依是不存在的，還有些功能相依是有可能存在。請說明那些是可確認不存在？那些是有可能存在？答案必須以你觀察到的現象為理由來說明，只憑猜測是不計分。（18分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "原卷此處附有表格R之四筆實際資料t1~t4的內嵌圖片（檔名5df9cb549e2b2.jpg），本工具無法讀取圖片中t1~t4的確切屬性名稱與資料值，故無法逐一代入原始資料判斷各候選功能相依的真偽。以下說明由資料實例判斷功能相依存在與否的一般原則與判斷方法，供讀者對照原卷實際資料代入運用。"
+},
+{
+"type": "para",
+"text": "判斷原則"
+},
+{
+"type": "para",
+"text": "與本系列先前年度（如111年地特三等資料庫應用第三題(二)）相同的判斷邏輯：資料實例只能用來「否證」某個候選功能相依，而永遠無法用來「證明」其必然成立。對於任一候選功能相依X→Y：若能在給定的t1~t4這四筆記錄中，找到兩筆記錄在X（決定屬性）上的值相同，但在Y（被決定屬性）上的值卻不同，則可判定X→Y「已可確認不存在」（找到明確反例）；反之，若在這四筆記錄中，找不到任何兩筆記錄的X值相同（即該決定屬性組合在這四筆資料中未曾重複出現），則無法否證此FD，此時只能回答「還有可能存在」（因為現有的四筆資料不足以否證它，但也絕不能因此宣稱它已被證明成立，日後新增資料仍可能推翻它）。"
+},
+{
+"type": "para",
+"text": "實際作答步驟建議"
+},
+{
+"type": "para",
+"text": "讀者應依照下列步驟，將原卷t1~t4的實際屬性值代入：①列出R的所有屬性，並針對題目所詢問或所有可能的候選FD（determinant→dependent組合）逐一檢視；②對每一候選FD，找出t1~t4中，決定屬性（若為單一屬性或屬性組合）數值相同的記錄組合；③若存在此類數值相同的記錄組合，進一步比對其被決定屬性的值是否也相同——若不同，即為反例，該FD「已可確認不存在」，並應具體指出是哪兩筆記錄（如t1與t3）在哪個決定屬性值相同、卻在哪個被決定屬性值不同，作為說明理由；④若決定屬性的數值在t1~t4中從未重複出現過，則該FD「還有可能存在」，理由應說明「因四筆資料中決定屬性值皆互不相同，無法找到可用以否證之反例」。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 8
+},
+{
+"type": "essay",
+"subject": "資料庫應用",
+"year": "108",
+"track": "地特三等",
+"section": null,
+"qnum": 9,
+"qlabel": null,
+"stem": "(二)　假設已知下列功能相依，請利用功能相依推演規則，也就是Closure概念，找出所有R的候選鍵（Candidate Key），注意：只憑猜測，沒有使用功能相依的推演過程，不計分。（12分）",
+"passage": null,
+"group": null,
+"options": {},
+"answer": null,
+"blocks": [
+{
+"type": "para",
+"text": "原卷此處附有本小題所需之已知功能相依清單的內嵌圖片（檔名5df9cb63b28b3.jpg），本工具無法讀取圖片中確切的功能相依內容與R的屬性清單，故無法代入求出原卷正確答案。以下說明利用屬性閉包（Attribute Closure）概念尋找候選鍵的標準演算步驟，並以一組自建的代表性範例示範完整推演過程；讀者可將原卷實際功能相依清單代入下列演算法重新推演。"
+},
+{
+"type": "para",
+"text": "尋找候選鍵之標準演算法（屬性閉包法）"
+},
+{
+"type": "para",
+"text": "①先找出「必屬於每個候選鍵」的屬性：任何從未出現在已知功能相依右側（被決定端）的屬性，必定屬於R的每一個候選鍵（因為沒有其他方式可以推導出它）；②以這些必要屬性的集合作為起始集合，計算其屬性閉包（closure）——反覆套用已知的功能相依，只要某FD的決定屬性已全部包含於目前集合中，就將其被決定屬性加入集合，直到無法再擴充為止；③若計算出的閉包已涵蓋R的全部屬性，則此起始集合本身即為一個候選鍵（若其為最小、無法再刪減任何成員的超鍵）；④若閉包尚未涵蓋全部屬性，則需逐一嘗試加入其餘屬性（或屬性組合），並重複計算閉包，直到找出所有『最小』（無法再刪減仍能保持全屬性覆蓋）的超鍵，即為R的所有候選鍵。"
+},
+{
+"type": "para",
+"text": "代表性範例演算示範"
+},
+{
+"type": "para",
+"text": "假設R(A,B,C,D,E)，已知FD1：A→B、FD2：BE→C、FD3：CD→A（此為僅供示範方法論之假設性範例，非原卷真實功能相依）。"
+},
+{
+"type": "para",
+"text": "步驟①：檢視A,B,C,D,E何者從未出現在任一FD右側——僅D、E從未作為被決定端出現，"
+},
+{
+"type": "para",
+"text": "故D、E必屬於每一個候選鍵，以{D,E}作為起始集合。"
+},
+{
+"type": "para",
+"text": "步驟②：計算{D,E}+ —— 起始集合{D,E}；檢視FD1(A→B)：決定屬性A不在集合中，暫不可用；"
+},
+{
+"type": "para",
+"text": "檢視FD2(BE→C)：決定屬性B不在集合中，暫不可用；檢視FD3(CD→A)：決定屬性C不在集合中，暫不可用。"
+},
+{
+"type": "para",
+"text": "{D,E}+ = {D,E}，未涵蓋全部屬性，{D,E}本身不是超鍵，需繼續嘗試加入其他屬性。"
+},
+{
+"type": "para",
+"text": "步驟③：嘗試加入B，計算{B,D,E}+：套用FD2(BE→C)：B、E皆在集合中，加入C，集合={B,C,D,E}；"
+},
+{
+"type": "para",
+"text": "套用FD3(CD→A)：C、D皆在集合中，加入A，集合={A,B,C,D,E}（已涵蓋全部）。"
+},
+{
+"type": "para",
+"text": "故{B,D,E}為一超鍵；檢查最小性：移除B則回到{D,E}+={D,E}（不足）、移除D則{B,E}+："
+},
+{
+"type": "para",
+"text": "套用FD2得C，集合={B,C,E}，FD3需D（無），無法再擴充，不足；移除E則{B,D}+={B,D}，FD1需A（無），不足。"
+},
+{
+"type": "para",
+"text": "三者移除任一均不足，故{B,D,E}具最小性，為一候選鍵。"
+},
+{
+"type": "para",
+"text": "依此類推，若存在其他可涵蓋全部屬性的最小超鍵組合（例如嘗試以A取代B等其他等價路徑），亦應一併找出並列為R的候選鍵。讀者請將原卷實際功能相依代入上述步驟①②③之演算流程，即可求出原題正確之候選鍵答案，且務必於作答時完整寫出每一步驟的推演過程（依題目要求，僅憑猜測而未展示推演過程不予計分）。"
+}
+],
+"orig_section": "試題與詳解",
+"orig_qnum": 9
 },
 {
 "type": "essay",
