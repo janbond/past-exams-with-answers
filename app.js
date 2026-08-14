@@ -1,11 +1,13 @@
 
 let ALL = [];
 let SUBJECTS = [];
-let state = { subject: null, year: null, track: null, section: null, onlyStar: false, search: '', cardMode: false, cardIndex: 0 };
+let state = { subject: null, year: null, track: null, section: null, onlyStar: false, onlyWrong: false, search: '', cardMode: false, cardIndex: 0 };
 let starred = new Set(JSON.parse(localStorage.getItem('examstar_v1')||'[]'));
+let wrongCounts = JSON.parse(localStorage.getItem('examwrong_v1')||'{}');
 
 function qid(q){ return [q.subject,q.year,q.track,q.section,q.qnum].join('|'); }
 function saveStar(){ localStorage.setItem('examstar_v1', JSON.stringify([...starred])); }
+function saveWrong(){ localStorage.setItem('examwrong_v1', JSON.stringify(wrongCounts)); }
 
 function loadPrefs(){
   try{
@@ -103,6 +105,7 @@ function currentList(){
     if(state.section) list = list.filter(q=>q.section===state.section);
   }
   if(state.onlyStar) list = list.filter(q=>starred.has(qid(q)));
+  if(state.onlyWrong) list = list.filter(q=>wrongCounts[qid(q)]);
   list = [...list].sort((a,b)=> a.year===b.year ? a.qnum-b.qnum : a.year.localeCompare(b.year));
   return list;
 }
@@ -122,8 +125,10 @@ function renderChoiceCard(q){
   if(q.passage){
     html += `<div class="passage" id="pg-${cssEsc(id)}">${highlight(q.passage, state.search)}</div><div class="passage-toggle" data-id="${attrEsc(id)}">展開／收合短文</div>`;
   }
+  const wrongCount = wrongCounts[id] || 0;
+  const wrongBadge = wrongCount > 0 ? `<span class="wrong-badge" data-id="${attrEsc(id)}" title="點擊清除錯題紀錄">✗ 答錯${wrongCount}次</span>` : '';
   html += `<div class="qhead">
-      <div><span class="qnum-badge">${q.year}年・${q.track}${q.section?('・'+q.section):''}・第${q.qnum}題</span>
+      <div><span class="qnum-badge">${q.year}年・${q.track}${q.section?('・'+q.section):''}・第${q.qnum}題</span>${wrongBadge}
       <div class="qstem">${highlight(q.stem, state.search)}</div></div>
       <button class="star-btn ${isStar?'on':''}" data-id="${attrEsc(id)}">${isStar?'★':'☆'}</button>
     </div>`;
@@ -343,14 +348,39 @@ function bindCardEvents(){
         oo.classList.add('dim');
         if(oo.dataset.k === q.answer) oo.classList.add('correct');
       });
-      if(k !== q.answer) o.classList.add('wrong');
+      if(k !== q.answer){
+        o.classList.add('wrong');
+        wrongCounts[id] = (wrongCounts[id]||0) + 1;
+        saveWrong();
+        const card = o.closest('.qcard');
+        const head = card && card.querySelector('.qnum-badge');
+        if(head && !card.querySelector('.wrong-badge')){
+          head.insertAdjacentHTML('afterend', `<span class="wrong-badge" data-id="${attrEsc(id)}" title="點擊清除錯題紀錄">✗ 答錯${wrongCounts[id]}次</span>`);
+          bindWrongBadge(card.querySelector('.wrong-badge'));
+        } else if(head){
+          const badge = card.querySelector('.wrong-badge');
+          badge.textContent = `✗ 答錯${wrongCounts[id]}次`;
+        }
+      }
       const optsWrap = o.closest('.opts');
       if(optsWrap) optsWrap.classList.add('revealed');
       revealAnswer(id);
     };
   });
+  document.querySelectorAll('.wrong-badge').forEach(bindWrongBadge);
 }
 function cssAttrEsc(id){ return id.replace(/"/g,'\\"'); }
+
+function bindWrongBadge(b){
+  if(!b) return;
+  b.onclick = (e)=>{
+    e.stopPropagation();
+    const id = b.dataset.id;
+    delete wrongCounts[id];
+    saveWrong();
+    render();
+  };
+}
 
 function revealAnswer(id){
   const p = document.getElementById('ap-'+cssEsc(id));
@@ -368,7 +398,8 @@ function toggleAnswer(id, btn){
 
 function updateStats(count){
   document.getElementById('statLeft').textContent = `顯示 ${count} 題`;
-  document.getElementById('statRight').textContent = `已標記 ${starred.size} 題`;
+  const wrongTotal = Object.keys(wrongCounts).length;
+  document.getElementById('statRight').textContent = `已標記 ${starred.size} 題 ・ 答錯 ${wrongTotal} 題`;
 }
 
 document.getElementById('searchBox').addEventListener('input', (e)=>{
@@ -378,6 +409,11 @@ document.getElementById('searchBox').addEventListener('input', (e)=>{
 document.getElementById('modeToggle').addEventListener('click', ()=>{
   state.onlyStar = !state.onlyStar;
   document.getElementById('modeToggle').style.color = state.onlyStar ? 'var(--star)' : 'var(--muted)';
+  render();
+});
+document.getElementById('wrongToggle').addEventListener('click', ()=>{
+  state.onlyWrong = !state.onlyWrong;
+  document.getElementById('wrongToggle').style.color = state.onlyWrong ? 'var(--bad)' : 'var(--muted)';
   render();
 });
 
