@@ -130,7 +130,9 @@ function renderChoiceCard(q){
   html += '<div class="opts">';
   ['A','B','C','D','E'].forEach(k=>{
     if(q.options[k]===undefined) return;
-    html += `<div class="opt" data-id="${attrEsc(id)}" data-k="${k}"><span class="lab">(${k})</span><span>${highlight(q.options[k], state.search)}</span></div>`;
+    const gloss = q.optionGlossary && q.optionGlossary[k];
+    const transHtml = gloss ? `<span class="trans">（${escapeHtml(gloss)}）</span>` : '';
+    html += `<div class="opt" data-id="${attrEsc(id)}" data-k="${k}"><span class="lab">(${k})</span><span>${highlight(q.options[k], state.search)}${transHtml}</span></div>`;
   });
   html += '</div>';
   html += `<div class="answer-panel" id="ap-${cssEsc(id)}"><div class="ans-line">正確答案：(${q.answer})</div><div>${(q.explanation||[]).map(e=>escapeHtml(e)).join('<br><br>')}</div></div>`;
@@ -342,6 +344,8 @@ function bindCardEvents(){
         if(oo.dataset.k === q.answer) oo.classList.add('correct');
       });
       if(k !== q.answer) o.classList.add('wrong');
+      const optsWrap = o.closest('.opts');
+      if(optsWrap) optsWrap.classList.add('revealed');
       revealAnswer(id);
     };
   });
