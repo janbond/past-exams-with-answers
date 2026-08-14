@@ -7,6 +7,7 @@
   :root{ --bg:#f4f5f8; --card:#ffffff; --card2:#eef0f5; --text:#1c1f26; --muted:#666e7d; --border:#e1e4ea; }
 }
 *{box-sizing:border-box;}
+svg{vertical-align:middle;flex-shrink:0;}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif;}
 body{padding-bottom:56px;}
 .app-header{position:sticky;top:0;z-index:20;background:var(--bg);padding:6px 12px 0;border-bottom:1px solid var(--border);}
@@ -14,7 +15,7 @@ body{padding-bottom:56px;}
 .title-row h1{font-size:14px;margin:0;font-weight:700;flex:0 0 auto;}
 .search-wrap{flex:1;padding:0;}
 #searchBox{width:100%;padding:6px 10px;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:13.5px;}
-#modeToggle{flex:0 0 auto;}
+#modeToggle,#wrongToggle,#cardModeToggle{flex:0 0 auto;}
 .tabbar{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .tabbar::-webkit-scrollbar{display:none;}
 .tab{flex:0 0 auto;padding:5px 12px;border-radius:999px;background:var(--card2);color:var(--muted);font-size:12.5px;white-space:nowrap;border:1px solid transparent;cursor:pointer;}
@@ -32,9 +33,10 @@ main{padding:8px 12px 20px;max-width:720px;margin:0 auto;}
 .qcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;}
 .qhead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;cursor:pointer;}
 .qnum-badge{display:inline-block;background:var(--card2);color:var(--muted);font-size:12px;padding:2px 8px;border-radius:999px;margin-bottom:6px;}
-.wrong-badge{display:inline-block;background:rgba(242,85,90,.15);color:var(--bad);font-size:11.5px;padding:2px 8px;border-radius:999px;margin-left:6px;margin-bottom:6px;cursor:pointer;}
+.wrong-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(242,85,90,.15);color:var(--bad);font-size:11.5px;padding:2px 8px;border-radius:999px;margin-left:6px;margin-bottom:6px;cursor:pointer;}
+.card-mode-btn{display:inline-flex;align-items:center;gap:6px;}
 .qstem{font-size:15.5px;line-height:1.6;white-space:pre-wrap;}
-.star-btn{font-size:20px;background:none;border:none;cursor:pointer;color:var(--muted);padding:0 2px;line-height:1;}
+.star-btn{display:inline-flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;color:var(--muted);padding:2px;line-height:1;}
 .star-btn.on{color:var(--star);}
 .passage{margin:8px 0 10px;padding:10px 12px;background:var(--card2);border-radius:10px;font-size:13.5px;line-height:1.6;color:var(--muted);white-space:pre-wrap;max-height:120px;overflow:hidden;position:relative;}
 .passage.expanded{max-height:none;}
@@ -121,6 +123,7 @@ main{padding:8px 12px 20px;max-width:720px;margin:0 auto;}
   #searchBox:focus{ outline:none; border-color:rgba(11,11,11,.25); box-shadow:0 0 0 3px var(--card2); }
   #modeToggle{ order:2; align-self:flex-start; font-size:15px; }
   #wrongToggle{ order:2; align-self:flex-start; font-size:15px; margin-left:6px; }
+  #cardModeToggle{ order:2; align-self:flex-start; font-size:15px; margin-left:6px; }
   .tabbar{ flex-direction:column; overflow-x:visible; gap:2px; padding-bottom:0; margin-top:2px; }
   .tab{
     text-align:left; border-radius:8px; padding:8px 12px; font-size:13.5px;

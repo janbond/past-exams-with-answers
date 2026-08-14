@@ -4,19 +4,42 @@ let SUBJECTS = [];
 let state = { subject: null, year: null, track: null, section: null, onlyStar: false, onlyWrong: false, search: '', cardMode: false, cardIndex: 0 };
 let starred = new Set(JSON.parse(localStorage.getItem('examstar_v1')||'[]'));
 let wrongCounts = JSON.parse(localStorage.getItem('examwrong_v1')||'{}');
+let lastSeen = JSON.parse(localStorage.getItem('examlastseen_v1')||'{}'); // { subject: qid } - last question scrolled/viewed per subject
+
+const ICONS = {
+  book: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>',
+  starOutline: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
+  starFilled: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
+  xCircle: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
+  xCircleSmall: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
+  layers: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>',
+};
 
 function qid(q){ return [q.subject,q.year,q.track,q.section,q.qnum].join('|'); }
 function saveStar(){ localStorage.setItem('examstar_v1', JSON.stringify([...starred])); }
 function saveWrong(){ localStorage.setItem('examwrong_v1', JSON.stringify(wrongCounts)); }
+function saveLastSeen(){ localStorage.setItem('examlastseen_v1', JSON.stringify(lastSeen)); }
 
 function loadPrefs(){
   try{
     const p = JSON.parse(localStorage.getItem('examprefs_v1')||'{}');
     if(p.subject) state.subject = p.subject;
+    if(p.year) state.year = p.year;
+    if(p.track) state.track = p.track;
+    if(p.section) state.section = p.section;
+    if(p.search) state.search = p.search;
+    if(p.onlyStar) state.onlyStar = p.onlyStar;
+    if(p.onlyWrong) state.onlyWrong = p.onlyWrong;
+    if(p.cardMode) state.cardMode = p.cardMode;
+    if(typeof p.cardIndex === 'number') state.cardIndex = p.cardIndex;
   }catch(e){}
 }
 function savePrefs(){
-  localStorage.setItem('examprefs_v1', JSON.stringify({subject: state.subject}));
+  localStorage.setItem('examprefs_v1', JSON.stringify({
+    subject: state.subject, year: state.year, track: state.track, section: state.section,
+    search: state.search, onlyStar: state.onlyStar, onlyWrong: state.onlyWrong,
+    cardMode: state.cardMode, cardIndex: state.cardIndex,
+  }));
 }
 
 function uniq(arr){ return [...new Set(arr)]; }
@@ -126,11 +149,11 @@ function renderChoiceCard(q){
     html += `<div class="passage" id="pg-${cssEsc(id)}">${highlight(q.passage, state.search)}</div><div class="passage-toggle" data-id="${attrEsc(id)}">展開／收合短文</div>`;
   }
   const wrongCount = wrongCounts[id] || 0;
-  const wrongBadge = wrongCount > 0 ? `<span class="wrong-badge" data-id="${attrEsc(id)}" title="點擊清除錯題紀錄">✗ 答錯${wrongCount}次</span>` : '';
+  const wrongBadge = wrongCount > 0 ? `<span class="wrong-badge" data-id="${attrEsc(id)}" title="點擊清除錯題紀錄">${ICONS.xCircleSmall} 答錯${wrongCount}次</span>` : '';
   html += `<div class="qhead">
       <div><span class="qnum-badge">${q.year}年・${q.track}${q.section?('・'+q.section):''}・第${q.qnum}題</span>${wrongBadge}
       <div class="qstem">${highlight(q.stem, state.search)}</div></div>
-      <button class="star-btn ${isStar?'on':''}" data-id="${attrEsc(id)}">${isStar?'★':'☆'}</button>
+      <button class="star-btn ${isStar?'on':''}" data-id="${attrEsc(id)}">${isStar?ICONS.starFilled:ICONS.starOutline}</button>
     </div>`;
   html += '<div class="opts">';
   ['A','B','C','D','E'].forEach(k=>{
@@ -176,7 +199,7 @@ function renderEssayCard(q){
   html += `<div class="qhead">
       <div><span class="qnum-badge">${q.year}年・${q.track}${q.section?('・'+q.section):''}・${qlabel}</span>
       <div class="qstem">${highlight(q.stem, state.search)}</div></div>
-      <button class="star-btn ${isStar?'on':''}" data-id="${attrEsc(id)}">${isStar?'★':'☆'}</button>
+      <button class="star-btn ${isStar?'on':''}" data-id="${attrEsc(id)}">${isStar?ICONS.starFilled:ICONS.starOutline}</button>
     </div>`;
   const blocksHtml = (q.blocks||[]).map(b=>renderAnswerBlock(b, state.search)).join('');
   html += `<div class="answer-panel" id="ap-${cssEsc(id)}">${blocksHtml}</div>`;
@@ -189,6 +212,9 @@ function cssEsc(s){ return s.replace(/[^a-zA-Z0-9\-_]/g, c=>'_'+c.charCodeAt(0)+
 function attrEsc(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
 function render(){
+  savePrefs();
+  document.getElementById('modeToggle').style.color = state.onlyStar ? 'var(--star)' : 'var(--muted)';
+  document.getElementById('wrongToggle').style.color = state.onlyWrong ? 'var(--bad)' : 'var(--muted)';
   document.body.classList.toggle('card-mode', !!state.cardMode);
   renderSubjectTabs();
   const main = document.getElementById('main');
@@ -242,16 +268,43 @@ function showList(list){
   else renderListMode(list);
 }
 
+let scrollObserver = null;
+let initialRestoreDone = false;
+
+function setupScrollTracking(){
+  if(scrollObserver) scrollObserver.disconnect();
+  const cards = document.querySelectorAll('.qlist .qcard');
+  if(!cards.length) return;
+  scrollObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        const id = en.target.dataset.id;
+        if(id){ lastSeen[state.subject] = id; saveLastSeen(); }
+      }
+    });
+  }, { root: null, rootMargin: '-35% 0px -55% 0px', threshold: 0 });
+  cards.forEach(c=>scrollObserver.observe(c));
+}
+
 function renderListMode(list){
   const main = document.getElementById('main');
   resetStatsBar();
-  const toolbar = list.length ? `<div class="list-toolbar"><button class="card-mode-btn" id="enterCardBtn">🃏 卡片模式</button></div>` : '';
+  const toolbar = list.length ? `<div class="list-toolbar"><button class="card-mode-btn" id="enterCardBtn">${ICONS.layers} 卡片模式</button></div>` : '';
   const body = list.length ? `<div class="qlist">${list.map(renderQuestionCard).join('')}</div>` : '<div class="empty">此範圍暫無題目資料</div>';
   main.insertAdjacentHTML('beforeend', toolbar + body);
   const btn = document.getElementById('enterCardBtn');
   if(btn) btn.onclick = ()=>{ state.cardMode = true; state.cardIndex = 0; render(); };
   updateStats(list.length);
   bindCardEvents();
+  setupScrollTracking();
+  if(!initialRestoreDone){
+    initialRestoreDone = true;
+    const targetId = lastSeen[state.subject];
+    if(targetId){
+      const el = document.querySelector(`.qcard[data-id="${cssAttrEsc(targetId)}"]`);
+      if(el) el.scrollIntoView({ block: 'center' });
+    }
+  }
 }
 
 function renderCardMode(list){
@@ -265,6 +318,8 @@ function renderCardMode(list){
   if(state.cardIndex < 0) state.cardIndex = 0;
   if(state.cardIndex > list.length-1) state.cardIndex = list.length-1;
   const q = list[state.cardIndex];
+  lastSeen[state.subject] = qid(q);
+  saveLastSeen();
   const html = `<div class="card-toolbar"><span class="back-link" id="exitCardBtn">‹ 返回列表</span><span class="crumb">第 ${state.cardIndex+1} ／ ${list.length} 題</span></div>
     <div class="card-single">${renderQuestionCard(q)}</div>`;
   main.insertAdjacentHTML('beforeend', html);
@@ -325,8 +380,8 @@ function bindCardEvents(){
     b.onclick = (e)=>{
       e.stopPropagation();
       const id = b.dataset.id;
-      if(starred.has(id)){ starred.delete(id); b.classList.remove('on'); b.textContent='☆'; }
-      else { starred.add(id); b.classList.add('on'); b.textContent='★'; }
+      if(starred.has(id)){ starred.delete(id); b.classList.remove('on'); b.innerHTML=ICONS.starOutline; }
+      else { starred.add(id); b.classList.add('on'); b.innerHTML=ICONS.starFilled; }
       saveStar();
     };
   });
@@ -355,11 +410,11 @@ function bindCardEvents(){
         const card = o.closest('.qcard');
         const head = card && card.querySelector('.qnum-badge');
         if(head && !card.querySelector('.wrong-badge')){
-          head.insertAdjacentHTML('afterend', `<span class="wrong-badge" data-id="${attrEsc(id)}" title="點擊清除錯題紀錄">✗ 答錯${wrongCounts[id]}次</span>`);
+          head.insertAdjacentHTML('afterend', `<span class="wrong-badge" data-id="${attrEsc(id)}" title="點擊清除錯題紀錄">${ICONS.xCircleSmall} 答錯${wrongCounts[id]}次</span>`);
           bindWrongBadge(card.querySelector('.wrong-badge'));
         } else if(head){
           const badge = card.querySelector('.wrong-badge');
-          badge.textContent = `✗ 答錯${wrongCounts[id]}次`;
+          badge.innerHTML = `${ICONS.xCircleSmall} 答錯${wrongCounts[id]}次`;
         }
       }
       const optsWrap = o.closest('.opts');
@@ -415,6 +470,29 @@ document.getElementById('wrongToggle').addEventListener('click', ()=>{
   state.onlyWrong = !state.onlyWrong;
   document.getElementById('wrongToggle').style.color = state.onlyWrong ? 'var(--bad)' : 'var(--muted)';
   render();
+});
+
+function resumeToLastSeen(){
+  const target = lastSeen[state.subject];
+  if(!target) return false;
+  const [subj, year, track, section, qnumStr] = target.split('|');
+  state.subject = subj || state.subject;
+  state.year = year || null;
+  state.track = track || null;
+  state.section = section || null;
+  state.search = '';
+  state.onlyStar = false;
+  state.onlyWrong = false;
+  const list = currentList();
+  const idx = list.findIndex(q=>qid(q)===target);
+  if(idx < 0) return false;
+  state.cardMode = true;
+  state.cardIndex = idx;
+  render();
+  return true;
+}
+document.getElementById('cardModeToggle').addEventListener('click', ()=>{
+  resumeToLastSeen();
 });
 
 async function loadData(){
