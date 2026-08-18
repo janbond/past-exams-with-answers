@@ -9,7 +9,10 @@ app.js              互動邏輯（讀取 data/ 底下的題庫）
 data/manifest.json  科目清單，列出要載入哪些 JSON 檔
 data/guowen.json          國文題庫（160題）
 data/faxue_yingwen.json   法學知識與英文題庫（789題）
+data/zitongwanglu.json    關務特考三等資訊處理－資通網路題庫（20題，111-115年）
 ```
+
+新增：關務特考三等資訊處理（111-115年）之「資料結構」「資料庫應用」已併入既有的 `ziliaojiegou.json`／`ziliaokuyingyong.json`（與高普考同科目共用同一分頁，track顯示為「關務人員三等」）；「資通網路」因官方科目名稱與高普考的「資通網路與安全」不同，故獨立為新檔 `zitongwanglu.json`。
 
 新增科目時，只要把新的 JSON 檔放進 `data/`，再把檔名加進 `manifest.json` 的陣列裡即可，不用改 `app.js`。
 
