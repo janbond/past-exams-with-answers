@@ -5,6 +5,15 @@ let state = { subject: null, year: null, track: null, section: null, onlyStar: f
 let starred = new Set(JSON.parse(localStorage.getItem('examstar_v1')||'[]'));
 let wrongCounts = JSON.parse(localStorage.getItem('examwrong_v1')||'{}');
 let lastSeen = JSON.parse(localStorage.getItem('examlastseen_v1')||'{}'); // { subject: qid } - last question scrolled/viewed per subject
+let bookProgress = JSON.parse(localStorage.getItem('bookprogress_v1')||'{}'); // { track: sectionName } - 讀書分類：每本書上次讀到的章節
+let bookRead = JSON.parse(localStorage.getItem('bookread_v1')||'{}'); // { track: [sectionName,...] } - 讀書分類：已讀過的章節
+const BOOK_SUBJECT = '讀書';
+function saveBookProgress(){ localStorage.setItem('bookprogress_v1', JSON.stringify(bookProgress)); }
+function saveBookRead(){ localStorage.setItem('bookread_v1', JSON.stringify(bookRead)); }
+function markChapterRead(track, sec){
+  if(!bookRead[track]) bookRead[track] = [];
+  if(!bookRead[track].includes(sec)){ bookRead[track].push(sec); saveBookRead(); }
+}
 
 const ICONS = {
   book: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>',
@@ -73,13 +82,16 @@ function renderYearGrid(){
 function renderTrackSectionTabs(){
   const qs = questionsFor(state.subject).filter(q=>q.year===state.year);
   const tracks = uniq(qs.map(q=>q.track));
-  let html = '<div class="back-link" id="backToYears">‹ 返回年份選擇</div>';
+  const isBook = state.subject === BOOK_SUBJECT;
+  let html = isBook
+    ? '<div class="back-link" id="backToBooks">‹ 返回讀書分類</div>'
+    : '<div class="back-link" id="backToYears">‹ 返回年份選擇</div>';
   html += '<div class="subtabs" id="trackTabs">';
   tracks.forEach(t=>{
     html += `<div class="tab track-tab${state.track===t?' active':''}" data-t="${t}">${t}</div>`;
   });
   html += '</div>';
-  if(state.track){
+  if(state.track && !isBook){
     const secs = uniq(qs.filter(q=>q.track===state.track).map(q=>q.section).filter(Boolean));
     if(secs.length>1){
       html += '<div class="subtabs" id="secTabs">';
@@ -90,6 +102,73 @@ function renderTrackSectionTabs(){
     }
   }
   return html;
+}
+
+function renderBookToc(secs){
+  let html = '<div class="book-toc"><div class="book-toc-title">章節目錄</div>';
+  secs.forEach((s,i)=>{
+    const isActive = s===state.section;
+    const isRead = (bookRead[state.track]||[]).includes(s);
+    html += `<div class="book-chapter${isActive?' active':''}${isRead?' read':''}" data-sec="${attrEsc(s)}">
+      <span class="chnum">${String(i+1).padStart(2,'0')}</span>
+      <span class="chtitle">${escapeHtml(s)}</span>
+      ${isRead ? '<span class="chcheck">✓ 已讀</span>' : ''}
+    </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderBookMode(qsTrack){
+  const secs = uniq(qsTrack.map(q=>q.section).filter(Boolean));
+  const main = document.getElementById('main');
+  if(!secs.length){
+    resetStatsBar();
+    showList(currentList());
+    return;
+  }
+  if(!state.section || !secs.includes(state.section)){
+    const saved = bookProgress[state.track];
+    state.section = (saved && secs.includes(saved)) ? saved : secs[0];
+  }
+  markChapterRead(state.track, state.section);
+  bookProgress[state.track] = state.section;
+  saveBookProgress();
+  savePrefs();
+
+  resetStatsBar();
+  main.insertAdjacentHTML('beforeend', renderBookToc(secs));
+  document.querySelectorAll('.book-chapter').forEach(el=>{
+    el.onclick = ()=>{
+      state.section = el.dataset.sec;
+      state.cardMode = false;
+      render();
+      scrollMainTop();
+    };
+  });
+
+  showList(currentList());
+
+  const idx = secs.indexOf(state.section);
+  const prevSec = idx > 0 ? secs[idx-1] : null;
+  const nextSec = idx < secs.length-1 ? secs[idx+1] : null;
+  let navHtml = '<div class="chapter-nav">';
+  navHtml += prevSec ? `<button class="chapter-nav-btn" id="prevChBtn">‹ 上一章：${escapeHtml(prevSec)}</button>` : '<span></span>';
+  navHtml += nextSec ? `<button class="chapter-nav-btn" id="nextChBtn">下一章：${escapeHtml(nextSec)} ›</button>` : '<span></span>';
+  navHtml += '</div>';
+  main.insertAdjacentHTML('beforeend', navHtml);
+  const prevBtn = document.getElementById('prevChBtn');
+  const nextBtn = document.getElementById('nextChBtn');
+  if(prevBtn) prevBtn.onclick = ()=>{ state.section=prevSec; state.cardMode=false; render(); scrollMainTop(); };
+  if(nextBtn) nextBtn.onclick = ()=>{ state.section=nextSec; state.cardMode=false; render(); scrollMainTop(); };
+}
+
+function scrollMainTop(){
+  try{
+    const main = document.getElementById('main');
+    if(main && main.scrollIntoView) main.scrollIntoView({ behavior:'smooth', block:'start' });
+    if(window.scrollTo) window.scrollTo({ top:0, behavior:'smooth' });
+  }catch(e){}
 }
 
 function highlight(text, term){
@@ -226,6 +305,9 @@ function render(){
     showList(list);
     return;
   }
+  const isBook = state.subject === BOOK_SUBJECT;
+  const yearsAll = uniq(questionsFor(state.subject).map(q=>q.year));
+  if(!state.year && yearsAll.length===1){ state.year = yearsAll[0]; }
   if(!state.year){
     resetStatsBar();
     main.innerHTML = renderYearGrid();
@@ -242,12 +324,16 @@ function render(){
     if(tracks.length===1) state.track = tracks[0];
   }
   const qs2 = qs.filter(q=> !state.track || q.track===state.track);
-  if(state.track && !state.section){
+  if(state.track && !state.section && !isBook){
     const secs = uniq(qs2.filter(q=>q.track===state.track).map(q=>q.section).filter(Boolean));
     if(secs.length===1) state.section = secs[0];
   }
   main.innerHTML = top;
-  document.getElementById('backToYears').onclick = ()=>{ state.year=null; state.track=null; state.section=null; state.cardMode=false; render(); };
+  if(isBook){
+    document.getElementById('backToBooks').onclick = ()=>{ state.track=null; state.section=null; state.cardMode=false; render(); };
+  } else {
+    document.getElementById('backToYears').onclick = ()=>{ state.year=null; state.track=null; state.section=null; state.cardMode=false; render(); };
+  }
   document.querySelectorAll('.track-tab').forEach(b=>{
     b.onclick = ()=>{ state.track=b.dataset.t; state.section=null; state.cardMode=false; render(); };
   });
@@ -255,8 +341,12 @@ function render(){
     b.onclick = ()=>{ state.section=b.dataset.s; state.cardMode=false; render(); };
   });
   if(state.track){
-    const list = currentList();
-    showList(list);
+    if(isBook){
+      renderBookMode(qs2);
+    } else {
+      const list = currentList();
+      showList(list);
+    }
   } else {
     resetStatsBar();
     updateStats(qs.length);
