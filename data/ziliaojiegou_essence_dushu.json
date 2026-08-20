@@ -1,0 +1,784 @@
+[
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 2　陣列",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "一維陣列位址公式",
+            "body": "A[i]位址 = base + i×size，幾乎所有多維陣列題都是從這個公式延伸。"
+          },
+          {
+            "label": "二維陣列（必背兩式）",
+            "body": "Row-major：base+(i×C+j)×size；Column-major：base+(j×R+i)×size。題目常給兩個已知元素位址，反推是哪種儲存方式再算第三個位址。"
+          },
+          {
+            "label": "三維陣列",
+            "body": "Row-major：base+(i×d2×d3+j×d3+k)×size；直接是二維公式的延伸，記住「由外到內、乘後面所有維度大小」的規律即可，不需要死背三維公式，用邏輯推。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 2　陣列",
+    "qnum": 2,
+    "qlabel": "精華範例",
+    "stem": "二維陣列float A[20][15]，已知A[2][3]位址為1000，A[5][3]位址為1180，請問是row-major還是column-major儲存？並求A[10][10]位址。（每個float佔4 bytes）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題"
+      },
+      {
+        "type": "para",
+        "text": "兩位址列（row）相差3（2→5），位址差180，180÷4=45個元素差，45÷3列＝15＝C（欄數），符合row-major公式(i×C+j)，故為row-major儲存。A[10][10]位址＝1000+((10-2)×15+(10-3))×4＝1508。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 2　陣列",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "稀疏矩陣三元組壓縮儲存、動態陣列2倍成長攤銷分析。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 3　鏈結串列",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "指標操作題型（環狀／雙向鏈結串列）",
+            "body": "「交換節點」「插入到另一串列」「反轉prev/next」是三大固定題型，改變指標前一定要先用暫存指標保留即將失去的連結，順序錯了會斷鏈。"
+          },
+          {
+            "label": "陣列 vs 鏈結串列的取捨",
+            "body": "陣列：隨機存取O(1)、插入刪除O(n)；鏈結串列：插入刪除O(1)（已知位置時）、隨機存取O(n)。判斷原則：查詢頻繁選陣列，新增刪除頻繁選鏈結串列。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 3　鏈結串列",
+    "qnum": 2,
+    "qlabel": "精華範例〔110年高考三級・swapnodes〕",
+    "stem": "環狀鏈結串列，寫出swapnodes(x,y)交換x、y兩節點本身（非交換值），並維持環狀結構完整。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題心法"
+      },
+      {
+        "type": "para",
+        "text": "先找到x、y的前一個節點prevX、prevY；用暫存變數記住x、y原本的next；依序改接prevX→y、prevY→x、y→(x原next)、x→(y原next)；若x、y相鄰須特別處理，否則會漏接斷鏈。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 3　鏈結串列",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "凱撒位移密文應用只是包裝情境，本質仍是環狀串列位移操作。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 4　堆疊與佇列",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "後序運算式求值",
+            "body": "由左至右掃描：運算元進Stack；遇運算子取出兩個運算元計算後結果再進Stack；掃描完畢Stack僅剩一個值即為答案。"
+          },
+          {
+            "label": "中序轉後序",
+            "body": "用額外Stack暫存運算子：運算子優先權≥Stack頂端則彈出輸出直到不成立才推入；遇左括號直接推入，遇右括號一路彈出輸出直到彈出左括號。"
+          },
+          {
+            "label": "優先佇列三種實作方式（必背表）",
+            "body": "未排序陣列：insert O(1)、delete_min O(n)。排序陣列：insert O(n)、delete_min O(1)。二元堆積：insert與delete_min皆O(log n)，最平衡。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 4　堆疊與佇列",
+    "qnum": 2,
+    "qlabel": "精華範例",
+    "stem": "中序運算式 A+B*C-D，轉換為後序運算式並列出Stack變化。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "逐步過程"
+      },
+      {
+        "type": "para",
+        "text": "A輸出；+推入；B輸出；*優先權高於+，推入；C輸出；-優先權不高於Stack頂*，彈出*、+皆輸出後推入-；D輸出；結束彈出-。最終：ABC*+D-。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 4　堆疊與佇列",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "環狀佇列陣列實作細節、調度場演算法正式名稱與括號巢狀優先權例外規則。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 5　遞迴",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "遞迴時間複雜度求解三法",
+            "body": "代入法（猜測驗證）、遞迴樹法（展開加總）、Master Theorem（T(n)=aT(n/b)+f(n)，比較f(n)與n^(log_b a)），考試優先用Master Theorem最快。"
+          },
+          {
+            "label": "記憶化（memoization）效果",
+            "body": "純遞迴不加記憶化重複計算多次（Fibonacci為O(2ⁿ)）；加記憶化陣列後每個子問題只算一次，降為O(n)。"
+          },
+          {
+            "label": "GCD迴圈次數上界",
+            "body": "while迴圈執行次數上界為2⌊log₂b⌋+1次，固定考古題證明題型，直接背結論比臨場推導更保險。"
+          },
+          {
+            "label": "演算法設計法附錄（分治/DP/貪婪）",
+            "body": "分治法：合併排序、快速排序、二元搜尋。DP：矩陣鏈乘法、0-1背包。貪婪法找零錢在某些幣值系統非最佳解需舉反例；0-1背包貪婪不保證最佳解需用DP，分數背包貪婪法則可得最佳解。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 5　遞迴",
+    "qnum": 2,
+    "qlabel": "精華範例〔107年高考三級・遞迴二分搜尋〕",
+    "stem": "寫出遞迴版二分搜尋函式，證明時間複雜度為O(log n)。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "證明"
+      },
+      {
+        "type": "para",
+        "text": "T(n)=T(n/2)+O(1)。Master Theorem：a=1,b=2,f(n)=O(n^0)，log_b(a)=0，同階屬Case 2，故T(n)=Θ(log n)。此「縮小一半+固定額外工作」套路可直接套用類似題型。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 5　遞迴",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "矩陣鏈乘法完整二維表格手算過程、多台機器k份工作排程貪婪反例。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 6　樹",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "四種走訪＋互相還原規則",
+            "body": "前序（根左右）、中序（左根右）、後序（左右根）、層序（BFS）。前序＋中序或中序＋後序可唯一還原；前序＋後序通常無法唯一還原（陷阱題）。"
+          },
+          {
+            "label": "n0=n2+1定理（必背證明）",
+            "body": "非空二元樹葉節點數(n0)＝分支度2節點數(n2)+1，用邊數關係n-1=n1+2n2與n=n0+n1+n2聯立可證。"
+          },
+          {
+            "label": "陣列表示二元樹索引公式",
+            "body": "1-indexed：左子=2i、右子=2i+1、父節點=⌊i/2⌋。左右斜樹用陣列表示最浪費空間。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 6　樹",
+    "qnum": 2,
+    "qlabel": "精華範例〔108年高考三級・countTree/countLeaves/swapTree〕",
+    "stem": "撰寫遞迴函式：countTree、countLeaves、swapTree。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "共通骨架"
+      },
+      {
+        "type": "para",
+        "text": "base case為節點NULL時回傳0；遞迴case為處理當前節點+遞迴左右子樹再組合結果。countTree=1+左+右；countLeaves：左右皆NULL回傳1否則左+右；swapTree：遞迴左右子樹後交換root->left與root->right。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 6　樹",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "引線二元樹完整插入/走訪程式碼、二元樹鏡射與序列化/反序列化演算法。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 7　堆積結構與優先權佇列",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "Build-Heap是O(n)而非O(n log n)",
+            "body": "由最後一個非葉節點開始反覆sift-down，用Σ(d/2^d)收斂級數可證明總和為O(n)。"
+          },
+          {
+            "label": "插入與刪除的sift方向相反",
+            "body": "插入：陣列尾端向上sift-up，O(log n)。刪除堆頂：陣列最後元素頂替根，向下sift-down，O(log n)。"
+          },
+          {
+            "label": "Heap Sort優勢",
+            "body": "恆為O(n log n)（優於快速排序最壞O(n²)），額外空間僅O(1)（優於合併排序O(n)），但不穩定。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 7　堆積結構與優先權佇列",
+    "qnum": 2,
+    "qlabel": "精華範例",
+    "stem": "將15,5,20,3,8依序插入空的Max-Heap，畫出最終陣列。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "逐步插入"
+      },
+      {
+        "type": "para",
+        "text": "15→[15]；5→[15,5]；20→[20,5,15]（交換）；3→[20,5,15,3]；8→[20,8,15,3,5]（與父節點5交換一次）。最終：[20,8,15,3,5]。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 7　堆積結構與優先權佇列",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "區間堆積／SMMH完整索引公式、二項堆積與左傾堆積合併操作。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 8　圖形",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "BFS（Queue）／DFS（Stack或遞迴）",
+            "body": "BFS像漣漪一圈圈往外擴散；DFS像走迷宮衝到底才回頭。遇多節點依題目規定順序決定優先順序，須列出Queue/Stack變化過程。"
+          },
+          {
+            "label": "最小生成樹三演算法",
+            "body": "Kruskal：邊由小到大排序不形成迴圈就加入，適合稀疏圖。Prim：從一點擴張選跨越集合最小邊，適合稠密圖。Sollin：各分量各自選最小外接邊合併，可平行化。邊權重相同時MST可能不唯一。"
+          },
+          {
+            "label": "Dijkstra／拓樸排序",
+            "body": "Dijkstra：貪婪法選未定案節點中距離最小者，不適用負權重。拓樸排序：重複移除入度0節點，排不完代表有迴圈。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 8　圖形",
+    "qnum": 2,
+    "qlabel": "精華範例",
+    "stem": "頂點{A,B,C,D,E}，邊(A,B,4)(A,C,2)(B,C,1)(B,D,5)(C,D,8)(D,E,2)(C,E,10)，用Kruskal求MST。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題"
+      },
+      {
+        "type": "para",
+        "text": "邊排序：BC(1)AC(2)DE(2)AB(4)BD(5)CD(8)CE(10)。依序檢查加入BC、AC、DE，AB形成迴圈跳過，加入BD後已選4條邊結束。MST：BC+AC+DE+BD，總權重10。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 8　圖形",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "接合點與雙連通元件完整判定演算法、Floyd-Warshall逐步矩陣更新、強連通元件Tarjan/Kosaraju演算法。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 9　樹狀搜尋結構",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "BST刪除三種情況＋反推搜尋路徑真偽",
+            "body": "葉節點直接刪；一子節點頂替；兩子節點以中序後繼/前驅替代再遞迴刪除。判斷搜尋路徑合法性只需檢查每步是否符合「左小右大」。"
+          },
+          {
+            "label": "AVL樹插入旋轉（出現頻率最高）",
+            "body": "失衡時套用LL/RR/LR/RL其中一種，插入一次最多一次重構即可恢復平衡。高度h節點數上限2^(h+1)-1。"
+          },
+          {
+            "label": "B-tree／B+-tree插入分裂規則（次高頻）",
+            "body": "鍵值滿溢時分裂，中間鍵值上升至父節點；B+-tree葉節點分裂是複製上升，內部節點是移動上升。"
+          },
+          {
+            "label": "紅黑樹／2-3-4樹只需概念理解",
+            "body": "多以比較題出現，用「紅黑樹＝黑節點與紅子節點合併即為(2,4)-樹節點」換算即可，不需死背完整旋轉+變色規則。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 9　樹狀搜尋結構",
+    "qnum": 2,
+    "qlabel": "精華範例",
+    "stem": "將10、20、30依序插入空的AVL樹，說明何時需要旋轉。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題"
+      },
+      {
+        "type": "para",
+        "text": "插入10、20皆平衡。插入30後節點10平衡因子變-2失衡，30插在「10的右子的右子」屬RR型，對10做單一左旋轉：20成為新樹根，10左子、30右子，恢復平衡。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 9　樹狀搜尋結構",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "紅黑樹插入/刪除完整旋轉與變色演算法步驟、2-3-4樹與紅黑樹雙向轉換的所有節點鍵值排列組合。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 10　排序法",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "時間複雜度與穩定性總表",
+            "body": "泡沫/插入/合併/基數穩定；選擇/快速/堆積/希爾不穩定。快速排序平均O(n log n)最壞O(n²)；合併與堆積恆為O(n log n)。"
+          },
+          {
+            "label": "快速排序最壞O(n²)觸發條件",
+            "body": "每次pivot都選到最大或最小值（如已排序陣列固定選頭尾當pivot），分割1:(n-1)，遞迴深度退化n層，總複雜度O(n²)。"
+          },
+          {
+            "label": "由排序過程反推排序法",
+            "body": "選擇：已排序段集中、未排序段雜亂。插入：已排序段在前、未排序段是原始輸入未變動。快速：以pivot為界分兩段。合併：多個已排序小區段拼接，長度常為2的次方。"
+          },
+          {
+            "label": "機器人輸送帶排序（近年高頻）",
+            "body": "奇偶交換排序網路：奇數輪比較(1,2)(3,4)…、偶數輪比較(2,3)(4,5)…。最壞情況需n輪；機器人數加倍為2n個，速度可加快近一倍。"
+          },
+          {
+            "label": "11種排序法一句話記憶",
+            "body": "泡沫：鄰居兩兩比大的往後移。選擇：每輪選最小擺到定位去。插入：像整理手牌由後往前插。希爾：先粗調再精修。合併：先分後合。快速：選標竿分兩邊。堆積：擂台賽選拔。基數：依位數分堆。臭皮匠：刻意繞遠路的反面教材。機器人輸送帶：單雙號口令交替喊。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 10　排序法",
+    "qnum": 2,
+    "qlabel": "精華範例〔114年地特三等・機器人輸送帶排序〕",
+    "stem": "n=6，球3,2,5,6,1,4，4個機器人是否足夠排到大到小？",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題"
+      },
+      {
+        "type": "para",
+        "text": "4輪後結果[6,5,3,4,2,1]，3與4順序仍相反未完成，4個機器人不足夠，需第5輪才能完全排序。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 10　排序法",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "計數排序完整程式碼實作細節、外部排序多路合併機制。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 11　搜尋法",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "循序搜尋 vs 二分搜尋",
+            "body": "循序搜尋O(n)不需排序；二分搜尋O(log n)但需先排序，屬分治法。三元化搜尋仍是O(log n)（僅底數不同，非更快）。"
+          },
+          {
+            "label": "雜湊搜尋與碰撞處理",
+            "body": "線性探測易一次聚集；平方探測減緩聚集；雙重雜湊分散性最佳。務必先由裝填因子反推表格實際大小，探測繞回對表格大小取餘數（不是對雜湊函數模數取餘數）。"
+          },
+          {
+            "label": "字串樣式比對搜尋（KMP，固定題型）",
+            "body": "暴力法最壞O(nm)。KMP用失敗函數將效率提升到O(n+m)：比對到index j失敗時跳到pattern的f(j-1)+1處。109年高考與地特考題內容完全相同。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 11　搜尋法",
+    "qnum": 2,
+    "qlabel": "精華範例（改編自111年高考三級真實數據）",
+    "stem": "7個數字[21,1,16,11,25,9,35]存入大小10 Hash Table，H(key)=(key×3) mod 7，線性探測。求查找成功ASL。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題"
+      },
+      {
+        "type": "para",
+        "text": "各數字初始雜湊值0,3,6,5,5,6,0，插入後25、9各探測3次，35探測2次，其餘1次。ASL=(1+1+1+1+3+3+2)/7=12/7≈1.71。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 11　搜尋法",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "三元化搜尋以外的多元搜尋樹搜尋複雜度證明、Boyer-Moore字串搜尋演算法。"
+      }
+    ]
+  }
+]

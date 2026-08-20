@@ -1,0 +1,1186 @@
+[
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 2　陣列",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "一維陣列位址公式",
+            "body": "A[i]位址 = base + i×size，幾乎所有多維陣列題都是從這個公式延伸。"
+          },
+          {
+            "label": "二維陣列（必背兩式）",
+            "body": "Row-major：base+(i×C+j)×size；Column-major：base+(j×R+i)×size。題目常給兩個已知元素位址，反推是哪種儲存方式再算第三個位址。"
+          },
+          {
+            "label": "三維陣列",
+            "body": "Row-major：base+(i×d2×d3+j×d3+k)×size；由外到內、乘後面所有維度大小的規律即可推導，不需死背公式。"
+          },
+          {
+            "label": "常考變化題型",
+            "body": "已知兩個元素位址反推row-major或column-major儲存方式，再計算第三個元素位址，是幾乎每年必考的固定題型（112、111、105年皆考）。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 2　陣列",
+    "qnum": 2,
+    "qlabel": "真實歷屆試題〔111年高考三級・三維陣列位址計算〕",
+    "stem": "已知三維陣列A之部分元素位址，請判斷其儲存方式（row-major或column-major）並計算指定元素位址。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題心法"
+      },
+      {
+        "type": "para",
+        "text": "三維陣列題的標準流程：（一）先確認陣列宣告的維度大小（如d1×d2×d3）；（二）利用兩個已知位址的索引差與位址差，反推是哪一個維度在變化、變化量對應多少個元素，藉此判斷是row-major還是column-major；（三）代入公式base+(i×d2×d3+j×d3+k)×size（row-major）計算目標元素位址。"
+      },
+      {
+        "type": "heading",
+        "text": "關鍵陷阱"
+      },
+      {
+        "type": "para",
+        "text": "row-major與column-major的差別在於「哪個索引的位址跳動幅度最大」：row-major中最外層索引i的跳動幅度最大（乘上d2×d3），column-major則是最內層索引跳動幅度最大。務必先透過已知的兩個位址算出「單位索引差對應的位址差」，才能正確判斷儲存方式，不要憑直覺猜測。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 2　陣列",
+    "qnum": 3,
+    "qlabel": "模擬練習",
+    "stem": "二維陣列float A[20][15]，已知A[2][3]位址為1000，A[5][3]位址為1180，請問是row-major還是column-major儲存？並求A[10][10]位址。（每個float佔4 bytes）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題"
+      },
+      {
+        "type": "para",
+        "text": "兩位址列（row）相差3（2→5），位址差180，180÷4=45個元素差，45÷3列＝15＝C（欄數），符合row-major公式(i×C+j)——因為只變i時，位址差＝ΔI×C×size＝3×15×4=180，吻合，故為row-major儲存。"
+      },
+      {
+        "type": "para",
+        "text": "A[10][10]位址＝1000+((10-2)×15+(10-3))×4＝1000+(120+7)×4＝1000+508＝1508。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 3　鏈結串列",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "指標操作三大固定題型",
+            "body": "「交換節點」「插入到另一串列」「反轉prev/next」，題目常限制「只能用有限行虛擬碼完成」，練習重點是改變指標前一定要先用暫存指標保留即將失去的連結，順序錯了會斷鏈。"
+          },
+          {
+            "label": "環狀鏈結串列須維持環狀",
+            "body": "操作後務必檢查頭尾是否仍相接，這是環狀串列題最容易漏掉的檢查點。"
+          },
+          {
+            "label": "陣列 vs 鏈結串列取捨",
+            "body": "陣列：隨機存取O(1)、插入刪除O(n)；鏈結串列：插入刪除O(1)（已知位置時）、隨機存取O(n)。判斷原則：情境「查詢頻繁」選陣列，「新增刪除頻繁」選鏈結串列。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 3　鏈結串列",
+    "qnum": 2,
+    "qlabel": "真實歷屆試題〔110年高考三級・swapnodes〕",
+    "stem": "給定一個環狀鏈結串列，請寫出swapnodes(x,y)函式，交換串列中x、y兩節點的位置（不可只交換節點內的值，須真正交換節點本身），並維持環狀結構完整。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題心法（標準四步驟）"
+      },
+      {
+        "type": "para",
+        "text": "（一）先找到x、y各自的「前一個節點」prevX、prevY（環狀串列要注意頭尾相接，繞一圈找）；（二）用暫存變數記住x、y原本的next指標；（三）依序改接prevX→y、prevY→x、y→(x原本的next)、x→(y原本的next)；（四）若x、y相鄰（其中一個就是另一個的prevNode），必須特別處理，否則會漏接或斷鏈。"
+      },
+      {
+        "type": "heading",
+        "text": "陷阱提醒"
+      },
+      {
+        "type": "para",
+        "text": "務必畫圖標出每一步指標改變前後的狀態，直接憑空寫程式碼很容易漏掉「x、y相鄰」這個特殊情況的陷阱，這是本題型最常見的失分點。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 4　堆疊與佇列",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "後序運算式求值（必背流程）",
+            "body": "由左至右掃描：運算元進Stack；遇運算子取出Stack頂端兩個運算元計算後，結果再放回Stack；掃描完畢Stack僅剩一個值即為答案。"
+          },
+          {
+            "label": "中序轉後序（必背流程）",
+            "body": "用一個額外Stack暫存運算子：運算元直接輸出；運算子時若Stack頂端運算子優先權≥新運算子則彈出並輸出，直到不成立才推入新運算子；遇左括號直接推入，遇右括號一路彈出輸出直到彈出左括號為止。"
+          },
+          {
+            "label": "優先佇列三種實作方式時間複雜度（必背）",
+            "body": "未排序陣列：insert O(1)、delete_min O(n)。排序陣列：insert O(n)、delete_min O(1)。二元堆積：insert與delete_min皆O(log n)，是最平衡的實作方式。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 4　堆疊與佇列",
+    "qnum": 2,
+    "qlabel": "模擬練習",
+    "stem": "中序運算式 A+B*C-D，請轉換為後序運算式，並列出Stack內容變化過程（運算子優先權：*、/高於+、−）。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "逐步過程"
+      },
+      {
+        "type": "table",
+        "header": [
+          "掃描字元",
+          "動作",
+          "輸出",
+          "Stack內容"
+        ],
+        "rows": [
+          [
+            "A",
+            "輸出",
+            "A",
+            "[]"
+          ],
+          [
+            "+",
+            "Stack空，推入",
+            "A",
+            "[+]"
+          ],
+          [
+            "B",
+            "輸出",
+            "AB",
+            "[+]"
+          ],
+          [
+            "*",
+            "優先權高於Stack頂+，推入",
+            "AB",
+            "[+,*]"
+          ],
+          [
+            "C",
+            "輸出",
+            "ABC",
+            "[+,*]"
+          ],
+          [
+            "-",
+            "彈出*輸出，彈出+輸出，推入-",
+            "ABC*+",
+            "[-]"
+          ],
+          [
+            "D",
+            "輸出",
+            "ABC*+D",
+            "[-]"
+          ],
+          [
+            "結束",
+            "彈出剩餘運算子",
+            "ABC*+D-",
+            "[]"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "最終後序運算式：ABC*+D-。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 4　堆疊與佇列",
+    "qnum": 3,
+    "qlabel": "真實歷屆試題〔108年地特三等・優先佇列三種實作比較〕",
+    "stem": "請說明優先佇列（Priority Queue）以未排序陣列、排序陣列、二元堆積三種方式實作時，insert與delete_min操作的時間複雜度差異。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題要點"
+      },
+      {
+        "type": "table",
+        "header": [
+          "實作方式",
+          "Insert",
+          "Delete_Min"
+        ],
+        "rows": [
+          [
+            "未排序陣列／串列",
+            "O(1)",
+            "O(n)"
+          ],
+          [
+            "排序陣列／串列",
+            "O(n)",
+            "O(1)"
+          ],
+          [
+            "二元堆積 Binary Heap",
+            "O(log n)",
+            "O(log n)"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "二元堆積是三者中唯一「兩個操作都能維持在O(log n)」的實作方式，因此實務上最常被採用；未排序陣列適合insert頻繁但delete_min少的情境，排序陣列則相反。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 5　遞迴",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "遞迴時間複雜度求解三法",
+            "body": "代入法（猜測答案後數學歸納法驗證）、遞迴樹法（畫出每層呼叫展開圖加總）、Master Theorem（T(n)=aT(n/b)+f(n)，比較f(n)與n^(log_b a)決定Case，是最快的解法）。"
+          },
+          {
+            "label": "記憶化（memoization）的效果",
+            "body": "純遞迴不加記憶化，重複子問題會被重複計算多次（如Fibonacci遞迴為指數時間O(2ⁿ)）；加上記憶化陣列後每個子問題只算一次，降為O(n)。"
+          },
+          {
+            "label": "輾轉相除法（GCD）迴圈次數上界",
+            "body": "while迴圈執行次數上界為2⌊log₂b⌋+1次，屬於固定歷屆試題證明題型，直接背這個結論比臨場推導更保險。"
+          },
+          {
+            "label": "演算法設計法延伸（分治/動態規劃/貪婪）",
+            "body": "分治法典型範例：合併排序、快速排序、二元搜尋。動態規劃典型範例：矩陣鏈乘法、0-1背包問題。貪婪法找零錢問題「優先用最大面額」在某些幣值系統（如{1,3,4}找6元）並非最佳解，需能舉反例；0-1背包貪婪法不保證最佳解需用DP，但分數背包貪婪法可得最佳解。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 5　遞迴",
+    "qnum": 2,
+    "qlabel": "真實歷屆試題〔107年高考三級・遞迴二分搜尋O(log n)證明〕",
+    "stem": "請寫出遞迴版二分搜尋函式，並證明其時間複雜度為O(log n)。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "證明過程"
+      },
+      {
+        "type": "para",
+        "text": "遞迴關係式T(n)=T(n/2)+O(1)（每次比較後範圍減半，額外工作量為常數）。用Master Theorem：a=1,b=2,f(n)=O(1)=O(n^0)，log_b(a)=log2(1)=0，f(n)與n^0同階，屬於Case 2，故T(n)=Θ(n^0×log n)=Θ(log n)。"
+      },
+      {
+        "type": "para",
+        "text": "這個「每次縮小一半＋固定額外工作」的套路，同樣適用於任何形式為T(n)=T(n/2)+O(1)的遞迴題，考試時可直接套用不必每次重新畫遞迴樹。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 5　遞迴",
+    "qnum": 3,
+    "qlabel": "真實歷屆試題〔110年高考三級・f(n)=f(n-1)+n²遞迴關係式求解〕",
+    "stem": "已知遞迴函式f(n)=f(n-1)+n²，f(0)=0，請推導f(n)的封閉式（closed form）。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "推導過程"
+      },
+      {
+        "type": "para",
+        "text": "展開：f(n)=f(n-1)+n²=f(n-2)+(n-1)²+n²=…=Σ(k=1到n) k²。利用平方和公式Σk²=n(n+1)(2n+1)/6，故f(n)=n(n+1)(2n+1)/6，時間複雜度為O(n²)（若逐項計算）或視為封閉式後可O(1)代入計算。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 6　樹",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "四種走訪＋互相還原規則（必背）",
+            "body": "前序（根左右）、中序（左根右）、後序（左右根）、層序（BFS）。已知「前序＋中序」或「中序＋後序」可唯一還原二元樹；但「前序＋後序」通常無法唯一還原（陷阱題：先判斷是否唯一，再嘗試還原）。"
+          },
+          {
+            "label": "n0=n2+1定理（必背證明）",
+            "body": "非空二元樹中，葉節點數(n0)＝分支度2節點數(n2)+1。可用邊數關係證明：總邊數=n-1，也等於n1+2n2，兩式聯立n=n0+n1+n2代入即可推出。"
+          },
+          {
+            "label": "陣列表示二元樹的索引公式",
+            "body": "1-indexed：節點i的左子=2i、右子=2i+1、父節點=⌊i/2⌋。左斜樹或右斜樹用陣列表示最浪費空間，高度h需2^h−1格空間卻只用了h個節點。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 6　樹",
+    "qnum": 2,
+    "qlabel": "真實歷屆試題〔108年高考三級・countTree/countLeaves/swapTree〕",
+    "stem": "請針對二元樹撰寫遞迴函式：countTree（計算節點總數）、countLeaves（計算葉節點數）、swapTree（交換每個節點的左右子樹）。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "共通解題骨架"
+      },
+      {
+        "type": "para",
+        "text": "這類「對樹做遞迴統計/操作」的題目都遵循同一個骨架：base case為「若節點為NULL，回傳0（或直接return）」；遞迴case則是「處理當前節點＋遞迴呼叫左子樹＋遞迴呼叫右子樹，再組合三者的結果」。"
+      },
+      {
+        "type": "heading",
+        "text": "三個函式的寫法"
+      },
+      {
+        "type": "para",
+        "text": "countTree(root)＝若root為NULL回傳0，否則回傳1+countTree(root->left)+countTree(root->right)。countLeaves(root)＝若root為NULL回傳0，若root左右子皆為NULL回傳1，否則回傳countLeaves(left)+countLeaves(right)。swapTree(root)＝若root非NULL，先遞迴swapTree(left)與swapTree(right)，再交換root->left與root->right兩指標。"
+      },
+      {
+        "type": "para",
+        "text": "背熟這個「base case＋處理當前節點＋遞迴左右子樹」骨架，幾乎可以應付所有樹狀遞迴函式的手寫題。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 6　樹",
+    "qnum": 3,
+    "qlabel": "真實歷屆試題〔110年地特三等・前序+中序重建樹＋非遞迴中序走訪〕",
+    "stem": "已知一棵二元樹的前序與中序走訪結果，請重建此二元樹，並寫出以Stack實作的非遞迴（iterative）中序走訪演算法。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "重建規則"
+      },
+      {
+        "type": "para",
+        "text": "前序的第一個元素必為樹根；在中序結果中找到此樹根的位置，其左側即為左子樹的中序結果，右側為右子樹的中序結果；再依左子樹的節點數，切分前序結果中緊接樹根之後的對應段落為左子樹的前序結果，其餘為右子樹的前序結果；遞迴重複此程序即可重建整棵樹。"
+      },
+      {
+        "type": "heading",
+        "text": "非遞迴中序走訪（Stack版）"
+      },
+      {
+        "type": "para",
+        "text": "演算法邏輯：目前節點從root開始；只要目前節點非NULL或Stack不為空，就重複「一路把目前節點推入Stack並往左子走到底」，走到底後彈出Stack頂端節點並拜訪它，再將目前節點設為該節點的右子繼續迴圈。此寫法用Stack模擬遞迴呼叫的行為，避免使用遞迴呼叫堆疊。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 7　堆積結構與優先權佇列",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "Build-Heap是O(n)而非O(n log n)（必背證明結論）",
+            "body": "由最後一個非葉節點開始反覆sift-down，雖然每次sift-down最壞是O(log n)，但大多數節點在下層只需sift-down很短距離，用Σ(d/2^d)收斂級數可證明總和為O(n)。"
+          },
+          {
+            "label": "插入與刪除的sift方向相反",
+            "body": "插入：放到陣列尾端，向上sift-up與父節點比較交換，O(log n)。刪除堆頂：用陣列最後元素頂替根，向下sift-down與較大（或較小）子節點比較交換，O(log n)。"
+          },
+          {
+            "label": "Heap Sort的關鍵優勢",
+            "body": "恆為O(n log n)（不論輸入狀態，優於快速排序最壞O(n²)），額外空間僅O(1)（優於合併排序需O(n)），但不穩定，常用於對最壞情況有嚴格要求的場合。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 7　堆積結構與優先權佇列",
+    "qnum": 2,
+    "qlabel": "真實歷屆試題〔107年地特三等・Build-Heap O(n)證明〕",
+    "stem": "請證明將n個元素建構成一個Max-Heap（Build-Heap）的時間複雜度為O(n)，而非直覺的O(n log n)。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "證明思路"
+      },
+      {
+        "type": "para",
+        "text": "由最後一個非葉節點開始，由右至左、由下至上依序對每個節點執行sift-down。設樹高為h（h=⌊log n⌋），高度為d的節點最多sift-down h-d次，而高度為d的節點數最多為n/2^(d+1)個。總工作量＝Σ(d=0到h) (n/2^(d+1))×(h-d)，此級數可證明收斂於O(n)（利用Σ(d/2^d)為收斂級數，其和為有限常數），而非O(n log n)。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 7　堆積結構與優先權佇列",
+    "qnum": 3,
+    "qlabel": "模擬練習",
+    "stem": "將15,5,20,3,8依序插入一個空的Max-Heap，請畫出最終的陣列表示法。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "逐步插入"
+      },
+      {
+        "type": "table",
+        "header": [
+          "插入值",
+          "插入後陣列",
+          "是否上浮交換"
+        ],
+        "rows": [
+          [
+            "15",
+            "[15]",
+            "否"
+          ],
+          [
+            "5",
+            "[15,5]",
+            "否（5<父節點15）"
+          ],
+          [
+            "20",
+            "[15,5,20]→[20,5,15]",
+            "是（20>15，交換）"
+          ],
+          [
+            "3",
+            "[20,5,15,3]",
+            "否"
+          ],
+          [
+            "8",
+            "[20,5,15,3,8]→[20,8,15,3,5]",
+            "是（8>5，交換一次；8<20不再上浮）"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "最終Max-Heap陣列：[20,8,15,3,5]。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 8　圖形",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "BFS（Queue）／DFS（Stack或遞迴）走訪（必考，每年幾乎都有）",
+            "body": "BFS像漣漪一圈圈往外擴散；DFS像走迷宮衝到底才回頭。遇多個可走訪節點時依題目規定的順序（通常字母/數字序）決定優先順序，且務必列出Queue/Stack內容變化過程。"
+          },
+          {
+            "label": "最小生成樹三演算法（必背，幾乎每年考）",
+            "body": "Kruskal：邊由小到大排序，不形成迴圈就加入，適合稀疏圖O(E log E)。Prim：從一點擴張，每次選跨越已選/未選集合的最小邊，適合稠密圖O(E log V)。Sollin/Borůvka：每輪各連通分量各自選最小外接邊合併，可平行化（114年考此演算法）。邊權重相同時MST可能不唯一。"
+          },
+          {
+            "label": "Dijkstra／拓樸排序（必考）",
+            "body": "Dijkstra：貪婪法逐步選未定案節點中距離最小者，不適用負權重邊，O(V²)或O(E log V)。拓樸排序：重複移除入度為0的節點，若無法排完代表有迴圈（非DAG），112年考結合成本計算與改變邊方向後重新排序比較。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 8　圖形",
+    "qnum": 2,
+    "qlabel": "模擬練習",
+    "stem": "加權圖頂點{A,B,C,D,E}，邊(A,B,4)(A,C,2)(B,C,1)(B,D,5)(C,D,8)(D,E,2)(C,E,10)。請用Kruskal求MST並列出加入邊的順序。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題"
+      },
+      {
+        "type": "para",
+        "text": "邊排序後：BC(1)、AC(2)、DE(2)、AB(4)、BD(5)、CD(8)、CE(10)。"
+      },
+      {
+        "type": "table",
+        "header": [
+          "檢查順序",
+          "邊",
+          "是否形成迴圈",
+          "結果"
+        ],
+        "rows": [
+          [
+            "1",
+            "BC(1)",
+            "否",
+            "加入"
+          ],
+          [
+            "2",
+            "AC(2)",
+            "否",
+            "加入"
+          ],
+          [
+            "3",
+            "DE(2)",
+            "否",
+            "加入"
+          ],
+          [
+            "4",
+            "AB(4)",
+            "是（A、B已同分量）",
+            "跳過"
+          ],
+          [
+            "5",
+            "BD(5)",
+            "否（連接兩分量）",
+            "加入，已選4條邊=V-1，結束"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "MST邊集合：BC、AC、DE、BD，總權重1+2+2+5=10。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 8　圖形",
+    "qnum": 3,
+    "qlabel": "模擬練習",
+    "stem": "沿用上題加權圖，請以Dijkstra演算法求出從A到其他各點的最短距離。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "逐步求解"
+      },
+      {
+        "type": "table",
+        "header": [
+          "步驟",
+          "選中節點",
+          "B暫定距離",
+          "C暫定距離",
+          "D暫定距離",
+          "E暫定距離"
+        ],
+        "rows": [
+          [
+            "初始",
+            "A(0)",
+            "∞",
+            "∞",
+            "∞",
+            "∞"
+          ],
+          [
+            "1",
+            "A(0)",
+            "4",
+            "2",
+            "∞",
+            "∞"
+          ],
+          [
+            "2",
+            "C(2)",
+            "3（經C:2+1）",
+            "—",
+            "10",
+            "12"
+          ],
+          [
+            "3",
+            "B(3)",
+            "—",
+            "—",
+            "8（經B:3+5）",
+            "12"
+          ],
+          [
+            "4",
+            "D(8)",
+            "—",
+            "—",
+            "—",
+            "10（經D:8+2）"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "最終最短距離：A到B為3、A到C為2、A到D為8、A到E為10。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 9　樹狀搜尋結構",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "BST刪除三種情況＋反推搜尋路徑真偽（必考）",
+            "body": "葉節點直接刪；一子節點由子節點頂替；兩子節點以中序後繼或前驅替代再遞迴刪除。判斷一組搜尋路徑是否為合法BST搜尋過程，只需逐步檢查每一步比較結果是否符合「左小右大」。"
+          },
+          {
+            "label": "AVL樹插入旋轉（本節出現頻率最高的樹狀結構子題）",
+            "body": "插入導致失衡時，依失衡類型套用LL（右旋）、RR（左旋）、LR、RL（雙旋轉）其中一種，插入一次最多只需一次重構即可恢復平衡。高度h的AVL樹節點數上限2^(h+1)-1，下限依Fibonacci關係N(h)=N(h-1)+N(h-2)+1。"
+          },
+          {
+            "label": "B-tree／B+-tree插入分裂規則（次高頻）",
+            "body": "鍵值滿溢（超過m-1個）時分裂，中間鍵值上升至父節點；B+-tree葉節點分裂時是「複製」中間鍵值上升（因葉節點需保留完整資料），內部節點分裂則是「移動」。order m代表每節點最多m個子節點。"
+          },
+          {
+            "label": "紅黑樹／2-3-4樹只需概念理解",
+            "body": "多以「同一組數字建構不同結構、比較差異」的比較題出現，只要能正確畫出AVL樹或B-tree，再用「紅黑樹＝黑節點與其紅子節點合併即為(2,4)-樹節點」換算規則即可推導，不需死背完整旋轉+變色規則。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 9　樹狀搜尋結構",
+    "qnum": 2,
+    "qlabel": "模擬練習",
+    "stem": "將10、20、30依序插入空的AVL樹，說明何時需要旋轉、屬於哪種類型。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題"
+      },
+      {
+        "type": "para",
+        "text": "插入10、20後皆平衡。插入30後，節點10的平衡因子變為左高度0減右高度2＝-2，失衡；30插入在「10的右子的右子」，屬RR型，對節點10做單一左旋轉：20成為新樹根，10為左子、30為右子，恢復平衡。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 9　樹狀搜尋結構",
+    "qnum": 3,
+    "qlabel": "模擬練習",
+    "stem": "依序將10、20、30、40、50插入一棵空的order 3 B-tree（每節點最多2個鍵值、3個子節點），請說明分裂發生的時機與規則。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "逐步插入"
+      },
+      {
+        "type": "table",
+        "header": [
+          "插入值",
+          "插入後狀態",
+          "是否分裂"
+        ],
+        "rows": [
+          [
+            "10",
+            "[10]",
+            "否"
+          ],
+          [
+            "20",
+            "[10,20]",
+            "否，剛好達上限"
+          ],
+          [
+            "30",
+            "超過上限",
+            "是：中間鍵值20上升為新根，樹變為根[20]、左子[10]、右子[30]"
+          ],
+          [
+            "40",
+            "進入右子[30]→[30,40]",
+            "否"
+          ],
+          [
+            "50",
+            "進入右子→[30,40,50]超過上限",
+            "是：中間鍵值40上升至根，根變為[20,40]，子節點[10][30][50]"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "最終樹形：根節點[20,40]，三個子節點[10]、[30]、[50]。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 10　排序法",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "時間複雜度與穩定性總表（必背）",
+            "body": "泡沫/插入/合併/基數穩定，平均O(n²)或O(n log n)或O(d(n+r))；選擇/快速/堆積/希爾不穩定。快速排序平均O(n log n)但最壞O(n²)；合併與堆積排序恆為O(n log n)。"
+          },
+          {
+            "label": "快速排序最壞O(n²)觸發條件（必背證明）",
+            "body": "每次pivot都選到當前子陣列最大或最小值（典型：原陣列已排序＋固定選第一或最後元素當pivot），分割變成1:(n-1)極端不均，遞迴深度退化為n層，總比較次數為等差級數O(n²)，107年高考三級考此完整證明。"
+          },
+          {
+            "label": "由排序過程反推排序法（必練實戰技巧）",
+            "body": "選擇排序：已排序段落集中且未排序段落仍完全雜亂。插入排序：已排序段落在前、未排序段落是「原始輸入完全未變動」。快速排序：以pivot為界分兩段，pivot已在最終位置。合併排序：多個已排序小區段拼接，長度常為2的次方。"
+          },
+          {
+            "label": "機器人輸送帶排序（近年高頻新題型）",
+            "body": "本質是奇偶交換排序網路：奇數輪比較(1,2)(3,4)…、偶數輪比較(2,3)(4,5)…交替進行。最壞情況需n輪才能完成；機器人數量加倍為2n個，完成速度可加快近一倍，114年高考／地特重複出題。"
+          },
+          {
+            "label": "11種排序法一句話記憶",
+            "body": "泡沫：鄰居兩兩比大的往後移。選擇：每輪選最小擺到定位去。插入：像整理手牌由後往前插。希爾：先粗調再精修。合併：先分後合。快速：選標竿分兩邊。堆積：擂台賽選拔。基數：依位數分堆。臭皮匠：刻意繞遠路的反面教材。機器人輸送帶：單雙號口令交替喊。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 10　排序法",
+    "qnum": 2,
+    "qlabel": "模擬練習",
+    "stem": "陣列A=[1,2,3,4,5]已排序好，若快速排序固定選取子陣列的「第一個元素」作為pivot，請證明此情況下時間複雜度為O(n²)。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "證明過程"
+      },
+      {
+        "type": "table",
+        "header": [
+          "遞迴層數",
+          "目前子陣列",
+          "Pivot",
+          "分割結果",
+          "本層比較次數"
+        ],
+        "rows": [
+          [
+            "第1層",
+            "[1,2,3,4,5]",
+            "1",
+            "左:[] 右:[2,3,4,5]",
+            "4"
+          ],
+          [
+            "第2層",
+            "[2,3,4,5]",
+            "2",
+            "左:[] 右:[3,4,5]",
+            "3"
+          ],
+          [
+            "第3層",
+            "[3,4,5]",
+            "3",
+            "左:[] 右:[4,5]",
+            "2"
+          ],
+          [
+            "第4層",
+            "[4,5]",
+            "4",
+            "左:[] 右:[5]",
+            "1"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "每次分割後左子陣列恆為空，遞迴深度共n-1層，總比較次數＝(n-1)+(n-2)+…+1＝O(n²)，屬等差級數求和。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 10　排序法",
+    "qnum": 3,
+    "qlabel": "真實歷屆試題〔114年地特三等・機器人輸送帶排序〕",
+    "stem": "n=6，球的大小為3,2,5,6,1,4，若輸送帶配有4個機器人，是否足夠將球由大排到小？",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "逐輪模擬"
+      },
+      {
+        "type": "table",
+        "header": [
+          "輪次",
+          "比較對",
+          "結果"
+        ],
+        "rows": [
+          [
+            "第1輪（奇）",
+            "(3,2)(5,6)(1,4)",
+            "[3,2,6,5,4,1]"
+          ],
+          [
+            "第2輪（偶）",
+            "(2,6)(5,4)",
+            "[3,6,2,5,4,1]"
+          ],
+          [
+            "第3輪（奇）",
+            "(3,6)(2,5)(4,1)",
+            "[6,3,5,2,4,1]"
+          ],
+          [
+            "第4輪（偶）",
+            "(3,5)(2,4)",
+            "[6,5,3,4,2,1]"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "經過4輪後結果為[6,5,3,4,2,1]，「3」與「4」順序仍相反，尚未排序完成，因此4個機器人「不足夠」，需第5輪才能完全排序。這類題目的關鍵是逐輪列表模擬，而非直接套公式跳過程。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 11　搜尋法",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "循序搜尋 vs 二分搜尋（基礎必背）",
+            "body": "循序搜尋O(n)不需排序；二分搜尋O(log n)但資料需先排序，屬分治法應用。三元化搜尋雖每次排除範圍看似更多，但仍是O(log n)（僅底數不同）。"
+          },
+          {
+            "label": "雜湊搜尋與碰撞處理（必練，幾乎每年考插入模擬與ASL計算）",
+            "body": "線性探測F(i)=i易產生一次聚集；平方探測F(i)=i²減緩聚集；雙重雜湊分散性最佳。務必先由裝填因子反推「表格實際大小」，探測繞回時對「表格實際大小」取餘數，不是對雜湊函數的模數取餘數——這是最常被扣分的地方。"
+          },
+          {
+            "label": "字串樣式比對搜尋（KMP，固定題型）",
+            "body": "暴力法最壞O(nm)。KMP用失敗函數（樣式自身最長相同前後綴長度）將效率提升到O(n+m)：比對到index j失敗時，直接跳到pattern的f(j-1)+1處繼續比對。109年高考與109年地特考題內容完全相同，屬必背固定題型。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 11　搜尋法",
+    "qnum": 2,
+    "qlabel": "真實歷屆試題（改編自111年高考三級真實數據）",
+    "stem": "7個數字[21,1,16,11,25,9,35]存入大小10的Hash Table，H(key)=(key×3) mod 7，線性探測F(i)=i。請計算查找成功的ASL。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題"
+      },
+      {
+        "type": "para",
+        "text": "各數字初始雜湊值：21→0、1→3、16→6、11→5、25→5(碰撞)、9→6(碰撞)、35→0(碰撞)。依序插入後，25探測3次存入位址7，9探測3次存入位址8，35探測2次存入位址1，其餘4個數字皆1次到位。"
+      },
+      {
+        "type": "para",
+        "text": "查找成功ASL＝(1+1+1+1+3+3+2)/7＝12/7≈1.71。解題訣竅：先由裝填因子0.7＝7筆資料÷表格大小反推表格實際大小為10，探測繞回時要對10取餘數，不是對雜湊函數的模數7取餘數。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構",
+    "section": "Chapter 11　搜尋法",
+    "qnum": 3,
+    "qlabel": "真實歷屆試題〔109年地特三等・KMP失敗函數〕",
+    "stem": "樣式pattern=\"abcdabcabcdabcdabc\"，請寫出失敗函數之定義，並說明比對到index 13皆相符、index 14發現不符時，如何利用failure function快速找到下一個比對位置。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "失敗函數定義"
+      },
+      {
+        "type": "para",
+        "text": "f(j)表示對pattern前j+1個字元，「使得某段落同時是真前綴又是真後綴」的最大長度再減1；若不存在這樣的重疊段落，f(j)=-1。"
+      },
+      {
+        "type": "heading",
+        "text": "跳位邏輯"
+      },
+      {
+        "type": "para",
+        "text": "本題比對到index 13皆相符（代表已成功匹配的最後索引為j=13），index 14發生不符，依定義下一步應將pattern指標移至f(13)+1=6+1=7處，即改用pattern的index 7繼續比對，完全不需從index 0重新開始，這正是KMP比暴力法快的核心原因。"
+      }
+    ]
+  }
+]
