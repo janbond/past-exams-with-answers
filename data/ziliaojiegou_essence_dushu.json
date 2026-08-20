@@ -4,6 +4,83 @@
     "subject": "讀書",
     "year": "彙整",
     "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 1　緒論",
+    "qnum": 1,
+    "qlabel": "精華重點（只留最常考的部分）",
+    "stem": "重點知識彙整",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "時間複雜度估算Big-O（必練實戰技巧）",
+            "body": "單層迴圈跑n次為O(n)。陷阱：迴圈變數用乘法遞增（i*=2）為O(log n)；用平方判斷結束（i*i<n）為O(√n)；迴圈內變數呈指數成長後接續另一個跑該變數次的迴圈，整體為O(2ⁿ)，不能只看迴圈表面跑幾次。"
+          },
+          {
+            "label": "抽象資料型態ADT",
+            "body": "只定義該提供哪些操作介面，不規定內部怎麼實作。例如優先佇列ADT只規定insert、findMin、removeMin、size、isEmpty，內部用陣列或堆積實作皆可。"
+          },
+          {
+            "label": "演算法設計法三大類",
+            "body": "分治法：子問題互相獨立（合併排序、快速排序、二元搜尋）。動態規劃：子問題重複出現需存表格（矩陣鏈乘法、0-1背包）。貪婪法：每步選當下最好，不保證全域最佳，找零錢問題是經典反例。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 1　緒論",
+    "qnum": 2,
+    "qlabel": "精華範例〔108年地特三等・Big-O估算〕",
+    "stem": "程式片段int k=1; for(i=0;i<n;i++) k*=2; for(i=0;i<k;i++) S，求時間複雜度。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題"
+      },
+      {
+        "type": "para",
+        "text": "第一迴圈執行n次每次k乘2，跑完k=2ⁿ，本身O(n)；第二迴圈依k值執行2ⁿ次。總時間由指數項主導，為O(2ⁿ)。陷阱在於k隨n呈指數成長，不能只看迴圈表面跑幾次。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
+    "section": "Chapter 1　緒論",
+    "qnum": 3,
+    "qlabel": "已省略（過去十年未考出）",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "演算法特性五要素背誦題、回溯法與分支限界法過去十年較少出完整計算題。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料結構考前精華重點總複習",
     "section": "Chapter 2　陣列",
     "qnum": 1,
     "qlabel": "精華重點（只留最常考的部分）",
@@ -64,7 +141,7 @@
     "section": "Chapter 2　陣列",
     "qnum": 3,
     "qlabel": "已省略（過去十年未考出）",
-    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
     "passage": null,
     "group": null,
     "options": {},
@@ -137,7 +214,7 @@
     "section": "Chapter 3　鏈結串列",
     "qnum": 3,
     "qlabel": "已省略（過去十年未考出）",
-    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
     "passage": null,
     "group": null,
     "options": {},
@@ -214,7 +291,7 @@
     "section": "Chapter 4　堆疊與佇列",
     "qnum": 3,
     "qlabel": "已省略（過去十年未考出）",
-    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
     "passage": null,
     "group": null,
     "options": {},
@@ -253,7 +330,7 @@
           },
           {
             "label": "GCD迴圈次數上界",
-            "body": "while迴圈執行次數上界為2⌊log₂b⌋+1次，固定考古題證明題型，直接背結論比臨場推導更保險。"
+            "body": "while迴圈執行次數上界為2⌊log₂b⌋+1次，固定歷屆試題證明題型，直接背結論比臨場推導更保險。"
           },
           {
             "label": "演算法設計法附錄（分治/DP/貪婪）",
@@ -295,7 +372,7 @@
     "section": "Chapter 5　遞迴",
     "qnum": 3,
     "qlabel": "已省略（過去十年未考出）",
-    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
     "passage": null,
     "group": null,
     "options": {},
@@ -372,7 +449,7 @@
     "section": "Chapter 6　樹",
     "qnum": 3,
     "qlabel": "已省略（過去十年未考出）",
-    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
     "passage": null,
     "group": null,
     "options": {},
@@ -449,7 +526,7 @@
     "section": "Chapter 7　堆積結構與優先權佇列",
     "qnum": 3,
     "qlabel": "已省略（過去十年未考出）",
-    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
     "passage": null,
     "group": null,
     "options": {},
@@ -526,7 +603,7 @@
     "section": "Chapter 8　圖形",
     "qnum": 3,
     "qlabel": "已省略（過去十年未考出）",
-    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
     "passage": null,
     "group": null,
     "options": {},
@@ -607,7 +684,7 @@
     "section": "Chapter 9　樹狀搜尋結構",
     "qnum": 3,
     "qlabel": "已省略（過去十年未考出）",
-    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
     "passage": null,
     "group": null,
     "options": {},
@@ -692,7 +769,7 @@
     "section": "Chapter 10　排序法",
     "qnum": 3,
     "qlabel": "已省略（過去十年未考出）",
-    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
     "passage": null,
     "group": null,
     "options": {},
@@ -769,7 +846,7 @@
     "section": "Chapter 11　搜尋法",
     "qnum": 3,
     "qlabel": "已省略（過去十年未考出）",
-    "stem": "以下內容過去十年考古題未曾出現，時間有限可略過",
+    "stem": "以下內容過去十年歷屆試題未曾出現，時間有限可略過",
     "passage": null,
     "group": null,
     "options": {},
