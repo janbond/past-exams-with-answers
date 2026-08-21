@@ -1,0 +1,2453 @@
+[
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 1　ER模型與EER擴充建模",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "實體關係模型（Entity-Relationship Model, ER Model）是資料庫設計最早的一步：先不管將來要用哪種資料庫系統實作，只用「有哪些東西（實體）」「這些東西彼此有什麼關聯（關係）」「每個東西有哪些特徵（屬性）」把業務需求畫成一張圖。等到需要表達「繼承」概念（例如「員工」底下又分「工程師」「業務員」，兩者都是員工，但各自有不同的專屬屬性）時，就要用擴充版的EER模型（Enhanced/Extended ER Model）加上父子型態關係（Supertype/Subtype）來表達。這一章是資料庫應用科目最重的必考大題來源，幾乎每年都會考「畫ER/EER圖」或「將ER圖轉換為關聯式綱要」。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點一：ER模型基本概念與限制"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "基數限制 Cardinality Constraint",
+            "body": "描述兩實體間一筆關係對應的數量關係，分為1:1、1:N、M:N三種；例如「一個部門有多名員工，但一名員工僅屬於一個部門」即為1:N。"
+          },
+          {
+            "label": "參與限制 Participation Constraint",
+            "body": "完全參與（Total／Mandatory）：該實體的每一個實例都必須參與該關係，ER圖上以雙線表示；部分參與（Partial／Optional）：該實體的實例可以不參與該關係，以單線表示。例如「每位員工必須屬於某個部門」為完全參與，「部門不一定要有經理」則為部分參與。"
+          },
+          {
+            "label": "複合屬性 Composite Attribute",
+            "body": "可再進一步分解為更小屬性的屬性，例如「地址」可分解為「縣市／鄉鎮／路名」，「日期」可分解為「年／月／日」。"
+          },
+          {
+            "label": "多值屬性 Multivalued Attribute",
+            "body": "一個實體實例可以擁有多個值的屬性，例如一位員工可以有多支「電話號碼」；轉換為關聯式綱要時，多值屬性必須獨立建立一張表，不能直接放在原表格中（否則違反1NF）。"
+          },
+          {
+            "label": "弱實體 Weak Entity",
+            "body": "無法單靠自身屬性唯一識別的實體，必須依附於某個「強實體」（Owner Entity）並搭配部分鍵（Partial Key）才能識別；例如「受扶養眷屬」需依附「員工」才能唯一識別（同一員工底下用姓名區分眷屬即可，不同員工底下姓名可重複）。轉換為關聯式綱要時，弱實體的表格須把強實體的主鍵併入，作為外來鍵的一部分，通常再與部分鍵組成該表的複合主鍵。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "生活化比喻／記憶技巧"
+      },
+      {
+        "type": "para",
+        "text": "把ER圖想成「畫一張需求素描」：基數限制是「幾對幾」，參與限制是「一定要有沒有」，弱實體則像「沒有身分證的小孩」——自己無法單獨證明身分，一定要掛在「父母（強實體）」名下、搭配「在家排行第幾（部分鍵）」才能確定是誰。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點二：EER父子型態關係（Specialization/Generalization）"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "特殊化 Specialization ／ 一般化 Generalization",
+            "body": "特殊化：由上而下，將一個父型態（Supertype）依某種區分方式細分出多個子型態（Subtype），子型態繼承父型態的所有屬性，並可各自擁有專屬屬性；一般化則是由下而上，將多個具有共同屬性的實體型態抽象合併為一個父型態，是特殊化的反向操作。"
+          },
+          {
+            "label": "完整性限制 Total／Partial Specialization",
+            "body": "完全特殊化（Total）：父型態的每一個實例，都必須至少歸屬於該特殊化所定義的其中一個子型態，不允許存在僅屬於父型態、卻不屬於任何子型態的實例。部分特殊化（Partial）：父型態的實例不強制歸屬任何子型態，允許部分實例只屬於父型態本身。"
+          },
+          {
+            "label": "互斥性限制 Disjoint／Overlap",
+            "body": "互斥（Disjoint，圖上標示d）：父型態的單一實例，在同一特殊化中至多只能歸屬其中一個子型態。重疊（Overlap，圖上標示o）：父型態的單一實例可以同時歸屬多個子型態。"
+          },
+          {
+            "label": "ER圖轉換為關聯式綱要規則",
+            "body": "強實體→獨立一張表；弱實體→表格須併入擁有者主鍵作為外來鍵的一部分（通常與部分鍵組成複合主鍵）；1:N關係→在「多」的一方加入外來鍵；M:N關係→須獨立建立關聯表，存放兩邊主鍵組成的複合外來鍵；多值屬性→須獨立建表；子型態→可依「單表法（子型態專屬屬性加NULL允許）」或「多表法（父表＋各子表各自僅存專屬屬性，以父表主鍵當子表主鍵兼外來鍵）」實作，考題常要求後者並標明PK/FK。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "114地特／113高考／113地特／112地特／111高考／111地特／110高考／109高考／109地特／108地特／107高考／107地特／106高考／105高考（ER/EER建模與轉換，幾乎每年必考的大題）"
+      },
+      {
+        "type": "heading",
+        "text": "教科書基礎補充（過去十年較少單獨考出，建議理解即可）"
+      },
+      {
+        "type": "para",
+        "text": "聚合（Aggregation）：EER模型中，將一個關係型態本身視為更高層關係中的參與實體，用以表達「對一個關係的關係」，例如「核准」某筆借閱記錄這件事，其本身的參與者是「借閱」這個關係，而不是單一實體。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 1　ER模型與EER擴充建模",
+    "qnum": 2,
+    "qlabel": "第2題",
+    "stem": "EER模型中的父子型態關係需要宣告兩個主要的限制：完整性限制與互斥性限制。(a)完整性限制宣告父型態的一個實例是否必須屬於至少一個子型態，有兩種可能：完全特殊化（Total Specialization）與部分特殊化（Partial Specialization），請分別定義之。（10分）(b)互斥性限制宣告父型態的一個實例是否可以同時屬於多個子型態，有兩種可能：互斥（Disjoint）與重疊（Overlap），請分別定義之。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "(a) 完整性限制"
+      },
+      {
+        "type": "para",
+        "text": "完全特殊化（Total Specialization）：父型態之每一個實例，皆必須至少歸屬於該特殊化所定義之其中一個子型態，不允許存在僅屬於父型態、卻不屬於任何子型態之實例；此限制通常以雙線連接父型態與特殊化圓圈表示。"
+      },
+      {
+        "type": "para",
+        "text": "部分特殊化（Partial Specialization）：父型態之實例並非必須歸屬於任何子型態，允許存在部分實例僅屬於父型態本身、而未被歸類至該特殊化所定義之任何一個子型態中；此限制通常以單線連接父型態與特殊化圓圈表示。"
+      },
+      {
+        "type": "heading",
+        "text": "(b) 互斥性限制"
+      },
+      {
+        "type": "para",
+        "text": "互斥（Disjoint）：父型態之單一實例，於同一特殊化中，至多只能歸屬於其中一個子型態，不允許該實例同時屬於兩個（或以上）子型態；此限制通常以字母d標示於特殊化圓圈中。"
+      },
+      {
+        "type": "para",
+        "text": "重疊（Overlap）：父型態之單一實例，得以同時歸屬於該特殊化所定義之多個子型態，並不限制其僅能歸屬於單一子型態；此限制通常以字母o標示於特殊化圓圈中。"
+      },
+      {
+        "type": "para",
+        "text": "作答技巧：這類「定義題」拿分關鍵在於把「限制的對象是誰」講清楚——完整性限制講的是「要不要歸屬」，互斥性限制講的是「能不能同時歸屬多個」，兩組概念容易混淆，作答時建議各自用一句話先講清楚「宣告的是什麼」，再分別定義兩種可能，切勿只寫「Total就是全部、Partial就是部分」這種同義反覆的空泛敘述。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 1　ER模型與EER擴充建模",
+    "qnum": 3,
+    "qlabel": "第1題",
+    "stem": "資料庫領域有許多專門術語，請敘述下列術語之意涵：(a)參與限制（Participation Constraint）（4分）(b)基數限制（Cardinality Constraint）（4分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "(a) 參與限制"
+      },
+      {
+        "type": "para",
+        "text": "描述某實體型態中的每一個實例，是否必須參與某一特定關係型態。分為完全參與（Total／Mandatory Participation）：該實體的每個實例都必須參與該關係，ER圖上以雙線連接表示；以及部分參與（Partial／Optional Participation）：該實體的實例可以選擇不參與該關係，以單線連接表示。"
+      },
+      {
+        "type": "heading",
+        "text": "(b) 基數限制"
+      },
+      {
+        "type": "para",
+        "text": "描述兩個實體型態之間，透過某一關係型態互相對應的實例數量上限，常見有1:1（一對一）、1:N（一對多）、M:N（多對多）三種型態，用以規範關聯轉換為關聯式綱要時外來鍵應放置於哪一方、或是否需要建立獨立的關聯表。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 1　ER模型與EER擴充建模",
+    "qnum": 4,
+    "qlabel": "模擬題1-1〔模擬預測題〕【建模型】",
+    "stem": "某線上書店欲建立資料庫，需求如下：每本「書籍」有書號（唯一）、書名、定價；每位「會員」有會員編號（唯一）、姓名、電話（可能有多支）；一筆「訂單」記錄某會員在某時間下的訂購，一筆訂單可包含多本書籍，同一本書在同一筆訂單中會記錄訂購數量；每筆訂單必須屬於恰好一位會員，但一位會員可以沒有任何訂單。請畫出ER圖（標明基數限制、參與限制），並將其轉換為關聯式綱要，標明每張表的PK與FK。（25分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "ER圖重點標註"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "實體與屬性",
+            "body": "書籍(書號PK, 書名, 定價)；會員(會員編號PK, 姓名)；電話為會員之多值屬性，需獨立處理；訂單(訂單編號PK, 訂購時間)。"
+          },
+          {
+            "label": "關係與基數",
+            "body": "會員－訂單：1:N（一位會員可有多筆訂單，一筆訂單僅屬一位會員）；訂單－書籍：M:N（一筆訂單可含多本書，一本書可出現在多筆訂單），需搭配屬性「數量」，故此M:N關係須轉為獨立關聯表。"
+          },
+          {
+            "label": "參與限制",
+            "body": "訂單對會員為完全參與（雙線）：每筆訂單必須屬於某位會員；會員對訂單為部分參與（單線）：會員可以沒有任何訂單。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "轉換為關聯式綱要"
+      },
+      {
+        "type": "table",
+        "header": [
+          "資料表",
+          "屬性",
+          "PK／FK"
+        ],
+        "rows": [
+          [
+            "書籍(BOOK)",
+            "書號, 書名, 定價",
+            "PK：書號"
+          ],
+          [
+            "會員(MEMBER)",
+            "會員編號, 姓名",
+            "PK：會員編號"
+          ],
+          [
+            "會員電話(MEMBER_PHONE)",
+            "會員編號, 電話",
+            "PK：(會員編號,電話)；FK：會員編號 參照 MEMBER"
+          ],
+          [
+            "訂單(ORDERS)",
+            "訂單編號, 訂購時間, 會員編號",
+            "PK：訂單編號；FK：會員編號 參照 MEMBER"
+          ],
+          [
+            "訂單明細(ORDER_ITEM)",
+            "訂單編號, 書號, 數量",
+            "PK：(訂單編號,書號)；FK：訂單編號 參照 ORDERS，書號 參照 BOOK"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "解題重點：多值屬性（電話）與M:N關係（訂單－書籍，且關係本身帶有「數量」這個關係屬性）都必須各自獨立成表，這是這類題目最容易漏掉、也是閱卷最愛扣分的地方；凡看到「一個東西可以有好幾個某值」就是多值屬性訊號，凡看到「關係本身還帶有數值型態的屬性」就是M:N必須拆表的訊號。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 2　正規化理論（1NF～BCNF／4NF）",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "正規化（Normalization）要解決的問題只有一個：資料重複導致的「新增異常、刪除異常、更新異常」。做法是不斷檢查表格中「誰依賴誰」（功能相依，Functional Dependency），只要發現有「非主鍵屬性沒有完全依賴主鍵」或「非主鍵屬性依賴另一個非主鍵屬性」的情形，就把表拆開，直到每個表格裡的每一條資訊都「只跟主鍵有關、且跟主鍵的關係是直接的」為止。這一章幾乎每年必考，題型固定為「給定綱要與功能相依，判斷正規型式並逐步分解」。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點一：1NF～BCNF定義"
+      },
+      {
+        "type": "table",
+        "header": [
+          "正規型式",
+          "判斷條件"
+        ],
+        "rows": [
+          [
+            "1NF",
+            "所有屬性值必須為單一值（Atomic），不可為陣列、集合或巢狀結構。"
+          ],
+          [
+            "2NF",
+            "符合1NF，且所有非主鍵屬性完全函數相依於整個主鍵（消除部分相依 Partial Dependency，僅在複合主鍵時才有意義）。"
+          ],
+          [
+            "3NF",
+            "符合2NF，且所有非主鍵屬性不遞移相依於主鍵（消除遞移相依 Transitive Dependency，即非鍵屬性不可相依於另一個非鍵屬性）。"
+          ],
+          [
+            "BCNF",
+            "每一個決定者（函數相依左邊的屬性集合）都必須是候選鍵；比3NF更嚴格，消除「決定者不是候選鍵」所造成的異常。"
+          ],
+          [
+            "4NF",
+            "符合BCNF，且消除多值相依（Multivalued Dependency）：同一主鍵下若有兩個以上「互相獨立」的多值屬性群同時出現，須拆表。"
+          ]
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "生活化比喻／記憶技巧"
+      },
+      {
+        "type": "para",
+        "text": "正規化像「拆家」：1NF先確保每個房間只放一件東西（不可一格塞多值）；2NF、3NF依序檢查「這東西是不是真的該放在這個房間」（完全相依、不遞移）；BCNF更嚴格，連「誰能決定誰」都要重新檢查一次身分（決定者必須是候選鍵）；4NF則是拆開「兩組互不相干卻硬湊在一起的多值清單」（例如同一門課的教師名單和課本名單本無關聯，卻因交叉組合而重複）。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點二：決定者、候選鍵與分解理論"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "決定者 Determinant",
+            "body": "功能相依 X→Y 中的左側屬性（集合）X，即為此函數相依的決定者；一張表中可能同時存在多個決定者，只要能決定表中任一其他屬性即符合定義，不要求決定「全部」其他屬性。"
+          },
+          {
+            "label": "候選鍵 Candidate Key",
+            "body": "表中一組屬性的最小集合，須同時滿足「唯一性」（可唯一識別每一列，亦即可決定所有其他屬性）與「最小性」（不存在真子集合仍能滿足唯一識別）。每一個候選鍵必為決定者，但決定者未必是候選鍵——這正是3NF與BCNF的核心差異：3NF允許「決定者不是候選鍵，但被決定的屬性是質數屬性（屬於某候選鍵的一部分）」的例外情形通過，BCNF則完全不允許，要求所有決定者都必須是候選鍵（超鍵）。"
+          },
+          {
+            "label": "Closure（屬性閉包）演算法找候選鍵",
+            "body": "從某屬性集合X出發，反覆套用已知的功能相依，只要相依的左側是目前閉包的子集合，就把右側屬性加入閉包，直到無法再擴充為止；若某屬性集合的閉包等於全部屬性，且不存在更小的子集合也能達到全部屬性，該集合即為候選鍵。判斷候選鍵的兩個輔助原則：屬性若未出現在任何功能相依的右邊，必為候選鍵的一部分；屬性若只出現在功能相依的右邊，必不為候選鍵成員。"
+          },
+          {
+            "label": "分解的兩個理論要求",
+            "body": "無損連接分解（Lossless-Join Decomposition）：分解後的表格經自然連接（Natural Join）還原，不得產生原表中不存在的多餘資料列；相依保存（Dependency Preservation）：原有的功能相依，在分解後仍可僅靠檢查各分解表本身（不需重新JOIN）驗證是否成立。BCNF分解演算法保證無損連接，但有時無法同時保存所有原相依，這是BCNF分解的已知理論限制，3NF分解則兩者皆可兼顧（但3NF分解可能保留部分冗餘）。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "113高考／113地特／112高考／111高考／111地特／110高考／109高考／108高考／108地特／107高考／107地特／106高考／105高考（正規化判斷與分解，幾乎每年必考）"
+      },
+      {
+        "type": "heading",
+        "text": "教科書基礎補充（過去十年較少單獨考出，建議理解即可）"
+      },
+      {
+        "type": "para",
+        "text": "第五正規化（5NF）與網域鍵正規化（DKNF）：5NF處理連接相依（Join Dependency）問題，即表格分解為三個以上表格才能無損還原的情形；DKNF（Domain-Key Normal Form）則更一般化，要求所有的完整性限制都只能由「網域限制」與「鍵限制」推導而來，是正規化理論中最高階、也最少在考題中實際出現的層次。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 2　正規化理論（1NF～BCNF／4NF）",
+    "qnum": 2,
+    "qlabel": "第3題",
+    "stem": "Z(P, Q, R, S)是一個關聯式資料表的綱要，P為資料表的主鍵與唯一的候選鍵，且該資料表有下列功能相依：P→{Q,R,S}、Q→S。(a)資料表Z符合第幾正規型式？原因為何？（15分）(b)將資料表Z正規化到適當的正規型式，寫出正規化之後每一個資料表的綱要，包括資料表的名稱、屬性、主鍵及外來鍵。（15分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "(a) 正規化程度判定"
+      },
+      {
+        "type": "para",
+        "text": "由於P為Z表格唯一之候選鍵（單一屬性，非複合鍵），故不可能存在2NF所規範之「非鍵屬性部分相依於候選鍵之真子集合」情形（單一屬性鍵不具備真子集合），因此Z表格必然符合2NF。"
+      },
+      {
+        "type": "para",
+        "text": "惟檢驗3NF：功能相依Q→S中，決定者Q並非候選鍵（Z表格中唯一候選鍵為P），且被決定屬性S亦非質數屬性（Z表格中唯一之質數屬性為P），故Q→S違反3NF「決定者須為超鍵，或被決定屬性須為質數屬性」之要求；又依P→{Q,R,S}與Q→S可推知P→Q→S構成遞移相依，S係透過非候選鍵之Q而間接相依於候選鍵P，此正是典型之遞移相依情形，違反3NF。因此，資料表Z符合第二正規型式（2NF），但不符合第三正規型式（3NF），亦連帶不符合BCNF，原因均在於功能相依Q→S中，決定者Q並非超鍵，構成違反3NF與BCNF之遞移相依。"
+      },
+      {
+        "type": "heading",
+        "text": "(b) 正規化分解"
+      },
+      {
+        "type": "para",
+        "text": "依消除遞移相依之標準分解原則，針對違反3NF之相依Q→S進行分解："
+      },
+      {
+        "type": "table",
+        "header": [
+          "分解後資料表",
+          "屬性",
+          "主鍵／外來鍵"
+        ],
+        "rows": [
+          [
+            "R1",
+            "Q, S",
+            "PK：Q"
+          ],
+          [
+            "R2",
+            "P, Q, R",
+            "PK：P；FK：Q 參照 R1(Q)"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "驗證：R1(Q,S)中，Q→S成立且Q為R1之候選鍵（超鍵），故R1符合BCNF；R2(P,Q,R)中，原相依P→{Q,R,S}限縮為P→{Q,R}（S已移至R1），P仍為R2之候選鍵（超鍵），故R2亦符合BCNF。由於分解所依據之公共屬性Q恰為R1之鍵，依BCNF分解演算法之理論保證，此分解具備無損連接性，可透過R1與R2以Q為連接鍵之自然連接還原出原表Z之全部資料與函數相依關係。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 2　正規化理論（1NF～BCNF／4NF）",
+    "qnum": 3,
+    "qlabel": "第2題",
+    "stem": "某一資料庫系統內有以下資料表（實底線欄位為主鍵：課程,教師,課本）：資料庫應用/王大明/CS、資料庫應用/王大明/BA、資料庫應用/李大華/CS、資料庫應用/李大華/BA、資料庫實務/王大明/CS、資料庫實務/王大明/CE。試說明此資料表為何符合BCNF正規化形式、但不符合第四階正規化形式？（15分）應如何修改使之符合第四階正規化形式？（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "為何符合BCNF但不符合4NF"
+      },
+      {
+        "type": "para",
+        "text": "本資料表(課程,教師,課本)中，「教師」欄位不因固定「課程」而唯一決定（如「資料庫應用」課程有王大明、李大華兩位教師），「課本」欄位亦不因固定「課程」而唯一決定，三個屬性彼此間不存在任何非顯然的函數相依（Functional Dependency）；換言之，本關聯中並無任何函數相依之決定因子不是超鍵（因為唯一存在的鍵即為(課程,教師,課本)三者全體），故本關聯符合BCNF（BCNF僅規範函數相依，未違反）。"
+      },
+      {
+        "type": "para",
+        "text": "然而，本關聯中存在兩個多值相依（Multivalued Dependency, MVD）：課程→→教師 與 課程→→課本；亦即對固定之「課程」而言，其對應之「教師」集合與「課本」集合彼此獨立（互不影響），形成兩組獨立多值事實之卡氏積組合，此即為觀察到之資料重複樣式（「資料庫應用」對應2位教師×2本課本＝4列；「資料庫實務」對應1位教師×2本課本＝2列）之根本原因。由於存在非顯然的多值相依，且決定因子「課程」並非超鍵，故本關聯違反第四正規化形式，形成新增／刪除／更新異常（例如新增一本「資料庫應用」課程之課本時，須連同兩位教師各新增一列，造成不必要之重複）。"
+      },
+      {
+        "type": "heading",
+        "text": "修改為符合4NF之分解方式"
+      },
+      {
+        "type": "para",
+        "text": "依兩個獨立的多值相依，將原關聯分解為以下兩個關聯，即可消除多值相依所致之冗餘，並符合4NF（分解後每一關聯僅各自對應一組多值事實，其上之多值相依成為顯然多值相依）："
+      },
+      {
+        "type": "table",
+        "header": [
+          "資料表",
+          "屬性（PK）",
+          "對應資料列"
+        ],
+        "rows": [
+          [
+            "COURSE_TEACHER",
+            "課程,教師（複合PK）",
+            "(資料庫應用,王大明),(資料庫應用,李大華),(資料庫實務,王大明)"
+          ],
+          [
+            "COURSE_TEXTBOOK",
+            "課程,課本（複合PK）",
+            "(資料庫應用,CS),(資料庫應用,BA),(資料庫實務,CS),(資料庫實務,CE)"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "此分解為無損連接分解，將原本課程與教師、課程與課本間各自獨立的多值事實分離儲存後，即不再產生因兩組獨立多值事實交叉組合而導致之重複列，達成4NF之要求。這是4NF題型的標準識別訊號：看到「兩組互不相關的多值清單被硬湊在同一張表、造成筆數相乘」，就是4NF違反的典型徵兆。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 2　正規化理論（1NF～BCNF／4NF）",
+    "qnum": 4,
+    "qlabel": "模擬題2-1〔模擬預測題〕【計算型】",
+    "stem": "關聯R(A,B,C,D,E)有以下功能相依集合F = {A→B, B→C, A,D→E, E→A}。請用屬性閉包（Closure）演算法找出R的所有候選鍵。（20分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題過程"
+      },
+      {
+        "type": "para",
+        "text": "觀察原則：D未出現在任何功能相依的右邊，故D必為候選鍵的一部分；先嘗試最小的候選集合{A,D}。"
+      },
+      {
+        "type": "table",
+        "header": [
+          "步驟",
+          "目前閉包",
+          "套用的功能相依",
+          "新增屬性"
+        ],
+        "rows": [
+          [
+            "初始",
+            "{A,D}",
+            "—",
+            "—"
+          ],
+          [
+            "1",
+            "{A,B,D}",
+            "套用 A→B",
+            "B"
+          ],
+          [
+            "2",
+            "{A,B,C,D}",
+            "套用 B→C",
+            "C"
+          ],
+          [
+            "3",
+            "{A,B,C,D,E}",
+            "套用 A,D→E",
+            "E"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "{A,D}的閉包已涵蓋全部屬性{A,B,C,D,E}，故{A,D}可唯一識別整張表；由於D不可省略（D未出現在任何相依右側，若移除D則{A}的閉包僅為{A,B,C}，無法涵蓋全部屬性），且A亦不可省略（單獨{D}的閉包僅為{D}），故{A,D}已滿足最小性，為R的候選鍵。經檢查其餘屬性組合皆無法在更小的集合下涵蓋全部屬性，因此{A,D}為R唯一的候選鍵。"
+      },
+      {
+        "type": "para",
+        "text": "作答技巧：遇到Closure題，先用「未出現在任何相依右邊的屬性一定在候選鍵中」這個原則縮小搜尋範圍，能大幅減少嘗試次數，這是這類題目的解題捷徑，也是閱卷老師期待看到的「說明理由」而非「憑猜測湊出答案」。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 3　SQL查詢語法與關聯代數（加強版）",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "SQL考題的難點從來不是語法本身（SELECT/FROM/WHERE背熟就會），而是「把一段中文需求正確翻譯成查詢邏輯」。多數人寫錯的地方，都不是不會寫SELECT，而是搞混了幾件事：WHERE和HAVING分別在「哪個階段」過濾資料？要「找出符合某條件的」用JOIN，要「找出不符合某條件的」該用NOT IN還是NOT EXISTS？要「統計加總」該GROUP BY哪些欄位？這一章的目標，就是把這套「翻譯思路」講清楚，而不是背一堆零散語法片段。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點一：SQL查詢的邏輯執行順序"
+      },
+      {
+        "type": "para",
+        "text": "SQL語句雖然「寫」的順序是 SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY，但資料庫實際「執行」的邏輯順序完全不同，這是考生最容易誤解、也是理解WHERE與HAVING差異的關鍵："
+      },
+      {
+        "type": "table",
+        "header": [
+          "執行順序",
+          "子句",
+          "作用"
+        ],
+        "rows": [
+          [
+            "1",
+            "FROM（含JOIN）",
+            "決定資料來源，把相關表格連接起來，此時尚未套用任何過濾條件。"
+          ],
+          [
+            "2",
+            "WHERE",
+            "對「單筆資料列」做過濾，此階段尚未分組，故不能使用聚合函數（如COUNT、SUM）。"
+          ],
+          [
+            "3",
+            "GROUP BY",
+            "將通過WHERE過濾的資料，依指定欄位分組彙整。"
+          ],
+          [
+            "4",
+            "HAVING",
+            "對「分組後的每一組」做過濾，此階段才可以使用聚合函數，這是HAVING與WHERE最本質的差異。"
+          ],
+          [
+            "5",
+            "SELECT",
+            "決定要輸出哪些欄位／運算式。"
+          ],
+          [
+            "6",
+            "ORDER BY",
+            "對最終輸出結果排序，是整個查詢邏輯上最後一步。"
+          ]
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "生活化比喻／記憶技巧"
+      },
+      {
+        "type": "para",
+        "text": "記WHERE跟HAVING的差異，想成「先篩選單人再分組」還是「先分組再篩選整組」：WHERE像是「先把不符資格的人擋在門外，不讓他們進場」（此時大家還沒分組，不能講「這組平均幾分」這種話）；HAVING像是「大家先分好組、算完組內統計數字後，再淘汰不合格的組」（例如淘汰「組內人數不到3人」的組）。凡題目出現COUNT、SUM、AVG等聚合函數搭配的過濾條件，一定要放HAVING，放WHERE會直接語法錯誤。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點二：JOIN與子查詢的選用時機"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "多表JOIN",
+            "body": "需要「同時取出多張表的欄位」或「用某張表的條件去篩選另一張表」時使用；每多一次JOIN，就是多串一張表，關鍵是找出表格之間的PK/FK連接欄位，逐一用ON寫清楚。"
+          },
+          {
+            "label": "子查詢：IN／NOT IN",
+            "body": "IN (子查詢)：找出「屬於某個集合」的資料，子查詢回傳一欄多列的值當作篩選集合；NOT IN (子查詢)：找出「不屬於某集合」的資料，常用於「找出從未發生過某事件」的題型（如「找出從未點播過任何歌曲的會員」），須特別注意子查詢結果若可能包含NULL，NOT IN會有邏輯陷阱（NULL會讓整個NOT IN恆為空），實務上建議改用NOT EXISTS較安全。"
+          },
+          {
+            "label": "子查詢：EXISTS／NOT EXISTS（相關子查詢 Correlated Subquery）",
+            "body": "子查詢內容會參照外層查詢的欄位（每一列外層資料都要重新執行一次子查詢），常用於「找出至少有／完全沒有符合某條件之關聯資料」的題型；「找出符合『所有』條件」的除法（Division）類題型，標準寫法是「雙重NOT EXISTS」：外層NOT EXISTS（存在某個條件項目，使得內層NOT EXISTS（該實體沒有滿足該條件項目）），即「不存在『他沒修過』的課」＝「他修過全部課」。"
+          },
+          {
+            "label": "純量子查詢（Scalar Subquery）於SELECT子句中",
+            "body": "子查詢僅回傳單一數值，可直接放在SELECT要輸出的欄位清單中，常用於「計算每一列各自對應的某個統計值」（如每位客戶的累計欠款金額），這也是一種相關子查詢的應用。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "114地特／113高考／113地特／112高考／112地特／111高考／111地特／110高考／110地特／109高考／109地特／108高考／108地特／107高考／106高考／105高考／105地特（SQL查詢幾乎每年必考2～3題，是本科最大宗題型）"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點三：View（視界）與DDL參照完整性"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "View 視界",
+            "body": "由CREATE VIEW 視界名稱 (欄位清單) AS SELECT... 定義的「虛擬表格」，不實際儲存資料，每次查詢View時才動態重新計算底層SELECT；用途為簡化複雜查詢（把常用的多表JOIN／聚合包裝起來）、做存取控制（只讓使用者看到View而非底層原始表）。定義統計性摘要View時，若底層明細表因JOIN而重複列（如一堂課多位學生選修），直接加總會重複計算，須先用DISTINCT或子查詢去除重複組合再彙整，這是很容易被扣分的細節。"
+          },
+          {
+            "label": "CREATE TABLE 與參照完整性限制",
+            "body": "CREATE TABLE需定義PRIMARY KEY（唯一識別，不可為NULL）與FOREIGN KEY（參照其他表主鍵，建立表間關聯）；可搭配ON DELETE CASCADE（刪除被參照列時，連帶刪除所有參照它的列）、ON DELETE SET NULL等選項規範參照完整性的處理方式。新增資料時若涉及多張有參照關係的表，必須先新增「被參照方」（如Member），再新增「參照方」（如OnDemand_Record），順序顛倒會違反外來鍵限制而失敗。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點四：關聯代數（Relational Algebra）"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "為何需要關聯代數",
+            "body": "關聯代數提供一套形式化、無歧義的數學運算基礎，用以精確定義查詢語意，不受特定資料庫系統的SQL語法差異影響；資料庫系統實際執行SQL查詢時，查詢處理器（Query Processor）會先將SQL轉換為關聯代數運算樹，再進行查詢最佳化與執行。"
+          },
+          {
+            "label": "基本運算子",
+            "body": "Select（σ，選擇）：依條件篩選「列」；Project（π，投影）：選取指定的「欄」；Join（⋈，連接）：依共同屬性合併兩表格的列；Union（∪，聯集）、Intersect（∩，交集）、Difference（−，差集）：需作用於「綱要相容」的兩個關聯；Cartesian Product（×，卡氏積）：兩表格所有列的兩兩配對組合；Division（÷，除法）：找出「滿足所有」條件的實體，理論基礎對應SQL中的雙重NOT EXISTS查詢。"
+          },
+          {
+            "label": "關聯完全 Relationally Complete",
+            "body": "若一個查詢語言的表達能力至少等同於關聯代數（即關聯代數能表達的查詢，該語言都能表達），則稱該語言為「關聯完全」；SQL即為關聯完全的查詢語言，這也是SQL能成為關聯式資料庫標準查詢語言的理論基礎之一。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點五：NoSQL查詢語法（MongoDB為例）"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "find()查詢",
+            "body": "對應SQL的SELECT...WHERE，例如 db.collection.find({status: \"active\"}) 找出status欄位為active的所有文件（document）。"
+          },
+          {
+            "label": "aggregate() 聚合pipeline",
+            "body": "對應SQL的GROUP BY與聚合函數，以多個階段（stage）組成處理管線，常見階段：$match（對應WHERE篩選）、$group（對應GROUP BY分組彙整，搭配$sum、$avg等累加運算子）、$sort（對應ORDER BY）；例如統計各類別總銷售額，可寫成 db.orders.aggregate([{$match:{...}}, {$group:{_id:\"$category\", total:{$sum:\"$amount\"}}}])。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "110高考／105高考（MongoDB查詢語法：find、刪除、聚合pipeline撰寫）"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 3　SQL查詢語法與關聯代數（加強版）",
+    "qnum": 2,
+    "qlabel": "第4題",
+    "stem": "根據關聯資料表架構：student(SID,Sname,Sage,Ssex)、course(CID,Cname,TID)、teacher(TID,Tname)、score(SID,CID,sc)，寫出以下SQL查詢：(a)查詢學生名字中含有「Alan」的男學生人數。（5分）(b)查詢Alan修過的課中，那門課只由一位老師開課的課程名稱。（5分）(c)查詢修過課程所有成績之平均成績大於等於60分的同學的學生編號、姓名和平均成績。（10分）(d)查詢學過編號01但沒有學過編號02課程的同學編號與其修01課的分數。（10分）(e)查詢沒有學過全部課程的同學的編號。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "解題思路"
+      },
+      {
+        "type": "para",
+        "text": "這題五個小題正好是SQL考題五種最常見的查詢邏輯：條件查詢＋COUNT（a）、分組後過濾HAVING（b）、多表JOIN＋GROUP BY＋HAVING（c）、NOT IN排除型（d）、除法查詢／雙重NOT EXISTS（e）。逐題練熟這五種邏輯，等於掌握了SQL考題的大部分題型。"
+      },
+      {
+        "type": "para",
+        "text": "-- (a) 名字含「Alan」之男學生人數\nSELECT COUNT(*) AS cnt\nFROM   student\nWHERE  Sname LIKE '%Alan%' AND Ssex = 'M';\n\n-- (b) Alan修過之課中，僅由一位老師開課者之課程名稱\nSELECT c.Cname\nFROM   course c\nJOIN score sc ON c.CID = sc.CID\nJOIN student s ON sc.SID = s.SID\nWHERE  s.Sname = 'Alan'\nAND    c.CID IN (\n         SELECT CID FROM course\n         GROUP BY CID\n         HAVING COUNT(DISTINCT TID) = 1);\n\n-- (c) 平均成績>=60之學生編號、姓名、平均成績\nSELECT s.SID, s.Sname, AVG(sc.sc) AS avg_score\nFROM   student s\nJOIN score sc ON s.SID = sc.SID\nGROUP BY s.SID, s.Sname\nHAVING AVG(sc.sc) >= 60;\n\n-- (d) 學過01但未學過02之學生編號與01課分數\nSELECT sc1.SID, sc1.sc\nFROM   score sc1\nWHERE  sc1.CID = '01'\nAND    sc1.SID NOT IN (\n         SELECT SID FROM score WHERE CID = '02');\n\n-- (e) 未學過全部課程之學生編號（雙重NOT EXISTS，關聯除法標準寫法）\nSELECT s.SID\nFROM   student s\nWHERE  EXISTS (\n         SELECT 1 FROM course c\n         WHERE NOT EXISTS (\n           SELECT 1 FROM score sc\n           WHERE sc.SID = s.SID AND sc.CID = c.CID));"
+      },
+      {
+        "type": "para",
+        "text": "(e)小題的雙重NOT EXISTS拆解：內層「NOT EXISTS(...)」在問「這位學生s、對於某門課c，有沒有選修紀錄？」若沒有，內層成立；外層「EXISTS(SELECT 1 FROM course c WHERE 內層成立)」則在問「是否存在這樣一門他沒修過的課c？」若存在，代表這位學生「沒有修完全部課程」，故應被選出。這正是「找出滿足『所有』條件的實體」這類除法查詢的標準骨架，考生只要記住這個「外層EXISTS＋內層NOT EXISTS」的固定寫法，遇到「全部」「所有」「every」關鍵字的查詢題就能直接套用。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 3　SQL查詢語法與關聯代數（加強版）",
+    "qnum": 3,
+    "qlabel": "第1題",
+    "stem": "某圖書館關聯式資料庫系統包含MEMBER(Mid, Name, Telephone)、BOOK(ISBN, Title, Publisher)、BORROWER(Mid, ISBN, Date)三表格。請利用SQL查詢指令回答：(a)找出曾經借閱過「全華」出版社出版書籍的會員，列出會員編號、姓名和聯絡電話。（10分）(b)針對每個出版社，找出曾經借閱過3本以上（含）該出版社書籍的會員，輸出出版社和會員編號。（10分）(c)定義一個名為TimeBookCount的檢視表，輸出每個會員借閱「時報」出版社書籍的總數，屬性命名為Mid與BookCount。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "-- (a) 曾借閱「全華」出版社書籍之會員\nSELECT DISTINCT m.Mid, m.Name, m.Telephone\nFROM   MEMBER m\nJOIN BORROWER br ON m.Mid = br.Mid\nJOIN BOOK b ON br.ISBN = b.ISBN\nWHERE  b.Publisher = '全華';\n\n-- (b) 各出版社中借閱該社書籍達3本以上（含）之會員\n-- 「3本以上」解讀為相異書籍數，故用COUNT(DISTINCT ISBN)\nSELECT b.Publisher, br.Mid\nFROM   BORROWER br\nJOIN BOOK b ON br.ISBN = b.ISBN\nGROUP BY b.Publisher, br.Mid\nHAVING COUNT(DISTINCT br.ISBN) >= 3;\n\n-- (c) TimeBookCount檢視表（借閱總次數，含重複借閱同一本書）\nCREATE VIEW TimeBookCount (Mid, BookCount) AS\nSELECT br.Mid, COUNT(*) AS BookCount\nFROM   BORROWER br\nJOIN BOOK b ON br.ISBN = b.ISBN\nWHERE  b.Publisher = '時報'\nGROUP BY br.Mid;"
+      },
+      {
+        "type": "para",
+        "text": "作答技巧：(a)因一位會員可能借閱同一出版社多本書、產生多筆重複列，須加DISTINCT避免同一會員被列出多次；(b)與(c)兩小題容易讓人誤以為做法相同，但題目文字其實暗藏差異——(b)問「3本以上」通常指「相異書籍數」該用COUNT(DISTINCT ISBN)，(c)問「借閱總數」則是「總次數」該用COUNT(*)，作答前務必逐字確認題目問的是「幾本不同的書」還是「借了幾次」。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 3　SQL查詢語法與關聯代數（加強版）",
+    "qnum": 4,
+    "qlabel": "第4題",
+    "stem": "某一資料庫系統內有以下三個資料表：教師(教師編號PK,姓名,科系)、課程(課程編號PK,名稱,學分數)、修課(教師編號,課程編號,學生編號為PK,教室,時間,成績)。試寫出一個SQL指令，建立一個視界（View），以顯示每位教師的開課資料以及修習這些課程的學生資料。（10分）試寫出一個SQL指令，建立一個統計性摘要視界（View），以顯示每位教師的開課數以及開課總學分數。（15分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "-- (1) 教師開課資料＋修課學生資料\nCREATE VIEW TeacherCourseStudent AS\nSELECT t.教師編號, t.姓名 AS 教師姓名, e.課程編號, c.名稱 AS 課程名稱,\n       e.學生編號, e.教室, e.時間, e.成績\nFROM   教師 t\nJOIN 修課 e ON t.教師編號 = e.教師編號\nJOIN 課程 c ON e.課程編號 = c.課程編號;\n\n-- (2) 每位教師開課數與開課總學分數（須先去重再加總）\nCREATE VIEW TeacherCourseSummary AS\nSELECT tc.教師編號, t.姓名,\n       COUNT(*) AS 開課數,\n       SUM(c.學分數) AS 開課總學分數\nFROM   (SELECT DISTINCT 教師編號, 課程編號 FROM 修課) tc\nJOIN 課程 c ON tc.課程編號 = c.課程編號\nJOIN 教師 t ON tc.教師編號 = t.教師編號\nGROUP BY tc.教師編號, t.姓名;"
+      },
+      {
+        "type": "para",
+        "text": "這題的陷阱是「修課」表格每一列對應「一位學生的一筆選課紀錄」，同一門課若有多位學生選修，就會有多列重複的（教師編號,課程編號）組合；若不先用「SELECT DISTINCT 教師編號, 課程編號 FROM 修課」取出相異的教師-課程組合，直接JOIN課程表加總學分數，會因為同一門課被算了好幾次而得到錯誤（膨脹）的總學分數。凡是「先JOIN一張明細表、再對某個彙總值做SUM」的題目，都要先檢查明細表是否會造成重複列，這是統計摘要View考題的核心陷阱。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 3　SQL查詢語法與關聯代數（加強版）",
+    "qnum": 5,
+    "qlabel": "第1題",
+    "stem": "某圖書公司關聯式資料庫包含作者（作者編號,作者姓名）、圖書（圖書編號,書名,出版年份,銷售數量）、寫書（作者編號,圖書編號，多對多關係）三表格。請針對下列三個查詢問題，各寫出一個SQL指令：(a)列出2015至2019這五年內出版的每一本圖書之圖書編號與書名。（10分）(b)列出寫過一本以上的書的每一位作者之作者編號。（10分）(c)列出寫過的書之總銷售數量超過十萬本的每一位作者之作者姓名。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "-- (a) 2015~2019年出版之圖書\nSELECT 圖書編號, 書名\nFROM   圖書\nWHERE  出版年份 BETWEEN 2015 AND 2019;\n\n-- (b) 寫過一本以上的書之作者編號（只需查關聯表，不必JOIN作者表）\nSELECT 作者編號\nFROM   寫書\nGROUP BY 作者編號\nHAVING COUNT(*) > 1;\n\n-- (c) 總銷售數量超過十萬本之作者姓名\nSELECT a.作者姓名\nFROM   作者 a\nJOIN 寫書 w ON a.作者編號 = w.作者編號\nJOIN 圖書 b ON w.圖書編號 = b.圖書編號\nGROUP BY a.作者編號, a.作者姓名\nHAVING SUM(b.銷售數量) > 100000;"
+      },
+      {
+        "type": "para",
+        "text": "(b)小題的重點是「不需要的JOIN不要加」：題目只問作者編號（不需要姓名），且統計依據（COUNT）完全可以只從「寫書」這張多對多關聯表取得，多JOIN一次「作者」表不僅多餘，也會拖慢查詢效能，這是很多人「看到多對多就反射性全部JOIN」的常見失分習慣。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 3　SQL查詢語法與關聯代數（加強版）",
+    "qnum": 6,
+    "qlabel": "第3題",
+    "stem": "假設有一個商家的關聯式資料庫系統，以四個表格記錄會員、貨品、購買紀錄和每筆訂單的物品清單：Member(accountNO, name, telephone)／Item(itemNO, name, price)／ShoppingRecord(orderID, accountNO, amount)／ShoppingList(orderID, itemNO, quantity)。請利用SQL查詢指令回答：(a)找出名為「張三」會員的所有購買紀錄（編號、應付金額）。（10分）(b)針對「張三」，找出購買總數量超過5個以上（含）的貨品，輸出貨品編號和購買總數量。（10分）(c)找出累計所有會員花了最多錢購買的貨品，輸出該貨品編號。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "-- (a) 「張三」之所有購買紀錄\nSELECT sr.orderID, sr.amount\nFROM   ShoppingRecord sr\nJOIN Member m ON sr.accountNO = m.accountNO\nWHERE  m.name = '張三';\n\n-- (b) 「張三」購買總數量>=5之貨品\nSELECT sl.itemNO, SUM(sl.quantity) AS total_qty\nFROM   ShoppingList sl\nJOIN ShoppingRecord sr ON sl.orderID = sr.orderID\nJOIN Member m ON sr.accountNO = m.accountNO\nWHERE  m.name = '張三'\nGROUP BY sl.itemNO\nHAVING SUM(sl.quantity) >= 5;\n\n-- (c) 所有會員累計花費最多之貨品\nSELECT sl.itemNO\nFROM   ShoppingList sl\nJOIN Item i ON sl.itemNO = i.itemNO\nGROUP BY sl.itemNO\nORDER BY SUM(sl.quantity * i.price) DESC\nLIMIT 1;"
+      },
+      {
+        "type": "para",
+        "text": "(c)小題的關鍵是「花費金額」＝數量×單價，且要對「所有會員」彙整（不像(a)(b)限定張三），所以GROUP BY的分組依據要換成貨品itemNO；用ORDER BY...DESC LIMIT 1取最大值，是比「先算出全部再用子查詢比對MAX」更簡潔的寫法，但需注意若考場SQL環境不支援LIMIT（如某些老式SQL Server），則需改用子查詢「WHERE 花費 = (SELECT MAX(花費)...)」的等價寫法，作答時可視考題有無指定資料庫系統彈性調整，兩種寫法都應熟悉。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 3　SQL查詢語法與關聯代數（加強版）",
+    "qnum": 7,
+    "qlabel": "第2題",
+    "stem": "假設現有如下點歌紀錄的關聯式資料庫，請使用SQL回答相關的子問題：Publisher(nation, company_ID, name) PK: nation+company_ID／Song(song_ID, name, language, type, publish_year, nation, publisher_ID) PK: song_ID／Member(mobile, nickname, gender) PK: mobile／OnDemand_Record(member_ID, song_ID, date_time)。(a)2023年點播率最高前兩名英文歌曲。（5分）(b)Universal所發行歌曲，2023Q4-2024Q3間，同一發行年份點播歌曲數>1的歌曲。（5分）(c)2024/02/14點播歌曲，依歌曲類型及會員性別分類統計。（5分）(d)新增會員「小喬」之點歌紀錄，並保持參照完整性。（5分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "-- (a) 2023年點播率最高前兩名英文歌曲\nSELECT s.name, COUNT(*) AS play_count\nFROM   OnDemand_Record r\nJOIN Song s ON r.song_ID = s.song_ID\nWHERE  s.language = 'English'\nAND    YEAR(r.date_time) = 2023\nGROUP BY s.song_ID, s.name\nORDER BY play_count DESC\nLIMIT 2;\n\n-- (c) 2024/02/14點播歌曲，依歌曲類型與會員性別分類統計\nSELECT s.type AS song_type, m.gender, COUNT(*) AS play_count\nFROM   OnDemand_Record r\nJOIN Song s ON r.song_ID = s.song_ID\nJOIN Member m ON r.member_ID = m.mobile\nWHERE  DATE(r.date_time) = '2024-02-14'\nGROUP BY s.type, m.gender\nORDER BY s.type, m.gender;\n\n-- (d) 新增會員「小喬」之點歌紀錄（須先新增Member，再新增OnDemand_Record）\nINSERT INTO Member (mobile, nickname, gender)\nVALUES ('0999654321', '小喬', 'F');\n\nINSERT INTO OnDemand_Record (member_ID, song_ID, date_time)\nVALUES ('0999654321', 'TWC_2024000001', '2024-03-28 22:00:00');"
+      },
+      {
+        "type": "para",
+        "text": "(d)小題考的其實不是SQL語法，而是「參照完整性」的理解：OnDemand_Record.member_ID是參照Member.mobile的外來鍵，若先執行INSERT INTO OnDemand_Record而Member中還沒有這位會員的資料，會直接違反外來鍵限制而失敗；凡題目出現「新增一筆橫跨多張表、且彼此有參照關係的資料」，一定要先想清楚「誰參照誰」，被參照的那一方（通常是主鍵表）要先插入，這是資料庫應用科目中「操作型」SQL題（INSERT/UPDATE/DELETE）最常考的觀念陷阱，比寫SELECT查詢更容易被忽略。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 3　SQL查詢語法與關聯代數（加強版）",
+    "qnum": 8,
+    "qlabel": "第3題",
+    "stem": "根據下列客戶訂單資料回答相關查詢SQL敘述，資料表格為：Customer(CID, Name), Orders(OID, CID, TotalAmount, OrderDate), Payment(PID, OID, AmountPaid)。(一)在OrderDate為2025.01.01當天，所有客戶訂單總量排行，依總量由高到低列出客戶姓名與總量。（10分）(二)找出截至2025.01.01，曾有付款行為且累計付款金額超過10,000的客戶姓名與其總付款金額。（10分）(三)所有訂單但付款金額總和不足訂單金額的客戶名稱與欠款金額，並以欠款金額由高至低排序。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "-- (三) 欠款客戶與欠款金額（用相關子查詢在SELECT中計算已付金額）\nSELECT c.Name,\n       SUM(o.TotalAmount) - (\n         SELECT SUM(p.AmountPaid)\n         FROM Payment p\n         JOIN Orders o2 ON p.OID = o2.OID\n         WHERE o2.CID = c.CID\n       ) AS AmountOwed\nFROM Customer c\nJOIN Orders o ON c.CID = o.CID\nGROUP BY c.CID, c.Name\nHAVING AmountOwed > 0\nORDER BY AmountOwed DESC;"
+      },
+      {
+        "type": "para",
+        "text": "這題(三)示範了「純量相關子查詢」的典型用法：內層子查詢「該客戶c.CID累計已付金額」會隨外層每一列客戶不同而重新計算一次（子查詢中的o2.CID = c.CID即為與外層關聯的相依條件），再用外層總訂單金額扣掉這個子查詢結果，即可算出每位客戶各自的欠款金額。這種「在SELECT或WHERE中直接放一個會隨外層列變動的子查詢」的寫法，是介於「單純JOIN」與「GROUP BY聚合」之間的第三種查詢邏輯，遇到「每一列都要各自對應一個獨立計算出來的統計值」的需求時，就是相關子查詢派上用場的時機。也要留意：分組欄位使用c.CID, c.Name（而非只用姓名）可避免同名不同客戶被誤併為一組，這是撰寫SQL時養成的良好習慣。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 3　SQL查詢語法與關聯代數（加強版）",
+    "qnum": 9,
+    "qlabel": "模擬題3-1〔模擬預測題〕【綜合應用】",
+    "stem": "某健身房會員系統：Member(MID, Name)、Class(ClassID, ClassName, Coach)、Enroll(MID, ClassID, EnrollDate)。請寫出SQL：(a)找出報名超過3堂（含）不同課程的會員姓名與報名課程數。（10分）(b)找出從未報名過任何課程的會員姓名。（10分）(c)找出「瑜珈」課程中，報名人數最多的教練姓名（若同一堂課名稱由多位教練各自開班）。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "參考解答"
+      },
+      {
+        "type": "para",
+        "text": "-- (a) 報名超過3堂不同課程之會員\nSELECT m.Name, COUNT(DISTINCT e.ClassID) AS class_count\nFROM   Member m\nJOIN Enroll e ON m.MID = e.MID\nGROUP BY m.MID, m.Name\nHAVING COUNT(DISTINCT e.ClassID) >= 3;\n\n-- (b) 從未報名過任何課程之會員（NOT IN／NOT EXISTS皆可，NOT EXISTS較安全）\nSELECT m.Name\nFROM   Member m\nWHERE  NOT EXISTS (\n         SELECT 1 FROM Enroll e WHERE e.MID = m.MID);\n\n-- (c) 「瑜珈」課程中報名人數最多的教練\nSELECT c.Coach\nFROM   Class c\nJOIN Enroll e ON c.ClassID = e.ClassID\nWHERE  c.ClassName = '瑜珈'\nGROUP BY c.Coach\nORDER BY COUNT(*) DESC\nLIMIT 1;"
+      },
+      {
+        "type": "para",
+        "text": "(b)小題刻意示範NOT EXISTS優於NOT IN的情境：若Enroll表的MID欄位因資料品質問題可能含有NULL值，NOT IN (子查詢含NULL)會導致整個NOT IN條件恆為未知（不會選出任何列），這是SQL的已知陷阱；NOT EXISTS則不受子查詢中NULL值影響，邏輯永遠正確，因此考場作答遇到「從未」「沒有任何」這類否定語意時，建議優先使用NOT EXISTS而非NOT IN，除非題目明確保證欄位不可能為NULL。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 4　交易處理與ACID特性",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "交易（Transaction）就是一組「要嘛全部做完、要嘛都別做」的操作組合，最經典的例子就是轉帳：從P帳戶扣錢、幫Q帳戶加錢，這兩個動作必須綁在一起，不能只做一半。ACID四個字母，講的正是「怎麼樣才算一個『正確』的交易」該符合的四項要求，這一章的考題幾乎都會用「轉帳」或類似情境，要求逐一說明ACID各自代表什麼、以及沒做到會出什麼問題。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點：ACID四大特性"
+      },
+      {
+        "type": "table",
+        "header": [
+          "特性",
+          "定義",
+          "違反時的後果"
+        ],
+        "rows": [
+          [
+            "原子性\nAtomicity",
+            "交易中的所有操作視為一個不可分割的整體，要嘛全部完成，要嘛全部不做；中途失敗須Rollback復原。",
+            "例如轉帳扣款成功但入帳失敗，資金憑空消失。"
+          ],
+          [
+            "一致性\nConsistency",
+            "交易執行前後，資料庫必須由一個合法一致的狀態轉換至另一個合法一致的狀態，不違反任何完整性限制。",
+            "總金額兜不攏、餘額變負值等違反商業規則的情形。"
+          ],
+          [
+            "隔離性\nIsolation",
+            "多個並行交易的執行結果，應等同於它們依某種順序依序執行的結果，交易的中間狀態不應被其他交易看見。",
+            "讀到髒資料（Dirty Read）、更新遺失（Lost Update）、無法重複讀取（Non-Repeatable Read）等並行異常。"
+          ],
+          [
+            "持久性\nDurability",
+            "交易一旦Commit，其效果必須永久保存，即使系統其後當機也不會遺失。",
+            "系統已對外回報成功，實際卻因當機而遺失變更，造成資料與承諾不符。"
+          ]
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "生活化比喻／記憶技巧"
+      },
+      {
+        "type": "para",
+        "text": "把ACID想成銀行轉帳的四個檢查關卡：Atomicity檢查「扣錢跟加錢是不是綁在一起、不能只做一半」；Consistency檢查「轉完帳後，錢有沒有憑空多出來或消失、有沒有變成負的違反規定」；Isolation檢查「別人在你轉帳轉到一半時，會不會偷看到你還沒轉完的中間狀態」；Durability檢查「銀行說轉帳成功後，這筆紀錄是不是真的永久生效、不會因為停電就消失」。"
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "114高考／111高考／110地特（多以「轉帳」情境要求逐一說明ACID四特性與違反後果）"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 4　交易處理與ACID特性",
+    "qnum": 2,
+    "qlabel": "第3題",
+    "stem": "關聯式資料庫系統在實作異動處理（Transaction Processing）時，大多希望能符合ACID四個特性以確保資料庫內容的正確性。假設一個異動欲從P帳戶轉1000元到Q帳戶，包含六個指令：1.read(P) 2.P:=P-1000 3.write(P) 4.read(Q) 5.Q:=Q+1000 6.write(Q)。請以該異動具體說明ACID所代表的四個要求分別為何？若沒有達到該要求會造成什麼不良的影響？（20分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "原子性（Atomicity）"
+      },
+      {
+        "type": "para",
+        "text": "要求：上述六個指令須視為一個不可分割之整體，要嘛全部完成（P扣款且Q入帳皆完成），要嘛完全不執行，不允許僅完成部分指令。"
+      },
+      {
+        "type": "para",
+        "text": "未達成之影響：若系統於執行完步驟3（P已扣款並寫回）後、尚未執行步驟6（Q尚未入帳）前發生當機，將導致P帳戶已減少1000元，但Q帳戶卻未收到該筆款項，造成資金憑空消失之嚴重錯誤。"
+      },
+      {
+        "type": "heading",
+        "text": "一致性（Consistency）"
+      },
+      {
+        "type": "para",
+        "text": "要求：異動執行前後，資料庫必須由一個合法一致之狀態轉換至另一個合法一致之狀態，例如P與Q兩帳戶之總金額於轉帳前後應維持不變，且不應違反任何完整性限制（如餘額不得為負）。"
+      },
+      {
+        "type": "para",
+        "text": "未達成之影響：若異動執行後導致P與Q之總金額與轉帳前不符，或允許P帳戶餘額變為負值而違反業務規則，將造成帳務數字兜不攏等資料不一致問題。"
+      },
+      {
+        "type": "heading",
+        "text": "隔離性（Isolation）"
+      },
+      {
+        "type": "para",
+        "text": "要求：本異動在尚未提交完成前，其執行過程中的中間狀態不應被其他並行執行之異動看見，即多個異動並行執行之結果，應等同於依某種循序方式依序執行之結果。"
+      },
+      {
+        "type": "para",
+        "text": "未達成之影響：若另一並行異動於本異動執行完步驟3（P已扣款）但尚未執行步驟6之時間點，讀取到P、Q之當前餘額（讀到「未提交」之中間狀態，即髒讀），該並行異動可能因誤信此不一致之中間數據而做出錯誤之後續處理。"
+      },
+      {
+        "type": "heading",
+        "text": "持久性（Durability）"
+      },
+      {
+        "type": "para",
+        "text": "要求：一旦本異動完成六個步驟並成功提交，P與Q帳戶之變更結果即必須永久保存於資料庫中，即使其後系統故障，該變更結果亦不應遺失。"
+      },
+      {
+        "type": "para",
+        "text": "未達成之影響：若異動提交後系統向使用者確認轉帳成功，但實際變更尚未確實寫入永久性儲存媒介前即發生當機，導致復原後變更遺失，形成系統已對外承諾成功、實際資料卻未持久保存之嚴重不一致情形。"
+      },
+      {
+        "type": "para",
+        "text": "作答技巧：這類題目的滿分關鍵在於「具體套用題目給的指令序列」而非泛泛而談定義——每一項特性都要明確指出「六個指令中，執行到哪一步、發生什麼事，會違反這項特性」，光是背誦ACID的抽象定義而不結合題目情境舉例，通常只能拿到一半左右的分數。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 5　並行控制",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "多個交易同時跑，資料庫要如何確保「亂序執行的結果」跟「排隊一個一個執行的結果」一樣？這就是並行控制要解決的問題，核心目標是維持「可序列性」（Serializability）。常見手法有兩派：一派是「上鎖」（鎖定協定，遇到衝突就先卡住等待），另一派是「比時間先後」（時戳排序，每個交易一出生就給一個時間戳記，用時戳大小決定誰該讓誰）。這一章的考題有兩種固定題型：畫優先圖判斷排程是否可序列化、以及給定時戳規則判斷讀寫該如何處理。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點一：鎖定協定與兩階段鎖定（2PL）"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "共享鎖 S-Lock ／ 排他鎖 X-Lock",
+            "body": "共享鎖：允許多個交易同時讀取同一資料項，但不可寫入；排他鎖：只允許一個交易讀寫該資料項，其他交易皆不可存取（無論讀或寫）。"
+          },
+          {
+            "label": "兩階段鎖定協定 2PL 的規範",
+            "body": "擴張階段（Growing Phase）：交易只能取得（acquire）新的鎖，不得釋放任何已持有的鎖；收縮階段（Shrinking Phase）：交易一旦開始釋放任一鎖之後，即不得再取得任何新的鎖，僅能持續釋放鎖直至交易結束。每一交易存在一個明確的「鎖定點」，之前只取得鎖，之後只釋放鎖，兩階段不得交錯反覆。"
+          },
+          {
+            "label": "2PL與可序列化時程的關係",
+            "body": "若所有交易均遵循2PL協定撰寫，則這些交易並行執行後產生的時程，必定是可衝突序列化的時程（Conflict Serializable Schedule）——因為2PL確保任兩交易間若存在衝突操作，其中一交易必須先完全進入收縮階段（釋放鎖）後，另一交易才可能取得鎖進行該衝突操作，使得任兩交易間的衝突操作執行順序具有明確且一致的先後關係，優先圖不會產生環路，因此並行執行的時程必為可序列化，可保證結果與依某固定順序循序執行的結果一致。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點二：優先圖判斷可序列性"
+      },
+      {
+        "type": "heading",
+        "text": "生活化比喻／記憶技巧"
+      },
+      {
+        "type": "para",
+        "text": "優先圖判斷法就像「畫人際欠債關係圖」：A欠B的錢、B欠C的錢，這條線一路往下欠沒問題（無環＝可排出先後順序去還債）；但如果C最後又欠回A，變成A欠B、B欠C、C欠A的三角債（有環），就永遠理不出一個「誰先誰後」的合理順序——這正是排程不可序列化的直觀圖像。"
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "113高考／112高考／108高考／107地特（優先圖判斷序列性、2PL為並行控制固定題型）"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點三：時戳排序與Thomas編寫規則"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "時戳排序 Timestamp Ordering 基本規則",
+            "body": "每個交易賦予唯一時間戳記TS(T)，每個資料項記錄read_TS（最後讀取它的交易時戳）與write_TS（最後寫入它的交易時戳）。讀取規則：交易T欲讀X時，若TS(T) < write_TS(X)，代表已有時戳較大（較晚）的交易寫入了更新的值，T若讀取將違反時間順序，故拒絕並撤銷T；否則允許讀取，並更新read_TS(X)為max(read_TS(X), TS(T))。基本寫入規則：若TS(T) < read_TS(X)或TS(T) < write_TS(X)，皆拒絕並撤銷T。"
+          },
+          {
+            "label": "Thomas編寫規則 Thomas's Write Rule（修正版寫入規則）",
+            "body": "讀取規則維持不變。寫入規則的修正：若TS(T) < read_TS(X)，仍拒絕並撤銷T（不可放寬，因已有較晚交易讀取過X）；但若僅是TS(T) < write_TS(X)（已有較晚交易寫入過更新值），Thomas規則不再要求撤銷T，而是直接忽略（ignore）T這次寫入即可——因為T這次寫入的值必然會被時戳較大、已寫入的交易結果覆蓋，忽略不寫等同於這次寫入從未發生，不影響最終序列化結果，藉此提升並行效率、減少不必要的撤銷重啟。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 5　並行控制",
+    "qnum": 2,
+    "qlabel": "第4題",
+    "stem": "兩階段鎖定（Two-Phase Locking）技術可以用來做並行控制（Concurrency Control），請詳細說明符合兩階段鎖定協定的交易應遵循的規範為何？時程（Schedule）是指多個交易並行執行時，各交易內的操作間的執行順序。請以此觀點說明若所有交易都遵循兩階段鎖定協定撰寫，則這些交易並行執行時，時程必定是什麼時程？並說明為何遵循這種時程執行可以達到並行控制的目的？（20分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "兩階段鎖定協定應遵循之規範"
+      },
+      {
+        "type": "para",
+        "text": "擴張階段（Growing Phase）：交易只能取得新的鎖，不得釋放任何已持有之鎖。收縮階段（Shrinking Phase）：交易一旦開始釋放任一鎖之後，即不得再取得任何新的鎖，僅能持續釋放鎖直至交易結束。換言之，每一交易存在一個明確的「鎖定點（Lock Point）」，鎖定點之前只取得鎖，鎖定點之後只釋放鎖，兩階段不得交錯反覆。"
+      },
+      {
+        "type": "heading",
+        "text": "遵循2PL之交易並行執行後，時程必定為何"
+      },
+      {
+        "type": "para",
+        "text": "若所有交易均遵循兩階段鎖定協定撰寫，則這些交易並行執行後所產生之時程，必定是可衝突序列化的時程（Conflict Serializable Schedule）。"
+      },
+      {
+        "type": "heading",
+        "text": "為何此時程可達成並行控制之目的"
+      },
+      {
+        "type": "para",
+        "text": "因為2PL協定確保任兩交易之間，若存在衝突操作（同時存取同一資料項，且至少一方為寫入），則其中一交易必須先完全進入收縮階段（釋放對該資料項之鎖）後，另一交易才可能取得鎖以進行該衝突操作；此一機制使得任兩交易間之衝突操作執行順序具有明確且一致的先後關係，其優先圖不會產生環路，因此並行執行之時程必為衝突可序列化。可序列化之時程可保證並行執行之最終結果，與依某一固定順序循序執行之結果一致，因而能維持資料庫在多交易並行存取下之一致性與正確性，達成並行控制之目的。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 5　並行控制",
+    "qnum": 3,
+    "qlabel": "第7題",
+    "stem": "假設某資料庫管理系統採用時間戳記（Timestamp）來管理並行控制，它採用的不是基本的時間戳記排序，而是修改版的Thomas的編寫規則（Write Rule）。假設某交易T的時間戳記是10010，請問下列情況，資料庫管理系統會如何處理？（每小題5分，共20分）(一)欲寫X時，得知write_TS(X)是10015。(二)欲寫X時，得知read_TS(X)是10012。(三)欲讀X時，得知write_TS(X)是10020。(四)欲讀X時，得知write_TS(X)是10005。",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "table",
+        "header": [
+          "情境",
+          "TS(T)與已知時戳比較",
+          "處理方式與理由"
+        ],
+        "rows": [
+          [
+            "(一) 寫X，write_TS(X)=10015",
+            "10010 < 10015",
+            "忽略（ignore）T這次寫入，不撤銷T——Thomas規則對「已有較晚寫入」的放寬，因T的寫入值必被覆蓋，忽略即可，不必昂貴地撤銷重啟。"
+          ],
+          [
+            "(二) 寫X，read_TS(X)=10012",
+            "10010 < 10012",
+            "拒絕並撤銷（rollback）T——此情形Thomas未放寬，因已有較晚交易讀取過X，若仍讓T寫入將回溯性地使該筆已發生的讀取變得不正確。"
+          ],
+          [
+            "(三) 讀X，write_TS(X)=10020",
+            "10010 < 10020",
+            "拒絕並撤銷T——讀取規則不受Thomas修正，已有較晚交易寫入更新值，T現在讀取將讀到「相對自身時間屬於未來」的值，違反序列化順序。"
+          ],
+          [
+            "(四) 讀X，write_TS(X)=10005",
+            "10010 ≥ 10005",
+            "允許T正常讀取，並將read_TS(X)更新為max(read_TS(X),10010)——未違反讀取規則。"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "這題的解題關鍵是先分清楚「這是讀還是寫」「比較的是read_TS還是write_TS」，Thomas規則只修改「寫入時遇到較晚write_TS」這一種情境（放寬為忽略），其餘三種情境（寫入時遇到較晚read_TS、讀取時遇到較晚write_TS）處理方式與基本時戳排序協定完全相同（皆撤銷），考生務必記住「Thomas只改一種情境」這個口訣，才不會四種情境都套用放寬規則而答錯。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 6　交易回復處理",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "系統當機重開機後，怎麼知道哪些交易的變更該保留、哪些該撤銷？答案是靠「交易記錄」（Log）——資料庫在真正動手改資料之前，會先把「要改成什麼樣子」寫進Log裡存好（先寫日誌原則，Write-Ahead Logging），這樣萬一改到一半當機，重開機後只要照著Log把「已經確定完成（Commit）但可能還沒真正寫回磁碟」的交易重做一次（Redo），把「當機時還沒做完」的交易的已執行部分撤銷（Undo），資料庫就能回到一個乾淨、正確的狀態。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點：Log-based Recovery原理與運作過程"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "先寫日誌原則 Write-Ahead Logging, WAL",
+            "body": "每次資料異動前，先將該資料項的異動前舊值（Before-Image）與異動後新值（After-Image）寫入Log，且Log必須早於對應的資料頁真正寫回磁碟前，先行寫入穩定儲存媒體。"
+          },
+          {
+            "label": "查核點 Checkpoint",
+            "body": "定期將記憶體中的異動資料強制寫回磁碟，並記錄於Log，可縮短回復時需掃描Log的範圍，不必每次都從頭掃描整份Log。"
+          },
+          {
+            "label": "延遲更新協定 Deferred Update",
+            "body": "交易執行期間所有寫入只記錄於Log及暫存區，直到Commit時才真正寫入資料庫；當機時只需對「已Commit但尚未真正寫回」的交易做Redo，未Commit的交易則直接忽略（不需Undo，因為根本還沒寫入資料庫）。"
+          },
+          {
+            "label": "立即更新協定 Immediate Update",
+            "body": "交易執行過程即可能將異動寫回磁碟（不等Commit），故當機時對「未Commit」的交易需要Undo，撤銷其可能已寫入磁碟的變更。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "生活化比喻／記憶技巧"
+      },
+      {
+        "type": "para",
+        "text": "Log-based Recovery像「先寫劇本再拍戲」：真正動手改資料前，先把「打算怎麼改」完整寫進劇本（Log）存好；萬一拍到一半停電，重開機後對照劇本——已經拍完全部戲份（已Commit）但底片可能還沒沖洗好（尚未寫回磁碟）的，就照劇本補沖洗一次（Redo）；還沒拍完就停電的（未Commit），已經拍的那幾幕全部作廢（Undo），從頭再來。"
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "112地特／108高考（Log-based Recovery原理運作過程、deferred update情境下判斷Redo/Undo）"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 6　交易回復處理",
+    "qnum": 2,
+    "qlabel": "第3題",
+    "stem": "當資料庫系統發生故障時，回復處理常採用交易記錄回復處理（Log-based Recovery）。試說明此種回復處理方式的原理以及運作過程。（25分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "原理"
+      },
+      {
+        "type": "para",
+        "text": "資料庫系統於執行交易過程中，將每一筆資料異動操作之相關資訊（包含異動前之舊值Before-Image與異動後之新值After-Image），依循「先寫日誌」原則（Write-Ahead Logging, WAL，即Log記錄必須早於對應之資料頁真正寫回磁碟前，先行寫入穩定儲存媒體）記錄於交易日誌中。當系統因軟硬體錯誤而故障時，回復管理程式（Recovery Manager）即可依據Log中所記錄之異動歷程，將資料庫回復至一個一致且正確之狀態，同時確保交易之原子性與持久性。"
+      },
+      {
+        "type": "heading",
+        "text": "運作過程"
+      },
+      {
+        "type": "para",
+        "text": "作答技巧：這是一題25分的大題，光講「原理」通常只能拿到基礎分，滿分關鍵在於把「運作過程」拆解成像上表這樣有先後順序的具體步驟（何時寫Log、何時Commit、故障後如何分類交易、REDO與UNDO各自處理哪一類交易），條理清楚地逐步陳述，才能拿到過程分。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 6　交易回復處理",
+    "qnum": 3,
+    "qlabel": "模擬題6-1〔模擬預測題〕【判斷型】",
+    "stem": "系統在時間點C設有一個查核點（Checkpoint）。之後系統於時間點F發生當機。已知交易T1於查核點前已Commit；T2於查核點後才開始，且在當機前已Commit；T3於查核點前開始，當機時仍未Commit；T4於查核點後才開始，當機時仍未Commit。請分別判斷T1～T4於系統重啟後應如何處理。（15分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "參考解答"
+      },
+      {
+        "type": "table",
+        "header": [
+          "交易",
+          "判斷",
+          "處理方式"
+        ],
+        "rows": [
+          [
+            "T1",
+            "查核點前已Commit，其變更在查核點時已確保寫回磁碟",
+            "不需處理（已確定生效且已持久化，無需REDO也無需UNDO）"
+          ],
+          [
+            "T2",
+            "查核點後開始，當機前已Commit",
+            "需REDO（已提交但其異動可能尚未寫回磁碟，需依Log重做以確保不遺失）"
+          ],
+          [
+            "T3",
+            "查核點前開始，當機時仍未Commit",
+            "需UNDO（未完成交易，須撤銷其已執行的異動，回復原子性）"
+          ],
+          [
+            "T4",
+            "查核點後開始，當機時仍未Commit",
+            "需UNDO（同T3，未提交即須撤銷）"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "解題關鍵只有一個判斷準則：看該交易「當機時是否已Commit」——已Commit的一律考慮REDO（但查核點前就已確定寫回磁碟的可省略），未Commit的一律UNDO；查核點的作用只是縮小「需要掃描Log以確認是否已寫回磁碟」的範圍，並不會改變「已Commit要REDO、未Commit要UNDO」這個根本判斷邏輯。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 7　索引結構：B-tree／B+-tree",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "索引的作用跟書本的目錄一模一樣：沒有目錄時想找某個主題，只能從頭到尾翻一遍（全表掃描）；有了目錄，就能直接跳到大概的頁數附近。B+-tree是資料庫最常用的索引結構，設計精神是把「用來導航的路標」和「實際存放的資料」分開放：內部節點只放路標（鍵值），真正的資料指標全部集中在最底層的葉節點，而且葉節點之間還用鏈結串起來，方便「範圍查詢」（例如查某個區間內的所有資料）時可以一路往右掃過去，不必每次都重新從樹根搜尋。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點：B+-tree結構特性與查詢效能"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "內部節點 Internal Node",
+            "body": "僅儲存作為搜尋導引用之鍵值（分隔鍵）與指向子節點之指標，並不儲存實際資料紀錄本身；若一內部節點具有n個子節點指標，則恰含n-1個鍵值，用以判斷搜尋鍵應導向哪一個子節點。"
+          },
+          {
+            "label": "葉節點 Leaf Node",
+            "body": "儲存實際之索引鍵值，並附帶指向對應資料紀錄之指標；所有葉節點依鍵值大小順序，透過額外的鏈結指標相互串接成一個有序之鏈結串列，以支援範圍查詢時得以循序掃描葉節點而無需重新由樹根搜尋。"
+          },
+          {
+            "label": "結構特性",
+            "body": "B+-tree為一種平衡多路搜尋樹，所有葉節點皆位於相同深度（高度平衡），每個節點（除樹根外）之子節點數目均落於[⌈m/2⌉, m]範圍內（m為樹的階數），此設計確保搜尋、插入、刪除等操作之時間複雜度均為O(log N)，且因應磁碟區塊大小設計節點容量，可大幅降低查詢所需之磁碟I/O存取次數。"
+          },
+          {
+            "label": "叢集索引 Clustered ／ 非叢集索引 Non-Clustered",
+            "body": "叢集索引：資料實際的實體儲存順序依索引鍵值排列，一個資料表通常只能有一個叢集索引（常建在主鍵上）；非叢集索引：索引與資料實體儲存順序無關，一個資料表可以有多個非叢集索引。"
+          },
+          {
+            "label": "B+-tree如何提升等值查詢效能",
+            "body": "對於WHERE 欄位=值 的等值查詢，透過B+-tree從根節點開始，於每一內部節點比對搜尋鍵值與節點中之分隔鍵，依比對結果選擇對應之子節點指標繼續向下搜尋，逐層下降，僅需經過與樹高度成正比（約為log_m(N)）之少數幾次節點存取即可抵達葉節點層並精確定位到資料之實際儲存位置指標；相較於未建立索引時，資料庫系統須對整張表進行全表掃描（Full Table Scan，時間複雜度O(N)），透過B+-tree索引搜尋所需之存取次數大幅減少，故能顯著提升查詢效能。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "生活化比喻／記憶技巧"
+      },
+      {
+        "type": "para",
+        "text": "B+-tree就像圖書館的「分層索引卡」：一樓大廳的分區牌（內部節點）只告訴你「文學類在3樓、科學類在5樓」，不會真的把書放在大廳；走到書架（葉節點）才是書本真正的位置，而且書架之間還用走道（鏈結串列）互通，方便你「連續掃過整排書」（範圍查詢），不必每次都跑回大廳重新問路。"
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "111高考／110高考（B+-tree索引結構特性與查詢效能提升原理）"
+      },
+      {
+        "type": "heading",
+        "text": "教科書基礎補充（過去十年較少單獨考出，建議理解即可）"
+      },
+      {
+        "type": "para",
+        "text": "雜湊索引（Hash Index）：適合等值查詢但不支援範圍查詢，因雜湊函數會打散資料的順序性；點陣圖索引（Bitmap Index）：適合低基數（取值種類少）欄位（如性別）之查詢，以位元陣列表示各值對應之資料列。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 7　索引結構：B-tree／B+-tree",
+    "qnum": 2,
+    "qlabel": "第2題",
+    "stem": "假設在關聯式資料庫系統中，DBA定義了一個MEMBER表格（Mid, Name, Telephone皆為字串型態），並根據Mid欄位定義一個名為「MyIndex」的B+-tree索引。請說明「MyIndex」索引的樹狀結構，包含其內部節點、葉節點、結構的特性等（答案請以文字敘述或圖形呈現）。其次請說明資料庫系統如何利用該索引結構，提升下列SQL查詢句的處理效能：select Name from MEMBER where Mid = 'M001'（20分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "B+-tree索引結構說明"
+      },
+      {
+        "type": "para",
+        "text": "[ 內部節點：鍵值(分隔用) + 子節點指標 ]\n        /        |        \\\n  [內部節點]   [內部節點]   [內部節點]\n   /    \\        ...          ...\n[葉節點]<-->[葉節點]<-->[葉節點]<-->[葉節點]  （葉節點間以指標相互鏈結）\n (Mid值,資料指標)  (Mid值,資料指標) ..."
+      },
+      {
+        "type": "para",
+        "text": "內部節點（Internal Node）：僅儲存作為搜尋導引用之鍵值（分隔鍵）與指向子節點之指標，並不儲存實際資料紀錄本身；若一內部節點具有n個子節點指標，則恰含n-1個鍵值，用以判斷搜尋鍵應導向哪一個子節點。"
+      },
+      {
+        "type": "para",
+        "text": "葉節點（Leaf Node）：儲存實際之Mid鍵值，並附帶指向對應資料紀錄（該筆會員完整資料所在位置）之指標；此外，所有葉節點依鍵值大小順序，透過額外之鏈結指標相互串接成一個有序之鏈結串列，以支援範圍查詢時得以循序掃描葉節點而無需重新由樹根搜尋。"
+      },
+      {
+        "type": "para",
+        "text": "結構特性：B+樹為一種平衡多路搜尋樹，所有葉節點皆位於相同深度（高度平衡），每個節點（除樹根外）之子節點數目均落於[⌈m/2⌉, m]範圍內（m為樹的階數），此設計確保搜尋、插入、刪除等操作之時間複雜度均為O(log N)，且因應磁碟區塊大小設計節點容量，可大幅降低查詢所需之磁碟I/O存取次數。"
+      },
+      {
+        "type": "heading",
+        "text": "如何提升查詢效能"
+      },
+      {
+        "type": "para",
+        "text": "執行 select Name from MEMBER where Mid = 'M001' 時，資料庫系統得以透過MyIndex索引，自樹根節點開始，於每一內部節點比對搜尋鍵值'M001'與節點中之分隔鍵，依比對結果選擇對應之子節點指標繼續向下搜尋，如此逐層下降，僅需經過與樹高度成正比（約為log_m(N)，N為資料筆數、m為樹的階數）之少數幾次節點存取，即可抵達葉節點層並精確定位到Mid='M001'該筆資料之實際儲存位置指標，再依該指標直接讀取對應資料紀錄取出Name值；相較於未建立索引時，資料庫系統須對MEMBER表格進行全表掃描（Full Table Scan，時間複雜度為O(N)，逐筆比對Mid是否等於'M001'），透過B+樹索引搜尋所需之存取次數大幅減少，故能顯著提升此類等值查詢（Equality Query）之處理效能。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 8　資料倉儲與OLAP",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "一般的資料庫（OLTP）設計目標是「快速處理當下的一筆交易」（例如提款、下訂單），但主管想看的是「這一整年、各地區、各產品線的銷售趨勢」這種橫跨大量歷史資料的彙總分析，用OLTP資料庫直接查會很慢、也會拖累正在進行中的交易。資料倉儲（Data Warehouse）就是專門為了這種「大範圍歷史資料分析」而生的獨立資料庫，搭配OLAP（線上分析處理）提供多維度、互動式的彙總查詢方式。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點一：資料倉儲核心概念與OLAP四種操作"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "資料方塊 Data Cube",
+            "body": "以多個維度（Dimension，如時間、地區、產品）及量值（Measure，如銷售金額）組織資料，形成多維陣列結構，是OLAP分析的核心資料模型。"
+          },
+          {
+            "label": "向下鑽取 Drill Down",
+            "body": "將資料自維度階層中較高（較彙總）之層次，展開呈現至較低（較細節）之層次；例如從「年度」銷售總額展開為各「季」「月」「日」之銷售金額。"
+          },
+          {
+            "label": "向上鑽取 Drill Up／Roll Up",
+            "body": "與向下鑽取相反，將資料自較低（細節）之層次，彙總聚合為較高（概略）之層次；例如從各「城市」銷售明細彙總為各「縣市」乃至全國「地區」層級之總體表現。"
+          },
+          {
+            "label": "切片 Slice",
+            "body": "固定某一維度為特定值，取得該維度下的子資料集，例如固定「時間＝2024年」，檢視當年各地區各產品的銷售資料。"
+          },
+          {
+            "label": "切塊 Dice",
+            "body": "同時限制多個維度的值範圍，取得子資料方塊，例如同時限制「時間∈2024Q1~Q2」且「地區∈北部」，檢視此範圍內的銷售資料。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "生活化比喻／記憶技巧"
+      },
+      {
+        "type": "para",
+        "text": "Drill Down／Up就像Google地圖的縮放：向下鑽取是「從全國地圖一路放大到某條街」（看更細）；向上鑽取是「從某條街縮小回全國地圖」（看更概括）。Slice切片像是「只看某一年的地圖」（固定一個維度），Dice切塊像是「只看某一年、某個區域的地圖」（同時限制多個維度）。"
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "114地特／113高考／112高考／110高考／109高考／108高考（星狀/雪花綱要、OLAP四操作、Data Warehouse相關術語比較，幾乎每年必考）"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點二：維度模式三種綱要"
+      },
+      {
+        "type": "table",
+        "header": [
+          "綱要類型",
+          "說明"
+        ],
+        "rows": [
+          [
+            "星狀綱要\n（Star Schema）",
+            "以單一事實表為中心，直接連結至多個未正規化之維度表，整體結構因事實表居中、維度表向外輻射而形似星形。"
+          ],
+          [
+            "雪花狀綱要\n（Snowflake Schema）",
+            "星狀綱要之延伸，維度表進一步正規化拆解為多層子維度表，整體結構因多層次維度表延伸而形似雪花。"
+          ],
+          [
+            "事實星座綱要\n（Fact Constellation Schema）",
+            "由多個事實表共享部分相同維度表所構成之複合結構，適用於企業存在多項業務流程且各流程分析需共用部分維度之情境。"
+          ]
+        ]
+      },
+      {
+        "type": "table",
+        "header": [
+          "",
+          "星狀綱要（Star）",
+          "雪花狀綱要（Snowflake）"
+        ],
+        "rows": [
+          [
+            "優點",
+            "結構單純、join層次少，查詢效能較佳，使用者易於理解與撰寫查詢",
+            "維度表經正規化，資料重複度低，節省儲存空間，維度資料一致性與維護性較佳"
+          ],
+          [
+            "缺點",
+            "維度表未正規化，可能存在資料重複，維護維度資料時較易發生更新異常",
+            "維度表拆分為多層子表，查詢時須經過更多join層次，查詢效能通常較星狀綱要低"
+          ]
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "教科書基礎補充（過去十年較少單獨考出，建議理解即可）"
+      },
+      {
+        "type": "para",
+        "text": "資料超市（Data Mart）：範圍較資料倉儲小、針對特定部門或主題設計的資料倉儲子集，適合單一部門快速導入分析需求，而不必等待整個企業級資料倉儲完成建置。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 8　資料倉儲與OLAP",
+    "qnum": 2,
+    "qlabel": "第4題",
+    "stem": "線上分析處理（OLAP）為資料倉儲系統中主要的資料分析方式，其中包括向下鑽取（Drill Down）與向上鑽取（Drill Up）兩種運算。請分別針對這兩種OLAP運算，首先說明其運算方式，然後舉例說明其可能的應用方式。（20分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "向下鑽取（Drill Down）"
+      },
+      {
+        "type": "para",
+        "text": "運算方式：將資料自維度階層中較高（較為彙總、概略）之層次，展開呈現至較低（較為細節）之層次，使分析者得以檢視更詳細之資料內容。"
+      },
+      {
+        "type": "para",
+        "text": "應用舉例：分析人員檢視某企業「年度」銷售總額後，欲進一步了解銷售狀況變化，可向下鑽取展開為各「季」之銷售金額，甚至進一步鑽取至各「月」乃至各「日」之銷售金額，藉以掌握更細緻之銷售趨勢變化。"
+      },
+      {
+        "type": "heading",
+        "text": "向上鑽取（Drill Up，又稱Roll Up）"
+      },
+      {
+        "type": "para",
+        "text": "運算方式：與向下鑽取相反，將資料自維度階層中較低（較為細節）之層次，彙總聚合為較高（較為概略）之層次，呈現彙整後之摘要數據。"
+      },
+      {
+        "type": "para",
+        "text": "應用舉例：分析人員原本檢視各「城市」之銷售明細資料，欲了解整體區域表現，可向上鑽取彙總為各「縣市」之銷售總額，甚至進一步彙總為全國「地區」層級之總體銷售表現，藉以掌握宏觀層次之經營概況。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 8　資料倉儲與OLAP",
+    "qnum": 3,
+    "qlabel": "第4題",
+    "stem": "資料倉儲設計最常使用多維度資料模型，是以星狀綱要、雪花狀綱要或事實星座綱要的形式存在，請先分別說明此三種綱要，然後比較星狀綱要與雪花狀綱要之優缺點。（25分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "三種綱要之說明與優缺點比較，詳見前一節「本章依考題頻率必會重點二」之兩張表格。作答技巧：這類題目滿分關鍵在於「三種綱要都要說明清楚」而非只答星狀與雪花——事實星座綱要常被考生遺漏或含糊帶過，但題目明確要求「先分別說明此三種綱要」，漏answer一種通常會被扣去該部分的全部分數；比較優缺點時，務必圍繞「正規化程度」與「join層次數」這個核心差異點展開，這是星狀與雪花所有優缺點的共同根源。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 8　資料倉儲與OLAP",
+    "qnum": 4,
+    "qlabel": "第4題",
+    "stem": "請分別就系統目標、對象資料、常用的資料模型、資料處理相關運算、系統使用者等項目，製表具體說明資料庫管理系統（DBMS）和資料倉儲（Data Warehouse）系統之間有何不同。（15分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "table",
+        "header": [
+          "比較項目",
+          "DBMS",
+          "Data Warehouse"
+        ],
+        "rows": [
+          [
+            "系統目標",
+            "支援日常交易處理，確保資料之即時性、正確性與一致性",
+            "支援決策分析與商業智慧，提供歷史趨勢與彙總分析"
+          ],
+          [
+            "對象資料",
+            "當前、即時更新之營運資料",
+            "大量歷史性、彙整性、主題導向之整合資料"
+          ],
+          [
+            "常用資料模型",
+            "關聯式模型為主",
+            "多維度模型，如星狀綱要、雪花綱要"
+          ],
+          [
+            "資料處理運算",
+            "短交易之新增/修改/刪除（OLTP），強調高並行與ACID",
+            "複雜多維度分析查詢（OLAP），強調唯讀彙總查詢"
+          ],
+          [
+            "系統使用者",
+            "前線作業人員、客服人員等日常操作人員",
+            "管理階層、決策者、資料分析師等決策支援人員"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 8　資料倉儲與OLAP",
+    "qnum": 5,
+    "qlabel": "第1題",
+    "stem": "在現今大數據（Big Data）盛行的時代，已經有許多大數據平台提供各種不同的服務，而在這些平台上運行的軟體多半包括有Data Warehouse、Data Mining、OLTP、OLAP、ETL等：試說明此五個軟體的主要功用。（15分）試說明此五個軟體的相互運作關係，以達成提供大數據服務的目的。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "table",
+        "header": [
+          "軟體",
+          "主要功用"
+        ],
+        "rows": [
+          [
+            "Data Warehouse",
+            "整合來自各種來源系統之大量歷史性、主題導向資料，提供集中式儲存庫，作為決策支援分析之資料基礎。"
+          ],
+          [
+            "Data Mining",
+            "運用統計、機器學習等技術，從大量資料中發掘隱藏的樣式、規則或知識。"
+          ],
+          [
+            "OLTP",
+            "支援企業日常營運交易處理，強調即時性、高並行、短交易之新增/修改/刪除操作。"
+          ],
+          [
+            "OLAP",
+            "支援多維度資料分析與決策支援，提供切片/切塊/上捲/下鑽等互動式多維度查詢。"
+          ],
+          [
+            "ETL",
+            "將來自不同來源系統之異質資料，經擷取、轉換、載入之過程，整合進資料倉儲。"
+          ]
+        ]
+      },
+      {
+        "type": "para",
+        "text": "五者之相互運作關係：OLTP系統為企業日常交易資料之原始來源；ETL將OLTP等來源系統之異質資料，經擷取、轉換（含清理、格式統一、彙總）後，載入Data Warehouse進行整合儲存；Data Warehouse所儲存之整合性歷史資料，即成為OLAP多維度分析與Data Mining探勘之共同資料基礎；OLAP在Data Warehouse之上提供決策者互動式、多維度之彙總分析，Data Mining則運用演算法進一步發掘更深層之樣式與知識規則；五者依序串接（OLTP→ETL→Data Warehouse→{OLAP, Data Mining}），共同構成完整的大數據分析服務鏈。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 9　分散式資料庫",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "分散式資料庫把「邏輯上是同一個資料庫」的資料，實際上拆開存放在網路中的多台主機。使用者操作起來要感覺不到背後這些複雜的拆分細節，這種「感覺不到」的特性就叫「透明度」（Transparency）——這一章考題幾乎固定考「列舉三種透明度」，是本科最容易穩拿分數的名詞解釋型考題之一。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點一：三種透明度"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "位置透明度 Location Transparency",
+            "body": "使用者存取資料時，不需知道資料實際儲存於哪一個實體站台或位置，即可如同存取單一集中式資料庫般進行查詢與異動；相關技術包括全域命名服務與位置目錄，由系統自動將邏輯名稱轉換並導向實際儲存站台。"
+          },
+          {
+            "label": "分割透明度 Fragmentation Transparency",
+            "body": "使用者不需知道資料表是否已被水平分割（依資料列切割）或垂直分割（依欄位切割）並分散儲存於不同站台，可直接以邏輯關聯名稱查詢，由分散式查詢處理器自動將查詢改寫並分派至各實際儲存分割片段之站台執行，再彙整結果回傳。"
+          },
+          {
+            "label": "複製透明度 Replication Transparency",
+            "body": "使用者不需知道資料是否於多個站台存有複本，亦無需自行處理各複本間之一致性維護；系統自動確保各複本間資料同步更新並維持一致性（常搭配兩階段提交、法定人數協定Quorum-based Protocol等技術），並自動選擇適當複本回應查詢或異動請求。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "112高考／107高考／107地特（三種透明度定義為固定必考題型，三層架構圖亦為常考大題）"
+      },
+      {
+        "type": "heading",
+        "text": "教科書基礎補充（過去十年較少單獨考出，建議理解即可）"
+      },
+      {
+        "type": "para",
+        "text": "兩階段提交協定（Two-Phase Commit, 2PC）：分散式交易確保所有節點一致提交或中止的協定，分為準備階段（各節點回報是否可提交）與提交階段（協調者依回報通知提交或中止），是複製透明度與分散式交易一致性背後的關鍵支援技術。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 9　分散式資料庫",
+    "qnum": 2,
+    "qlabel": "第4題",
+    "stem": "分散式資料庫為一個分散在電腦網路的許多在邏輯上相關資料庫的集合，請畫出分散式資料庫系統三層主從伺服器架構（Three-tier Client-server Architecture），並論述其運作原理，分散資料的管理具有不同層次的透明度（Transparency），請論述三種透明度及相關技術。（25分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "三層主從伺服器架構示意"
+      },
+      {
+        "type": "para",
+        "text": "[用戶端層 Client Tier]\n      |  請求 / 回應\n      v\n[應用伺服器層 Application Server Tier]\n      |  資料請求 / 回應\n      v\n[資料伺服器層 Data Server Tier]（分散式資料庫伺服器群）"
+      },
+      {
+        "type": "para",
+        "text": "運作原理：用戶端層負責使用者介面之呈現與使用者操作之接收，將使用者請求傳送至應用伺服器層；應用伺服器層負責處理商業邏輯運算，將使用者請求轉譯為對應之資料存取需求，並依需求內容判斷應向哪些分散於不同站台之資料伺服器發出查詢或交易請求；資料伺服器層則實際執行資料之查詢、更新等操作，並將處理結果回傳予應用伺服器層，再由應用伺服器層彙整後回傳予用戶端層呈現。此三層式架構之核心精神在於將呈現邏輯、商業邏輯與資料管理邏輯彼此分離，使系統各層得以獨立擴充、維護，並使使用者無需知悉背後實際資料分散儲存之複雜細節。"
+      },
+      {
+        "type": "heading",
+        "text": "三種透明度及相關技術"
+      },
+      {
+        "type": "table",
+        "header": [
+          "透明度類型",
+          "說明與相關技術"
+        ],
+        "rows": [
+          [
+            "位置透明度",
+            "使用者存取資料時，無需知悉該資料實際儲存於網路中哪一實體站台，僅需以全域邏輯名稱存取即可；相關技術包括全域命名服務與位置目錄，由系統自動轉換並導向實際儲存站台。"
+          ],
+          [
+            "分割透明度",
+            "使用者無需知悉某一邏輯關聯是否已被水平或垂直分割為多個片段並分散儲存；相關技術包括分散式查詢處理器，負責將查詢自動改寫並分派至各實際儲存站台執行，再彙整結果回傳。"
+          ],
+          [
+            "複製透明度",
+            "使用者無需知悉某筆資料是否於多個站台存有複本，亦無需自行處理一致性維護；相關技術包括複製管理機制與兩階段提交、法定人數協定等一致性協定，由系統自動確保各複本間資料同步。"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 9　分散式資料庫",
+    "qnum": 3,
+    "qlabel": "第5題",
+    "stem": "分散式資料庫系統的優點是擁有透明度（Transparency），請寫出三種分散式資料庫的透明度並說明之。（8分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "位置透明（Location Transparency）：使用者存取資料時，不需知道資料實際儲存於哪一個實體節點或位置，即可如同存取單一集中式資料庫般進行查詢與異動。"
+      },
+      {
+        "type": "para",
+        "text": "分割透明（Fragmentation Transparency）：使用者不需知道資料表是否已被水平或垂直分割並分散儲存於不同節點，可直接以邏輯關聯名稱查詢，由系統自動整合各分割片段之資料。"
+      },
+      {
+        "type": "para",
+        "text": "複製透明（Replication Transparency）：使用者不需知道資料是否於多個節點存有複本，系統自動確保各複本間資料一致，並自動選擇適當之複本回應使用者的查詢或異動請求。"
+      },
+      {
+        "type": "para",
+        "text": "作答技巧：三種透明度的名稱與說明高度相似、容易混淆，記憶口訣可對應到「資料放在哪裡（位置）」「資料被切成幾塊（分割）」「資料有幾份備份（複製）」三個各自獨立的問題，只要先想清楚題目描述的情境是「不知道放哪」「不知道被拆了」還是「不知道有幾份備份」，就能準確對應到正確的透明度名稱，不必死背定義的文字敘述。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 10　NoSQL與大數據",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "關聯式資料庫要求「先定義好固定的表格結構，資料才能放進去」，這套規則在資料量不大、結構穩定時很好用，但遇到「資料量暴增、結構常常變動、需要極高讀寫速度」的網路服務情境（例如社群動態、感測器數據）就顯得綁手綁腳。NoSQL就是為了因應這種情境而生的一整類「不強制用關聯式表格」的資料庫系統，用「捨棄部分嚴謹性」換取「彈性與水平擴展能力」。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點一：大數據特性與NoSQL出現緣由"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "大數據3V（後擴充為5V）",
+            "body": "Volume（資料量龐大）、Velocity（產生與處理速度快）、Variety（資料型態多樣，含結構化／半結構化／非結構化）；擴充後常加入Veracity（真實性／資料品質）、Value（價值）。"
+          },
+          {
+            "label": "NoSQL出現之緣由",
+            "body": "隨網際網路服務規模擴大，巨量資料、高速讀寫、需具備水平擴展（Horizontal Scalability）能力、且資料結構彈性多變（Schema-less）等需求日增，傳統關聯式資料庫因強調嚴謹的ACID特性與固定schema，且多以垂直擴展（Scale-up）為主，在超大規模、高並行、分散式部署情境下面臨效能與擴充瓶頸，因而發展出NoSQL資料庫系統。"
+          },
+          {
+            "label": "NoSQL之主要議題",
+            "body": "CAP定理下一致性（Consistency）與可用性（Availability）於網路分割（Partition Tolerance）情況下的取捨；為追求可用性與擴展性而採用之最終一致性（Eventual Consistency）模型；多樣化的資料模型（Key-Value、Document、Column-family、Graph）；以及分散式叢集架構下的資料分片（Sharding）與水平擴展設計。"
+          },
+          {
+            "label": "NoSQL資料庫四大類型",
+            "body": "鍵值資料庫（Key-Value Store，如Redis）；文件資料庫（Document Store，如MongoDB，以JSON/BSON文件儲存）；欄族資料庫（Column-Family Store，如Cassandra，依欄位群組儲存適合大量寫入分析）；圖形資料庫（Graph Database，如Neo4j，適合社群網路等高度關聯性資料）。"
+          },
+          {
+            "label": "NoSQL三大特色",
+            "body": "Schemaless（無固定綱要，資料結構可彈性變化）；Eventual Consistency（最終一致性，容忍短暫的資料不一致以換取可用性與效能）；Horizontal Scaling（水平擴展，透過增加更多伺服器節點來擴充容量，相對於關聯式資料庫常見的垂直擴展）。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "生活化比喻／記憶技巧"
+      },
+      {
+        "type": "para",
+        "text": "關聯式資料庫像「制式表格公文」，每一欄都要先定義好才能填；NoSQL像「便利貼」，想貼什麼內容就貼、格式隨時可以不一樣，換來的代價是「便利貼之間互相核對資料是否一致」這件事變得比較鬆散（最終一致性），但換取了「隨便加多少張便利貼都行」的彈性擴展能力。"
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "114地特／112地特／110高考／110地特／109高考／107高考／106高考／105高考（大數據3V與NoSQL特性、緣由、種類，考題涵蓋範圍廣）"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點二：Map-Reduce運算架構"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "Map階段",
+            "body": "將大量原始資料分散處理，每筆原始紀錄依規則轉換為中間形式的(key, value)配對，此階段可將龐大原始資料分散於多個節點平行處理，各節點僅需獨立處理自己負責的資料切片。"
+          },
+          {
+            "label": "Shuffle階段",
+            "body": "將所有Map階段產生的中間(key, value)配對，依據key重新分組排序，把key相同的所有資料透過網路傳送並聚集至同一個Reduce工作節點，確保後續彙總運算時同一組的所有資料都在同一處理節點上。"
+          },
+          {
+            "label": "Reduce階段",
+            "body": "針對每一個key分組，對該組底下所有Map階段輸出的value做聚合運算（如加總、計數），最終輸出<key, 聚合結果>，適合大規模平行化的資料分析。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "教科書基礎補充（過去十年較少單獨考出，建議理解即可）"
+      },
+      {
+        "type": "para",
+        "text": "CAP定理：分散式系統無法同時完全滿足一致性（Consistency）、可用性（Availability）、分區容忍性（Partition Tolerance）三者，設計時通常需在一致性與可用性間權衡取捨，這也是多數NoSQL資料庫選擇「最終一致性」而非強一致性的理論依據。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 10　NoSQL與大數據",
+    "qnum": 2,
+    "qlabel": "第1題",
+    "stem": "檔案系統之後發展資料庫管理系統，請說明資料庫管理系統出現的主要緣由與主要議題。（10分）古典資料庫管理系統之後發展出NoSQL資料庫系統，請說明NoSQL資料庫系統出現的主要緣由與主要議題。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "資料庫管理系統出現之主要緣由與議題"
+      },
+      {
+        "type": "para",
+        "text": "傳統檔案系統存在多項問題：資料重複與不一致（同一資料存於多個檔案，易產生版本不一致）；資料存取困難（每次查詢均須撰寫專屬程式）；資料隔離（不同應用程式各自使用不同檔案格式，難以整合）；完整性問題（缺乏統一之一致性限制機制）；原子性問題（缺乏交易概念，操作中斷易致資料損毀）；並行存取異常；安全性問題（難以做細緻的存取權限控制）。資料庫管理系統即為解決上述議題而生，提供資料獨立性、集中共享存取、完整性限制機制、交易管理（ACID）與存取權限控制等機制，取代檔案系統各自為政之管理方式。"
+      },
+      {
+        "type": "heading",
+        "text": "NoSQL資料庫系統出現之主要緣由與議題"
+      },
+      {
+        "type": "para",
+        "text": "隨著網際網路服務規模擴大，巨量資料、高速讀寫、需具備水平擴展能力、且資料結構彈性多變等需求日增，傳統關聯式資料庫因強調嚴謹的ACID特性與固定schema，且多以垂直擴展為主，在超大規模、高並行、分散式部署情境下面臨效能與擴充瓶頸，因而發展出NoSQL資料庫系統。其主要議題包括：CAP定理下一致性與可用性於網路分割情況下的取捨；為追求可用性與擴展性而採用之最終一致性模型；多樣化的資料模型（如Key-Value、Document、Column-family、Graph）；以及分散式叢集架構下的資料分片與水平擴展設計。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 10　NoSQL與大數據",
+    "qnum": 3,
+    "qlabel": "第5題",
+    "stem": "假設在某MongoDB資料庫中，有個Collection叫做student，每個物件表示學生的_id、name（含first與last）以及department。請以Mongo語法依序寫出：(a)找出姓為'Codd'的學生，並限定只輸出第一位。（10分）(b)刪除所有就讀'CS'系的學生資料。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "// (a) 找出姓為Codd之學生，僅輸出第一位\ndb.student.find({\"name.last\": \"Codd\"}).limit(1);\n\n// (b) 刪除所有就讀CS系之學生資料\ndb.student.deleteMany({\"department\": \"CS\"});"
+      },
+      {
+        "type": "para",
+        "text": "作答技巧：MongoDB查詢語法的關鍵是熟悉幾個常用方法的對應關係——find()對應SQL的SELECT...WHERE，deleteMany()／deleteOne()對應DELETE，limit()對應LIMIT；巢狀欄位（如name.last）用點記法（dot notation）存取，是與SQL語法最大的視覺差異，考前建議把這幾個常用方法（find、insertOne、updateOne、deleteMany、aggregate）各自的基本語法都手寫練過一遍。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 10　NoSQL與大數據",
+    "qnum": 4,
+    "qlabel": "第5題",
+    "stem": "以跨國電商年度銷售資料（國別、日期、銷售金額…）為例，圖解說明Map-Reduce的運算架構，並說明Map、Shuffle、跟Reduce是如何分工而得到年度區域（如亞洲、歐洲、非洲、美洲、大洋洲）的總銷售金額？（20分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "原始銷售紀錄               Map階段            Shuffle階段          Reduce階段\n(台灣,2024-01-05,1000) -> <亞洲,1000>\n(法國,2024-02-10,2000) -> <歐洲,2000>    依洲別分組聚集   各洲別加總金額\n(日本,2024-03-15,1500) -> <亞洲,1500>  ->  (相同洲別的  ->  <亞洲,總和>\n(美國,2024-04-20,3000) -> <美洲,3000>     資料聚集一起)    <歐洲,總和>\n(埃及,2024-05-25, 500) -> <非洲, 500>                     <美洲,總和>\n(澳洲,2024-06-30, 800) -> <大洋洲,800>                    <非洲,總和>\n                                                          <大洋洲,總和>"
+      },
+      {
+        "type": "heading",
+        "text": "三階段分工說明"
+      },
+      {
+        "type": "para",
+        "text": "Map階段：讀取每一筆原始銷售紀錄（國別、日期、銷售金額），依據「國別→洲別」對照表，將每筆紀錄轉換並輸出中間形式之(key,value)配對<洲別, 銷售金額>，此階段可將龐大原始資料分散於多個節點平行處理。"
+      },
+      {
+        "type": "para",
+        "text": "Shuffle階段：將所有Map階段所產生之中間配對，依據Key（即洲別）重新分組排序，將同一洲別的所有<洲別,金額>資料聚集至同一個Reduce工作節點，確保後續加總運算時，同一洲別的所有資料都在同一處理節點上。"
+      },
+      {
+        "type": "para",
+        "text": "Reduce階段：針對每一洲別分組，將該洲別底下所有Map階段輸出之銷售金額全部加總，最終輸出<洲別,該洲別年度總銷售金額>之結果。三階段透過「先平行轉換與標記（Map）、再依Key分組聚集（Shuffle）、最後平行加總（Reduce）」之分工方式，達成大規模銷售資料之高效彙總分析。"
+      },
+      {
+        "type": "para",
+        "text": "作答技巧：這類「圖解說明」題，光用文字敘述通常拿不到滿分，務必實際畫出（或用表格模擬）「原始資料→Map輸出→Shuffle分組→Reduce輸出」四欄的具體對照範例，用真實資料走一遍三階段的轉換過程，才能清楚展現對Map-Reduce分工原理的理解。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 11　資料庫系統架構與基本術語",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "這一章是本科名詞解釋題的大本營：資料庫系統設計依「資料抽象化」原則分為三層架構，並有一系列核心術語需要精確定義。考題常以「請敘述下列名詞之意涵」的形式，一次考5個看似不相關、其實橫跨全書各章的術語，因此這一章除了記住三層架構本身，也適合作為總複習前四冊各章定義的索引。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點一：資料抽象化三層架構"
+      },
+      {
+        "type": "table",
+        "header": [
+          "層次",
+          "功能與功用"
+        ],
+        "rows": [
+          [
+            "實體層\nPhysical Level",
+            "資料抽象化中最底層，描述資料實際上如何被儲存於實體儲存媒介的細節，包括檔案結構、索引方式、資料在磁碟上之實際存放位置與存取路徑，由資料庫管理系統之儲存引擎負責管理。"
+          ],
+          [
+            "邏輯層\nLogical Level",
+            "描述整個資料庫中儲存了哪些資料，以及各資料項目間存在何種關係（即概念綱要），此層獨立於實體層之實際儲存細節，資料庫設計者主要於此層次進行資料表、屬性及關聯之設計。"
+          ],
+          [
+            "視界層\nView Level",
+            "資料抽象化中最高層，僅呈現整個資料庫中與特定使用者或應用程式相關之部分內容（即外部綱要），隱藏邏輯層與實體層之其餘細節，不同使用者可依其權限與需求擁有不同之資料檢視方式。"
+          ]
+        ]
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "分層之好處：資料獨立性",
+            "body": "實體資料獨立性（得以變更實體儲存方式而不影響邏輯層綱要與應用程式）與邏輯資料獨立性（得以調整邏輯層綱要而儘量不影響既有使用者視界與應用程式）。"
+          },
+          {
+            "label": "分層之好處：安全性與易用性",
+            "body": "透過視界層限制不同使用者僅能存取與其權限相符的資料子集合；使用者僅需理解與其業務相關的視界層內容，降低使用門檻；各層次之變更侷限於該層次範圍內處理，降低系統維護與開發複雜度。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "112高考／110高考／110地特／109高考／108高考／105高考（三層架構與資料庫核心術語，常以名詞解釋組合題形式出現）"
+      },
+      {
+        "type": "heading",
+        "text": "本章常考名詞速記彙整"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "View 視界",
+            "body": "由查詢語句定義的虛擬表格，不實際儲存資料，每次查詢時動態計算，可簡化複雜查詢或做存取控制（詳見第二冊Chapter 3）。"
+          },
+          {
+            "label": "外來鍵 Foreign Key",
+            "body": "參照其他資料表主鍵，用以建立表間關聯之屬性（或屬性集合）。"
+          },
+          {
+            "label": "實體完整性規則 Entity Integrity Rule",
+            "body": "規定基底關聯表格之主鍵不得為空值（NULL），以確保每一筆資料列均可被主鍵唯一識別。"
+          },
+          {
+            "label": "叢集索引 Clustered Index",
+            "body": "資料實際的實體儲存順序依索引鍵值排列，一個資料表通常只能有一個叢集索引（詳見第四冊Chapter 7）。"
+          },
+          {
+            "label": "物件導向資料庫 Object-Oriented Database",
+            "body": "以物件、類別、繼承等概念儲存資料，關聯式的表格、值組、主鍵、屬性、預儲程序可分別對應物件導向的類別、物件實例、物件識別碼（OID）、屬性、方法。"
+          }
+        ]
+      },
+      {
+        "type": "para",
+        "text": "這類固定考「5選題各5分」的名詞解釋，涵蓋範圍常橫跨全書各章（如本次歷屆試題就同時考了分散式資料庫的Replication Independence、索引結構的B+-tree、完整性限制的Entity Integrity Rule、正規化理論的BCNF、以及NoSQL），建議考前將前四冊每章開頭「重點整理」中列出的粗體英文術語，全部集中抄一份清單做總複習，逐一確認能否用一到兩句話精確講出定義。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 11　資料庫系統架構與基本術語",
+    "qnum": 2,
+    "qlabel": "第1題",
+    "stem": "資料庫系統的設計原則，是根據資料抽象化（data abstraction）的概念，將資料分作不同層，包含：實體層（physical level）、邏輯層（logical level）和視界層（view level）。請分別敘述每一層的功能或功用為何？並說明將資料分做三層的好處。（20分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "三層之功能與功用，詳見前一節「本章依考題頻率必會重點一」之表格。"
+      },
+      {
+        "type": "heading",
+        "text": "分層之好處"
+      },
+      {
+        "type": "para",
+        "text": "達成資料獨立性：包括實體資料獨立性（得以變更實體儲存方式而不影響邏輯層綱要與應用程式）以及邏輯資料獨立性（得以調整邏輯層綱要而儘量不影響既有使用者視界與應用程式）。"
+      },
+      {
+        "type": "para",
+        "text": "提升資料安全性：透過視界層限制不同使用者僅能存取與其權限相符之資料子集合，避免使用者接觸不應存取之機敏資料。"
+      },
+      {
+        "type": "para",
+        "text": "簡化使用者操作：使用者僅需理解與其業務相關之視界層內容，無需理解整個資料庫之完整邏輯結構或實體儲存細節，降低使用門檻。"
+      },
+      {
+        "type": "para",
+        "text": "降低系統維護與開發複雜度：各層次之變更得以侷限於該層次範圍內處理，避免變更牽一髮動全身，有助於資料庫系統長期之維護與擴充。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 11　資料庫系統架構與基本術語",
+    "qnum": 3,
+    "qlabel": "第2題",
+    "stem": "請定義資料庫管理系統的四個基本名詞：資料庫（Database）、資料（Data）、資訊（Information）、詮釋資料（Metadata）。（20分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "para",
+        "text": "資料庫（Database）：一個經過組織、整合之相關資料集合，通常反映現實世界中某一範疇之情況，並依適當結構儲存於電腦系統中，供多個使用者或應用程式共享存取，由資料庫管理系統統一管理其儲存、查詢與更新。"
+      },
+      {
+        "type": "para",
+        "text": "資料（Data）：未經處理之原始事實、數值或符號，本身不具備脈絡意義。"
+      },
+      {
+        "type": "para",
+        "text": "資訊（Information）：資料經處理、組織、彙整後所產生，具備脈絡與意義、可供決策參考之內容。"
+      },
+      {
+        "type": "para",
+        "text": "詮釋資料（Metadata）：「描述資料的資料」，用以描述資料庫中資料之結構、格式、型態、來源等屬性資訊（如綱要定義），本身並非業務資料。"
+      },
+      {
+        "type": "para",
+        "text": "作答技巧：「資料」與「資訊」的差異是本題最容易失焦的地方，務必抓住「有沒有經過處理、有沒有脈絡意義」這個核心判準；「詮釋資料」則常被誤答成「重要的資料」，正確理解應是「描述資料本身結構的資料」，例如資料表的欄位名稱、型態定義，這些定義本身就是一種詮釋資料。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 12　資料庫安全：SQL",
+    "qnum": 1,
+    "qlabel": "重點整理",
+    "stem": "重點知識彙整（依真實歷屆試題出題頻率整理，內容與Word版參考書一致）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "白話講解"
+      },
+      {
+        "type": "para",
+        "text": "SQL Injection是資料庫應用科目中，少數會考「寫出一段有漏洞的程式碼」的題型。核心觀念很簡單：如果網頁程式把使用者輸入的文字「直接原封不動拼接」進SQL指令字串裡，使用者輸入的內容就有機會被資料庫誤認為是「SQL指令的一部分」而不是單純的資料，攻擊者便能藉此操控查詢邏輯。"
+      },
+      {
+        "type": "heading",
+        "text": "本章依考題頻率必會重點：SQL Injection成因、攻擊手法與防禦"
+      },
+      {
+        "type": "list",
+        "items": [
+          {
+            "label": "成因",
+            "body": "應用程式直接將使用者輸入字串拼接進SQL查詢語句，未做參數化查詢（Parameterized Query）或輸入驗證。"
+          },
+          {
+            "label": "常見攻擊手法：略過權限檢查",
+            "body": "利用SQL註解字元（如--）截斷後續密碼檢查條件，例如在登入欄位輸入 admin'-- ，使實際執行的SQL等同於「WHERE username = 'admin'」，繞過密碼比對。"
+          },
+          {
+            "label": "常見攻擊手法：注入永真條件",
+            "body": "在輸入欄位輸入 ' OR '1'='1 這類使WHERE條件恆為真的字串，讓查詢繞過原本預期的驗證邏輯，回傳不應被授權存取的資料列。"
+          },
+          {
+            "label": "常見攻擊手法：注入額外SQL子句",
+            "body": "利用UNION SELECT取得其他表格的資料，或用分號注入額外的DROP TABLE等破壞性語句。"
+          },
+          {
+            "label": "防禦方式",
+            "body": "使用參數化查詢／預備陳述式（Prepared Statement）取代字串拼接，使輸入內容僅被視為資料值，不會被解讀為可執行的SQL語法；對使用者輸入做嚴格的格式驗證（如白名單）；資料庫帳號採最小權限原則；使用WAF（Web Application Firewall）過濾異常請求。"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "生活化比喻／記憶技巧"
+      },
+      {
+        "type": "para",
+        "text": "SQL Injection就像「填單申請書時夾帶額外指令」：正常人會在「姓名」欄填「王小明」，但攻擊者填的是「王小明，順便幫我把整個檔案櫃打開」——如果承辦人員（應用程式）沒有先檢查這段文字是不是真的「只是個名字」就照單全收去執行，就會被夾帶的額外指令得逞。參數化查詢就像規定「姓名欄只能填文字資料，不管填什麼都不會被當成指令執行」，從根本杜絕這種夾帶手法。"
+      },
+      {
+        "type": "heading",
+        "text": "歷屆出題年度"
+      },
+      {
+        "type": "para",
+        "text": "110高考（SQL Injection定義、防禦方式、撰寫具漏洞程式碼與對應攻擊寫法，為本主題目前唯一出現之歷屆試題，但屬固定考法，務必熟練）"
+      },
+      {
+        "type": "heading",
+        "text": "教科書基礎補充（過去十年較少單獨考出，建議理解即可）"
+      },
+      {
+        "type": "para",
+        "text": "OWASP Top 10：由OWASP組織定期發布的十大網頁應用程式安全風險排行，SQL Injection長年名列前茅，近年版本已歸類至更廣泛的「注入類」風險（Injection），實務上除SQL Injection外，NoSQL Injection、命令注入（Command Injection）等亦屬同一類風險，防禦原則相通：永遠不信任使用者輸入，並用參數化／綁定變數的方式處理。"
+      }
+    ]
+  },
+  {
+    "type": "essay",
+    "subject": "讀書",
+    "year": "彙整",
+    "track": "資料庫應用",
+    "section": "Chapter 12　資料庫安全：SQL",
+    "qnum": 2,
+    "qlabel": "第3題",
+    "stem": "請解釋何謂SQL injection以及要如何預防？（10分）常見的SQL injection攻擊手法為「略過權限檢查」與「注入SQL子語法」等，請寫出一段有SQL injection漏洞的網頁程式碼以及可能的SQL injection攻擊寫法。（10分）",
+    "passage": null,
+    "group": null,
+    "options": {},
+    "answer": null,
+    "blocks": [
+      {
+        "type": "heading",
+        "text": "SQL injection之定義"
+      },
+      {
+        "type": "para",
+        "text": "SQL injection（SQL注入）係指攻擊者於網頁應用程式之輸入欄位（如登入表單），刻意輸入夾帶惡意SQL語法片段之內容；若該應用程式係以字串拼接方式，直接將使用者輸入內容組合進SQL查詢語句中，而未進行適當之過濾或參數化處理，將導致資料庫實際執行攻擊者所注入之SQL指令，可能造成略過身分驗證、未經授權之資料存取、資料竄改或刪除等嚴重資安後果。"
+      },
+      {
+        "type": "heading",
+        "text": "預防方式"
+      },
+      {
+        "type": "para",
+        "text": "採用參數化查詢／預備陳述式：將使用者輸入內容以綁定變數方式傳遞給資料庫，而非直接拼接於SQL字串中，使輸入內容僅被視為資料值，不會被解讀為可執行之SQL語法；對所有使用者輸入進行嚴格之驗證與過濾（如白名單驗證）；資料庫連線帳號依最小權限原則設定；部署Web應用防火牆（WAF），過濾具備已知SQL注入特徵之惡意請求。"
+      },
+      {
+        "type": "heading",
+        "text": "含SQL injection漏洞之範例程式碼（字串拼接方式）"
+      },
+      {
+        "type": "para",
+        "text": "$username = $_POST[\"username\"];\n$password = $_POST[\"password\"];\n$query = \"SELECT * FROM users WHERE username = '\" . $username .\n         \"' AND password = '\" . $password . \"'\";\n$result = mysqli_query($conn, $query);"
+      },
+      {
+        "type": "heading",
+        "text": "可能之攻擊寫法"
+      },
+      {
+        "type": "para",
+        "text": "略過權限檢查（利用SQL註解字元 -- 截斷後續密碼檢查條件）：於username欄位輸入 admin'-- ，密碼欄位任意輸入，此時實際組成之SQL語句為 SELECT * FROM users WHERE username = 'admin'-- ' AND password = '任意值'；由於「--」在SQL中代表註解，其後內容（含密碼比對條件）將被忽略，實際執行之查詢等同於SELECT * FROM users WHERE username = 'admin'，攻擊者無需知曉正確密碼，即可以admin身分登入。"
+      },
+      {
+        "type": "para",
+        "text": "注入SQL子語法（利用永真條件 OR '1'='1'）：於username欄位輸入 ' OR '1'='1 ，使組成之SQL語句條件恆為真：SELECT * FROM users WHERE username = '' OR '1'='1' AND password = '...'；由於'1'='1'恆為真，可能使此查詢繞過原先預期之帳號密碼驗證邏輯，回傳不應被授權存取之資料列。"
+      },
+      {
+        "type": "para",
+        "text": "作答技巧：這題「寫出一段有漏洞的程式碼」不需要語言華麗，用最簡單的字串拼接（如上例PHP風格的偽代碼）清楚示範「使用者輸入直接被塞進SQL字串」這個核心漏洞成因即可；攻擊寫法務必對應題目明確要求的兩種手法（略過權限檢查、注入SQL子語法）各寫一個具體範例，並解釋「為什麼這樣輸入會讓SQL的邏輯被篡改」，只列出攻擊字串而不解釋原理，通常無法拿到完整分數。"
+      }
+    ]
+  }
+]
